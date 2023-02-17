@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+*{
+    font-family: 'Rubik','Courier New', Courier, monospace;
+}
+
+.sk-bg-green{
+    background-color: #14532D !important;
+}
+.sk-bg-gray{
+    background-color: #EBEDF5 !important;
+}
+.sk-bg-green:hover{
+    background-color: #1f7542;
+}

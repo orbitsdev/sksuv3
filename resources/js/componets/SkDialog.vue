@@ -43,7 +43,7 @@
                 type: Boolean,
                 default: false,
             },
-            persistent: {
+            peristent: {
                 type: Boolean,
                 default: false,
             },

@@ -1,7 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GoogleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,10 +18,24 @@ use Inertia\Inertia;
 
 Route::get('/', function () {
     return Inertia::render('login');
-});
+})->name('login');
 Route::get('/login', function () {
     return Inertia::render('login');
-});
+})->name('login');
 Route::get('/register', function () {
-    return Inertia::render('register');
+    return Inertia::render('register', );
+});
+
+Route::post('user/login', [AuthController::class , 'login']);
+Route::post('user/create', [AuthController::class , 'create']);
+
+Route::get('/authorize/{provider}/redirect', [GoogleController::class, 'redirectToProvider']);
+Route::get('/authorize/{provider}/callback', [GoogleController::class, 'handleProviderCallback']);
+
+
+
+Route::group(['middleware' => ['auth' ,]], function () {
+    Route::get('/dashboard', function () { return Inertia::render('dashboard');})->name('dashboard'); //name goes here
+    Route::post('/logout', [AuthController::class , 'logout']);
+    
 });

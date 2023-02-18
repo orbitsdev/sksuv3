@@ -31,7 +31,7 @@
           <h2 class="mt-6 text-3xl font-bold tracking-tight text-gray-900">Sign in to your account</h2>
        
         </div>
-  
+        
         <div class="mt-8">
           <div>
             <div>
@@ -42,49 +42,64 @@
                   </button>
               </div>
             </div>
+
+            
   
-            <div class="relative mt-6">
-              <div class="absolute inset-0 flex items-center" aria-hidden="true">
-                <div class="w-full border-t border-gray-300"></div>
-              </div>
-              <div class="relative flex justify-center text-sm">
-                <span class="bg-white px-2 text-gray-500">Or continue with</span>
-              </div>
-            </div>
+           
           </div>
   
           <div class="mt-6">
-            <form action="#" method="POST" class="space-y-6">
+            <form  @submit.prevent="submit" class="space-y-6">
               <div>
-                <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
+
+
+                <label for="first_name" class="block text-sm font-medium text-gray-700">First name</label>
                 <div class="mt-1">
-                  <input id="email" name="email" type="email" autocomplete="email" required class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
+                                   <Authfield1 type="text" v-model="form.first_name" />
                 </div>
+
+                <p class="text-red-700 text-sm" v-if="$page.props.errors.first_name"> {{$page.props.errors.first_name }}</p>
+              </div>
+              <div>
+                <label for="lastname" class="block text-sm font-medium text-gray-700">Last name</label>
+                <div class="mt-1">
+                   <Authfield1 type="text" v-model="form.last_name" />
+                </div>
+
+                <p class="text-red-700 text-sm" v-if="$page.props.errors.last_name"> {{$page.props.errors.last_name }}</p>
+              </div>
+              <div>
+                <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                <div class="mt-1">
+                   <Authfield1 type="email" autocomplete="email" v-model="form.email" />
+                </div>
+                <p class="text-red-700 text-sm" v-if="$page.props.errors.email"> {{$page.props.errors.email }} </p>
               </div>
   
               <div class="space-y-1">
                 <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
                 <div class="mt-1">
-                  <input id="password" name="password" type="password" autocomplete="current-password" required class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
+                  <Authfield v-model="form.password" />
                 </div>
-              </div>
-  
-              <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                  <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                  <label for="remember-me" class="ml-2 block text-sm text-gray-900">Remember me</label>
-                </div>
-  
-                <div class="text-sm">
-                  <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">Forgot your password?</a>
-                </div>
-              </div>
-  
-              <div>
-                <button type="submit" class="sk-bg-green flex w-full justify-center rounded-md border border-transparent sk-bg-green py-2 px-4 text-sm font-medium text-white shadow-sm  focus:outline-none focus:ring-2 focus:green--500 focus:ring-offset-2">Sign in</button>
+                <p class="text-red-700 text-sm" v-if="$page.props.errors.password"> {{$page.props.errors.password }} </p>
 
               </div>
+              
+  
+              <div>
+                 <SkButton type="submit"  :processing="form.processing" />
+
+              </div>
+
+              <div class=" text-sm flex items-center justify-center">
+                <SksuLink  href="/login" preserve-scroll class="font-medium text-indigo-600 hover:text-indigo-500 underline"> All ready have an account ? </SksuLink>
+              </div>
+           
             </form>
+
+          
+            
+            
           </div>
         </div>
       </div>
@@ -101,6 +116,41 @@
         
     }
 </script>
+
+
+<script setup>
+import { useForm } from "@inertiajs/vue3"
+
+
+let form =  useForm({
+  'first_name': '',
+  'last_name': '',
+  'email': '',
+  'password': '',
+});
+
+
+  
+  function submit(){
+    form.post('user/create'), {
+        preserveScroll: true,
+        onSuccess: () => {
+          // handle success
+
+          form.reset('email');
+          form.reset('password');
+        },
+        onError: (error) => {
+          console.log(`Error: ${err.response.status}`)
+        },
+        hasError:(err)=>{
+          console.log(err);
+        }
+      }
+  }
+
+</script>
+
 
 <style lang="scss" scoped>
 

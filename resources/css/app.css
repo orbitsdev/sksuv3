@@ -5,7 +5,7 @@
 
 
 *{
-    font-family: 'Rubik','Courier New', Courier, monospace;
+    font-family: 'Rubik';
 }
 
 .sk-bg-green{
@@ -20,3 +20,14 @@
 .sk-bg-green-disbaled{
     background-color: #a6e0be;
 }
+
+.sk-button2{
+    background-color: #14532D !important;
+}
+.sk-button2:hover{
+    background-color: rgb(13, 68, 35) !important;
+}
+.progress{
+    background-color: #12af51 !important;
+}
+

@@ -38,7 +38,7 @@
           </div>
 
           <div>
-            <SkButton type="submit" :processing="form.processing" />
+            <SkButton type="submit" :processing="form.processing" > Signin </SkButton>
           </div>
         </form>
 

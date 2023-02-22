@@ -87,7 +87,7 @@
               
   
               <div>
-                 <SkButton type="submit"  :processing="form.processing" />
+                     <SkButton type="submit" :processing="form.processing" > Signup </SkButton>
 
               </div>
 

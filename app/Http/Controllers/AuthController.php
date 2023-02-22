@@ -6,6 +6,7 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -39,6 +40,8 @@ class AuthController extends Controller
 
     if (Auth::attempt(['email' => $user->email, 'password' => $validated['password']])) {
         $request->session()->regenerate();
+
+       
         return redirect()->intended('dashboard');
     }
 
@@ -57,8 +60,14 @@ class AuthController extends Controller
  
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
- 
-            return redirect()->intended('dashboard');
+
+
+            if(Auth::user()->hasRole('osas')){
+                return redirect()->intended('year');
+            }
+
+
+
         }
  
         return back()->withErrors([

@@ -54,7 +54,7 @@
             },
             width: {
                 type: String,
-                default: '340',
+                default: '540',
             },
             transition: {
                 type: String,

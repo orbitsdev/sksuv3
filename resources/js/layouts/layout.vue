@@ -1,21 +1,9 @@
-
 <template>
-
-  
-    <div class="">
-   
-    <w-app>
-
-        
-        <slot></slot>
-    </w-app>
-</div>
+  <w-app>
+    <slot></slot>
+  </w-app>
 </template>
 
-<script>
-   
-</script>
+<script></script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

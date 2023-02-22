@@ -28,6 +28,8 @@ onBeforeUnmount(() => {
             <img class="h-12 w-12" src="/assets/sksu1.png" alt="">
           </div>
           <p class="text-2xl text-gray-100 font-bold  " > Wrms-AC </p>
+
+            {{ $props.auth }}
         </div>
 
         <!-- Right section on desktop -->
@@ -57,7 +59,7 @@ onBeforeUnmount(() => {
 
               <SksuLink href="#" class="hover:scale-x-110 hover:bg-gray-200 rounded-lg transition-all ease-inoute block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-1">Settings</SksuLink> -->
 
-              <SksuLink as="button" @click="logout"  class="block text-left w-full hover:scale-x-110 hover:bg-gray-200 rounded-lg transition-all ease-inoute block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</SksuLink>
+              <SksuLink href="#" as="button" @click="logout"  class="block text-left w-full hover:scale-x-110 hover:bg-gray-200 rounded-lg transition-all ease-inoute block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</SksuLink>
             </div>
           </div>
         </div>

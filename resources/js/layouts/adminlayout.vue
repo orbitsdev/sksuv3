@@ -17,8 +17,9 @@
             <!-- Left nav -->
             <div class=" lg:col-span-2 lg:block">
               <nav class="flex space-x-4">
-              <DashboardLink href="year" :active="$page.component=== 'osas/schoolyear'"> School Year </DashboardLink>
-              <DashboardLink href="#" :active="$page.component=== 'userAccount' "> Accounts </DashboardLink>
+              <DashboardLink :href="route('schoolyear.index')" :active="$page.component=== 'osas/schoolyear'"> School Year </DashboardLink>
+              <DashboardLink :href="route('account.index')" :active="$page.component=== 'osas/accounts' "> Accounts </DashboardLink>
+              <DashboardLink href="#" :active="$page.component=== 'organizations'"> Campuses </DashboardLink>
               <DashboardLink href="#" :active="$page.component=== 'organizations'"> Organizations </DashboardLink>
               <DashboardLink href="#" :active="$page.component=== 'campusDirector' "> Applications </DashboardLink>
               <DashboardLink href="#" :active="$page.component=== 'campusDirector' "> Endoresed </DashboardLink>

@@ -1,9 +1,5 @@
 <template>
 
-  <Head>
-    <title>Dashboard</title>
-  </Head>
-
 
 
 <adminlayout>

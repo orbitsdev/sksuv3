@@ -2,7 +2,6 @@
 
 <template>
  
-      
       <w-dialog
         :model-value="isOpen"
         :content-class="contentClass"

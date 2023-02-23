@@ -1,7 +1,10 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from "vue";
+
+import { router } from "@inertiajs/core";
 const isOpen = ref(false);
+const is_singning_out = ref(false);
 const closeOnClickOutside = (event) => {
   if (document.getElementById("logout-dropdown").contains(event.target)) {
     console.log('dasdas');
@@ -18,6 +21,25 @@ onMounted(() => {
 onBeforeUnmount(() => {
   document.removeEventListener("click", closeOnClickOutside);
 });
+
+
+ function  logout(){
+
+  is_singning_out.value = true
+  router.post('/logout',{
+    onSuccess: () => {
+    is_singning_out.value = false;
+    },
+    onError: (err) => {
+    is_singning_out.value = false;
+    },
+    onFinish: ()=>{
+      is_singning_out.value = false;
+    }
+
+
+  });
+}
 </script>
 
 <template>
@@ -67,7 +89,7 @@ onBeforeUnmount(() => {
 
         <SkDialog 
         :persistent="true"
-        :isOpen="isLoading"
+        :isOpen="is_singning_out"
         :width="'260'"
         >
             <div class="flex items-center justify-center ">

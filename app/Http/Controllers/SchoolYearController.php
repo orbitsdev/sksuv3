@@ -34,16 +34,16 @@ class SchoolYearController extends Controller
             'to' => $request->input('toYear'),
         ]);
 
-        return redirect()->back();
+        return redirect()->back()->with('toast', 'School Year Created');;
 
     }
 
     public function deleteSelected(Request $request){
 
       
-     $school_years  = SchoolYear::whereIn('id', $request->input('school_years'))->delete();
+     $school_years  = SchoolYear::whereIn('id', $request->input('ids'))->delete();
 
-     return redirect()->back();
+     return redirect()->back()->with('toast', 'School Year Created');
 
     }
 }

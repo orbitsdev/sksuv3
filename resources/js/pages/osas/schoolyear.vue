@@ -14,7 +14,7 @@ const has_warning = ref(null);
 const confirm_delete = ref(false);
 const is_deleting = ref(false);
 const search = ref(props.filters.search);
-const selected_school_year = ref([]);
+const selected_items = ref([]);
 
 //watch
 watch(
@@ -40,10 +40,10 @@ async function deleteSelected() {
   try {
     is_deleting.value = true;
     await router.post("/year/delete-selected", {
-      school_years: selected_school_year.value,
+      ids: selected_items.value,
     });
     is_deleting.value = false;
-    selected_school_year.value = [];
+    selected_items.value = [];
     is_open.value = false;
     confirm_delete.value = false;
   } catch (error) {
@@ -66,12 +66,18 @@ function saveSchoolYear() {
       },
       onError: (error) => {
         has_warning.value = error;
+        console.log('on error');
+        confirm_delete.value = false;
       },
       hasError: (err) => {
+        console.log('has  error');
+        confirm_delete.value = false;
         console.log(err);
       },
     });
 }
+
+
 </script>
 <script>
 import adminlayout from "../../layouts/adminlayout.vue";
@@ -128,16 +134,16 @@ export default {
       class="bg-white rounded-xl shadow-xl mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8"
     >
       <div class="rounded pb-6">
-        <div class="grid grid-cols-1 gap-4">
-          <div class=" ">
-            <div class="py-4 border-b flex items-center justify-between">
+        <div class="">
+          <div class="">
+            <div class="pt-4  flex items-center justify-between">
               <p class="text-xl text-green-800 font-bold font-rubik uppercase">
                Manage School Year
               </p>
 
               <div class="flex items-center">
                 <sk-button2
-                  v-if="selected_school_year.length > 0"
+                  v-if="selected_items.length > 0"
                   @click="confirm_delete = true"
                   :c="'bg-white border '"
                   class="w-40 flex items-center justify-center mr-2 h-10"
@@ -172,7 +178,7 @@ export default {
                       clip-rule="evenodd"
                     />
                   </svg>
-                  School Year</sk-button2
+                  Add School Year</sk-button2
                 >
               </div>
             </div>
@@ -189,7 +195,7 @@ export default {
                   :c="'whitespace-nowrap align-center text-center text-sm items-center  font-medium text-gray-900'"
                 >
                   <input
-                    v-model="selected_school_year"
+                    v-model="selected_items"
                     :value="item.id"
                     type="checkbox"
                     class="h-4 w-4 accent-green-600 text-white rounded border-gray-200"
@@ -286,15 +292,17 @@ export default {
           </div>
         </div>
         <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-          <SkDeleteButton @click="deleteSelected" :processing="is_deleting">
-            Confirm
+          <SkDeleteButton @click="deleteSelected" :processing="is_deleting" class="w-24">
+           Yes
           </SkDeleteButton>
-          <SkButtonGray @click="confirm_delete = false" class="w-24">
-            Cancel
+          <SkButtonGray @click="confirm_delete = false" :c="'w-24'">
+            No
           </SkButtonGray>
         </div>
       </main>
-    </sk-dialog>
+    </sk-dialog>  
+    {{!!this.$page.props.notification }}
+    <Notification :show="!!this.$page.props.notification"/>
   </adminlayout>
 </template>
 

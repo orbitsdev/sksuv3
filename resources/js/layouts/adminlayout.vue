@@ -18,8 +18,8 @@
             <div class=" lg:col-span-2 lg:block">
               <nav class="flex space-x-4">
               <DashboardLink :href="route('schoolyear.index')" :active="$page.component=== 'osas/schoolyear'"> School Year </DashboardLink>
-              <DashboardLink :href="route('account.index')" :active="$page.component=== 'osas/accounts' "> Accounts </DashboardLink>
-              <DashboardLink href="#" :active="$page.component=== 'organizations'"> Campuses </DashboardLink>
+              <DashboardLink :href="route('campus.index')" :active="$page.component === 'osas/campusindex'"> Campuses </DashboardLink>
+              <DashboardLink :href="route('account.userpassword.index')" :active="($page.component === 'osas/accountpasswordindex' || $page.component === 'osas/campusadviserindex'  ) "> Accounts & Roles </DashboardLink>
               <DashboardLink href="#" :active="$page.component=== 'organizations'"> Organizations </DashboardLink>
               <DashboardLink href="#" :active="$page.component=== 'campusDirector' "> Applications </DashboardLink>
               <DashboardLink href="#" :active="$page.component=== 'campusDirector' "> Endoresed </DashboardLink>

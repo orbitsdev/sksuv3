@@ -24,15 +24,18 @@ import SkTable from "./components/SkTable.vue";
 import Tcell from "./components/Tcell.vue";
 import SkCheckbox from "./components/SkCheckbox.vue";
 import DashboardLink from "./components/DashboardLink.vue";
+import TableTitle from "./components/TableTitle.vue";
 import Pagination from "./components/Pagination.vue";
 import EmptyCard from "./components/EmptyCard.vue";
+import Notification from "./components/Notification.vue";
+import AccountLink from "./components/AccountLink.vue";
 import Datepicker from 'vue3-datepicker';
 
 
 createInertiaApp({
 
     progress: {
-        color: '#12af51',
+        color: '#ffff',
     },
     resolve: (name) => resolvePageComponent(`./pages/${name}.vue`, import.meta.glob('./pages/**/*.vue')),
     setup({ el, App, props, plugin }) {
@@ -61,6 +64,9 @@ createInertiaApp({
             .component("Pagination", Pagination)
             .component("Link", Link)
             .component("EmptyCard", EmptyCard)
+            .component("AccountLink", AccountLink)
+            .component("TableTitle", TableTitle)
+            .component("Notification", Notification)
             .component("DashboardLink", DashboardLink);
 
         return app.mount(el);

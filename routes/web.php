@@ -6,7 +6,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Request;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CampusController;
 use App\Http\Controllers\GoogleController;
+use App\Http\Controllers\PublicController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\SchoolYearController;
 
@@ -20,6 +22,10 @@ use App\Http\Controllers\SchoolYearController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+
+
+ 
 
 
 Route::middleware('guest')->group(function () {
@@ -48,7 +54,14 @@ Route::middleware('guest')->group(function () {
 
 Route::group(['middleware' => ['auth',]], function () {
     Route::get('dashboard', function () {
+
+            if(Auth::user()->hasRole('osas')){
+                return redirect()->route('schoolyear.index');
+            }
         return Inertia::render('dashboard');
+
+
+
     })->name('dashboard'); //name goes here
     Route::post('logout', [AuthController::class, 'logout']);
 
@@ -83,4 +96,14 @@ Route::group(['middleware' => ['auth',]], function () {
 
 
     Route::get('user/account', [AccountController::class, 'index'])->name('account.index');
+    Route::get('user/account/passwords', [AccountController::class, 'userPasswordIndex'])->name('account.userpassword.index');
+    Route::post('user/account/password/update', [AccountController::class, 'userPasswordUpdate'])->name('account.userpassword.update');
+    Route::get('user/account/campus-advisers', [AccountController::class, 'userCampusAdviserIndex'])->name('account.campussadviser.index');
+    
+    Route::get('campus', [CampusController::class, 'index'])->name('campus.index');
+    Route::post('campus/create', [CampusController::class, 'create'])->name('campus.create');
+    Route::post('campus/update', [CampusController::class, 'update'])->name('campus.update');
+    Route::post('campus/delete-selected', [CampusController::class, 'deleteSelected'])->name('campus.deleteSelected');
+    
+
 });

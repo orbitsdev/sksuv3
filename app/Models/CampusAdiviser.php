@@ -2,19 +2,17 @@
 
 namespace App\Models;
 
-use App\Models\Campus;
+use App\Models\SchoolYear;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class SchoolYear extends Model
+class CampusAdiviser extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
 
-    public function campus_advisers(){
-        return $this->hasMany(CampusAdiviser::class);
+    public function school_year(){
+        return $this->belongsTo(SchoolYear::class);
     }
-
-    
 }

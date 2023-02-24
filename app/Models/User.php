@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Vpa;
 use App\Models\Role;
+use App\Models\Officer;
 use App\Models\CampusAdviser;
 use App\Models\SocialAccount;
 use App\Models\CampusDirector;
@@ -87,6 +88,14 @@ class User extends Authenticatable
         return $this->hasMany(Vpa::class);
     }
 
+
+    public function officers(){
+        return $this->hasMany(Officer::class);
+    }
+
+    public function officer(){
+        return $this->hasOne(Officer::class);
+    }
 
 
 }

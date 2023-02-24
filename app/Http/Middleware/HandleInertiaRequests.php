@@ -38,8 +38,26 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         return array_merge(parent::share($request), [
+            'auth'=> [
+                'user'=> Auth::user()
+            ],
+            'notification'=> session('notification'),
+            'flash'=> [
+                'warning' => session('warning'), 
+                'success' => session('success'), 
+            ],
+            'can'=> [
+                'isOsas' => Auth::user()->hasRole('osas'),
+                'isSboAdviser' => Auth::user()->hasRole('sbo-adviser'),
+                'isSboStudent' => Auth::user()->hasRole('sbo-student'),
+                'isGuest' => Auth::user()->hasRole('guest'),
+                'isSuperAdmin' => Auth::user()->hasRole('super-admin'),
+                'isDeveloper' => Auth::user()->hasRole('developer'),
+                'isDirector' => Auth::user()->hasRole('campus-director'),
+                'isVpa' => Auth::user()->hasRole('vpaa'),
+            ],
+                        
 
-            'notification'=> session('toast')
                 
         ]);
     }

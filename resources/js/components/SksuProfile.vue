@@ -51,13 +51,15 @@ onBeforeUnmount(() => {
           </div>
           <p class="text-2xl text-gray-100 font-bold  " > Wrms-AC </p>
 
-            {{ $props.auth }}
+         
         </div>
 
         <!-- Right section on desktop -->
         <div @click="toggle" 
               id="logout-dropdown"
          class="  lg:ml-4 lg:flex lg:items-center lg:py-5 lg:pr-0.5">
+
+         <div class="text-2xl  font-extrabold mr-6 text-white px-4"> ISULAN </div>
           <button type="button" class="flex-shrink-0 rounded-full p-1 text-cyan-200 hover:bg-white hover:bg-opacity-10 hover:text-white focus:outline-none focus:ring-2 focus:ring-white">
             <span class="sr-only">View notifications</span>
             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">

@@ -12,6 +12,7 @@ use App\Http\Controllers\PublicController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CampusAdviserController;
 use App\Http\Controllers\CampusDirectorController;
+use App\Http\Controllers\OfficerController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\RequirementController;
 use App\Http\Controllers\SchoolYearController;
@@ -34,10 +35,7 @@ use App\Http\Controllers\VpaController;
 
 
 Route::middleware('guest')->group(function () {
-    Route::get('/', function () {
 
-        return Inertia::render('login');
-    })->name('login');
     Route::get('login', function () {
         return Inertia::render('login');
     })->name('login');
@@ -58,6 +56,20 @@ Route::middleware('guest')->group(function () {
 
 
 Route::group(['middleware' => ['auth',]], function () {
+
+    
+Route::get('/', function () {
+
+    if (Auth::user()->hasRole('osas')) {
+        return redirect()->route('schoolyear.index');
+    }
+    if (Auth::user()->hasRole('sbo-adviser')) {
+        return redirect()->route('officers.index');
+    }
+   
+});
+
+
     Route::get('dashboard', function () {
 
         if (Auth::user()->hasRole('osas')) {
@@ -68,6 +80,9 @@ Route::group(['middleware' => ['auth',]], function () {
     Route::post('logout', [AuthController::class, 'logout']);
 
     Route::group([
+        'middleware'=> [
+            'can:is-osas'
+        ],
         'prefix' => 'school-year',
         'as' => 'schoolyear.'
     ], function () {
@@ -79,6 +94,9 @@ Route::group(['middleware' => ['auth',]], function () {
 
 
     Route::group([
+        'middleware'=> [
+            'can:is-osas'
+        ],
         'prefix' => 'user/acount',
         'as' => 'account.'
     ], function () {
@@ -90,6 +108,9 @@ Route::group(['middleware' => ['auth',]], function () {
 
 
     Route::group([
+        'middleware'=> [
+            'can:is-osas'
+        ],
         'prefix' => 'user/acount/campus-adviser',
         'as' => 'campusadviser.'
     ], function () {
@@ -101,6 +122,9 @@ Route::group(['middleware' => ['auth',]], function () {
 
 
     Route::group([
+        'middleware'=> [
+            'can:is-osas'
+        ],
         'prefix' => 'user/acount/campus-directors',
         'as' => 'campusdirector.'
     ], function () {
@@ -113,6 +137,9 @@ Route::group(['middleware' => ['auth',]], function () {
 
 
     Route::group([
+        'middleware'=> [
+            'can:is-osas'
+        ],
         'prefix' => 'user/acount/vpa',
         'as' => 'vpa.'
     ], function () {
@@ -127,6 +154,7 @@ Route::group(['middleware' => ['auth',]], function () {
 
 
     Route::group([
+
         'prefix' => 'campus-and-organizations',
         'as' => 'campusandorganization.'
     ], function () {
@@ -139,6 +167,9 @@ Route::group(['middleware' => ['auth',]], function () {
 
 
     Route::group([
+        'middleware'=> [
+            'can:is-osas'
+        ],
         'prefix' => 'campus-and-organizations',
         'as' => 'campus.'
     ], function () {
@@ -150,6 +181,7 @@ Route::group(['middleware' => ['auth',]], function () {
     });
 
     Route::group([
+
         'prefix' => 'campus-and-organizations',
         'as' => 'organization.'
     ], function () {
@@ -163,6 +195,9 @@ Route::group(['middleware' => ['auth',]], function () {
 
 
     Route::group([
+        'middleware'=> [
+            'can:is-osas'
+        ],
         'prefix' => 'requirements',
         'as' => 'requirement.'
     ], function () {
@@ -171,6 +206,19 @@ Route::group(['middleware' => ['auth',]], function () {
         Route::post('create', [RequirementController::class, 'create'])->name('create');
         Route::post('update', [RequirementController::class, 'update'])->name('update');
         Route::post('delete-selected', [RequirementController::class, 'deleteSelected'])->name('deleteselected');
+    });
+
+
+    Route::group([
+        'middleware'=> [
+            'can:is-adviser'
+        ],
+        'prefix' => 'officers',
+        'as' => 'officers.'
+    ], function () {
+
+        Route::get('/', [OfficerController::class, 'index'])->name('index');
+    
     });
 
    

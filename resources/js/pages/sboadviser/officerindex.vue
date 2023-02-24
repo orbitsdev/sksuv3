@@ -5,7 +5,7 @@ import { throttle } from "lodash";
 import { useForm } from "@inertiajs/vue3";
 
 const props = defineProps({
-  requirements: Object,
+  campuses: Object,
   filters: Object,
 });
 
@@ -157,58 +157,16 @@ function getDefaultValue(item) {
     <div
       class="bg-white rounded-xl shadow-xl mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8"
     >
-       <div class="pt-4  flex items-center justify-between">
-              <p class="text-xl text-green-800 font-bold font-rubik uppercase">
- 
-               Manage Requirements
-              </p>
-                <div class="flex items-center">
-                <sk-button2
-                  v-if="selected_items.length > 0"
-                  @click="confirm_delete = true"
-                  :c="'bg-white border '"
-                  class="w-40 flex items-center justify-center mr-2 h-10"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    class="w-5 h-5 mr-2 text-rose-700"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z"
-                      clip-rule="evenodd"
-                    />
-                  </svg>
-                  Delete Selected
-                </sk-button2>
 
-                 <sk-button2 @click="showForm" class="w-40 flex items-center justify-center h-10">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            class="w-5 h-5 mr-2"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M12 3.75a.75.75 0 01.75.75v6.75h6.75a.75.75 0 010 1.5h-6.75v6.75a.75.75 0 01-1.5 0v-6.75H4.5a.75.75 0 010-1.5h6.75V4.5a.75.75 0 01.75-.75z"
-              clip-rule="evenodd"
-            />
-          </svg>
-          Add Requirement
-        </sk-button2>
-                </div>
+     <TableTitle class="pt-4"> Campuses </TableTitle>
 
        
-      </div>
       <SkTable 
-         v-if="props.requirements.data.length > 0"
+         v-if="props.campuses.data.length > 0"
       :headers="['', 'Name',  '']">
         <tr
           class="divide-x divide-gray-200"
-          v-for="item in props.requirements.data"
+          v-for="item in props.campuses.data"
           :key="item"
         >
           
@@ -247,11 +205,11 @@ function getDefaultValue(item) {
 
             <EmptyCard class="flex items-center justify-center h-64" v-else />
 
-        <div class="mt-6 py-4 bg-white" v-if="$props.requirements.links.length > 0">
+        <div class="mt-6 py-4 bg-white" v-if="$props.campuses.links.length > 0">
           <Pagination
-            v-if="$props.requirements.data.length > 0"
+            v-if="$props.campuses.data.length > 0"
             class="block"
-            :links="$props.requirements.links"
+            :links="$props.campuses.links"
           />
         </div>
         </div>
@@ -319,7 +277,7 @@ function getDefaultValue(item) {
           </div>
           <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
             <h3 class="text-lg font-medium leading-6 text-gray-900" id="modal-title">
-              Delete requirements 
+              Delete campuses 
             </h3>
             <div class="mt-2">
               <p class="text-sm text-gray-500">

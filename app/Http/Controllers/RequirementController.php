@@ -37,7 +37,7 @@ class RequirementController extends Controller
             'name'=> $request->input('name'),
         ]);
 
-        return redirect()->back()->with('notification', ' Created');
+        return redirect()->back()->with('success', ' Created');
     }
     public function update(Request $request){
         $validated = $request->validate([
@@ -51,7 +51,7 @@ class RequirementController extends Controller
             'name'=> $request->input('name')
         ]);
         
-        return redirect()->back()->with('notification', ' Updated'); 
+        return redirect()->back()->with('success', ' Updated'); 
     }
 
 
@@ -60,6 +60,6 @@ class RequirementController extends Controller
         // $campus = Campus::wheeIn('id', $request->input('ids'))->get();
          Requirement::whereIn('id', $request->input('ids'))->delete();
         
-        return redirect()->back()->with('notification', ' Delete'); 
+        return redirect()->back()->with('success', ' Delete'); 
     }
 }

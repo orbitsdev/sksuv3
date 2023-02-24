@@ -21,9 +21,6 @@ class Campus extends Model
     }
 
 
-    public function organizations(){
-        return $this->hasMany(Organization::class);
-    }
 
    
 }

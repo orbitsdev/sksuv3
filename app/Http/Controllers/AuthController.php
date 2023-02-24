@@ -73,7 +73,7 @@ class AuthController extends Controller
                         RoleChangerController::changeRoleTo(Auth::user()->id, 'guest');
                 }
 
-                return redirect()->intended('year');
+                return redirect()->route('officers.index');
             }
 
 

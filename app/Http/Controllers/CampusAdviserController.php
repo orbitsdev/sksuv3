@@ -33,20 +33,33 @@ class CampusAdviserController extends Controller
 
     
     public function create(Request $request){
-       
-        $campus = CampusAdviser::create([
-         'school_year_id'=> $request->input('school_year_id'), 
-         'campus_id'=> $request->input('campus_id'), 
-         'user_id'=> $request->input('user_id'), 
-
-        ]);
-
-        $user = User::where('id', $request->input('user_id'))->first();
-        $role = Role::where('name', 'sbo-adviser')->first();
-        $user->roles()->sync($role->id);
         
 
-        return redirect()->back()->with('notification', 'Created');
+        $existing = CampusAdviser::where('user_id', $request->input('user_id'))->where('campus_id', $request->input('campus_id'))->where('school_year_id', $request->input('school_year_id'))->first();
+
+        if($existing){
+            return redirect()->back()->with('message', 'User already exist');
+            
+        }else{
+            $campus = CampusAdviser::create([
+                'school_year_id'=> $request->input('school_year_id'), 
+                'campus_id'=> $request->input('campus_id'), 
+                'user_id'=> $request->input('user_id'), 
+       
+               ]);
+       
+               
+               
+               $user = User::where('id', $request->input('user_id'))->first();
+               $role = Role::where('name', 'sbo-adviser')->first();
+               $user->roles()->sync($role->id);
+               
+               
+               return redirect()->back()->with('message', 'Created');
+       
+               
+            }   
+
     }
 
 

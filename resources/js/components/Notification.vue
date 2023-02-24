@@ -1,42 +1,37 @@
 
+
+
+
+
 <script setup>
 import { ref, onMounted , defineProps} from "vue";
 
+  
     const props = defineProps({
-        show: {
-            type: Boolean,
-            default: false,
-        },
-        
-        title: {
-            type: String,
-            default: 'Successfully saved!',
-        },
-
+        flash: {
+          type: Boolean,
+          default:false,
+        }
     });
 
-    const show_notification = ref(props.show);
+  const show = ref([props.flash]);
+
+
     onMounted(()=>{
-        setTimeout(function(){
-        show_notification.value = false;
-        console.log("dasda");
-        },3000);
+
+      
+      setTimeout(function(){
+        show.value = false;
+      }, 3000);
     });
+
+
 </script>
 <template>
 
-<div v-if="show_notification" aria-live="assertive" class="pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:p-6">
+<div  v-if="show"  aria-live="assertive" class="z-50 pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:p-6">
   <div class="flex w-full flex-col items-center space-y-4 sm:items-end">
-    <!--
-      Notification panel, dynamically insert this into the live region when it needs to be displayed
-
-      Entering: "transform ease-out duration-300 transition"
-        From: "translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
-        To: "translate-y-0 opacity-100 sm:translate-x-0"
-      Leaving: "transition ease-in duration-100"
-        From: "opacity-100"
-        To: "opacity-0"
-    -->
+  
     <div class="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
       <div class="p-4">
         <div class="flex items-start">

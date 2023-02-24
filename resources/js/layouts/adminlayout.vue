@@ -21,21 +21,20 @@
             <div class=" lg:col-span-2 lg:block">
 
 
-
+       
               <nav class="flex space-x-4">
+
+              <div v-if="$page.props.can.isOsas">
               <DashboardLink :href="route('schoolyear.index')" :active="$page.component=== 'osas/schoolyear'"> School Year </DashboardLink>
               <DashboardLink :href="route('campus.index')" :active="($page.component === 'osas/campusandorganization' || $page.component === 'osas/campusindex' || $page.component === 'osas/organizationindex')"> Campus </DashboardLink>
               <DashboardLink :href="route('account.userpassword.index')" :active="($page.component === 'osas/accountpasswordindex' || $page.component === 'osas/campusadviserindex' || $page.component === 'osas/campusdirectorindex' || $page.component === 'osas/vpaindex' ) "> Accounts & Roles </DashboardLink>
               <DashboardLink :href="route('requirement.index')" :active="$page.component=== 'osas/requirementsindex' "> Requirements  </DashboardLink>
-              <!-- <DashboardLink :href="route('requirement.index')" :active="$page.component=== 'osas/requirementsindex' "> Organizations  </DashboardLink> -->
-              <!-- <DashboardLink href="#" :active="$page.component=== 'campusDirector' "> Endoresed </DashboardLink> -->
-
-
-<!--               
-<SksuLink href="/page1"> Page1</SksuLink>
-<SksuLink href="/page2"> Page2</SksuLink>
-<SksuLink href="/page3"> Page3</SksuLink> -->
-
+              </div>
+              <div v-if="$page.props.can.isSboAdviser">
+              <DashboardLink :href="route('officers.index')" :active="$page.component=== 'sboadviser/officerindex'"> Officers </DashboardLink>
+           
+              </div>
+          
               </nav>
             </div>
             <div class="px-12 lg:px-0">

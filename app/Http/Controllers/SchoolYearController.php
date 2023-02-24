@@ -19,7 +19,7 @@ class SchoolYearController extends Controller
             'years'=> SchoolYear::query()
             ->when(supportrequest::input('search'), function($query, $search){
                 $query->where('from', 'like', "%{$search}%")->orWhere('to', 'like', "%{$search}%");
-                })->latest()
+                })->latest()->withCount('campus_advisers')
                 ->paginate(10)
                 ->withQueryString(),
             'filters'=>supportrequest::only(['search'])
@@ -41,7 +41,13 @@ class SchoolYearController extends Controller
     public function deleteSelected(Request $request){
 
       
-     $school_years  = SchoolYear::whereIn('id', $request->input('ids'))->delete();
+     $collection  = SchoolYear::whereIn('id', $request->input('ids'))->get();
+
+     foreach($collection as $data){
+        $data->campus_advisers()->delete();
+     }
+
+     SchoolYear::whereIn('id', $request->input('ids'))->delete();
 
      return redirect()->back()->with('toast', 'School Year Created');
 

@@ -8,7 +8,7 @@ const emit = defineEmits(['selectItem', 'setDefaultValue']);
 
 
 onMounted(async () => {
-  const { data } = await axios.get(route('public.schoolyear'));
+  const { data } = await axios.get(route('public.guestusers'));
 
 
     if(data.data.length > 0){
@@ -39,7 +39,7 @@ onMounted(async () => {
     autocomplete="country-name"
     class="block w-full max-w-lg h-10 px-2 rounded-md border shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm"
   >
-    <option v-for="item in items" :key="item.id" :value="item.id" >SY {{ item.from }} - {{ item.to }}</option>
+    <option v-for="item in items" :key="item.id" :value="item.id" > {{ item.first_name }} - {{ item.last_name }}</option>
   </select>
   <div v-else class="p-2 rounded  bg-rose-600 animate-pulse  text-white"> Empty</div>
 </template>

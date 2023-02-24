@@ -17,6 +17,13 @@ const selected_items = ref([]);
 const selected_item = ref(null);
 const has_warning = ref(null);
 
+
+const form = useForm({
+  name: "",
+  id: null,
+});
+
+
 watch(
   search,
   throttle((value) => {
@@ -30,11 +37,6 @@ watch(
     );
   }, 500)
 );
-
-const form = useForm({
-  name: "",
-  id: null,
-});
 
 function showForm() {
 //   form.school_year_id = null;
@@ -57,7 +59,7 @@ function showUpdateForm(item){
 
 
 function saveCampus() {
-  form.post("campus/create", {
+  form.post(route("campus.create"), {
     preserveState: true,
     onSuccess: () => {
       show_form.value = false;
@@ -73,7 +75,7 @@ function saveCampus() {
 function updateCampus() {
 
 
-  form.post("campus/update", {
+  form.post(route("campus.update"), {
     preserveState: true,
     onSuccess: () => {
     form.id = null;
@@ -119,8 +121,8 @@ function getDefaultValue(item) {
 }
 </script>
 <template>
-  <adminlayout>
- 
+  <campusandorganization>
+  
     <template #search>
       <div class="mx-auto w-full max-w-xs lg:max-w-md">
         <label for="search" class="sr-only">Search</label>
@@ -144,7 +146,7 @@ function getDefaultValue(item) {
           <input
             v-model.number="search"
             class="block w-full rounded-md border border-transparent bg-white bg-opacity-20 py-2 pl-10 pr-3 leading-5 text-white placeholder-white focus:border-transparent focus:bg-opacity-100 focus:text-gray-900 focus:placeholder-gray-500 focus:outline-none focus:ring-0 sm:text-sm"
-            placeholder="Campus, Year"
+            placeholder="Name "
             type="search"
             name="search"
           />
@@ -152,13 +154,11 @@ function getDefaultValue(item) {
       </div>
     </template>
 
-    <div
-      class="bg-white rounded-xl shadow-xl mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8"
-    >
-      <div class="flex items-center justify-between pt-4">
-        <TableTitle class=""> Manage Campuses</TableTitle>
+    
+      <div class="flex items-center justify-between ">
 
-              <div class="flex items-center">
+
+              <div class=" flex items-center  w-full justify-end">
                 <sk-button2
                   v-if="selected_items.length > 0"
                   @click="confirm_delete = true"
@@ -207,8 +207,8 @@ function getDefaultValue(item) {
           v-for="item in props.campuses.data"
           :key="item"
         >
-          <Tcell>
-            <Tcell
+          
+          <Tcell
               :c="'whitespace-nowrap align-center text-center text-sm items-center  font-medium text-gray-900'"
             >
               <input
@@ -218,7 +218,6 @@ function getDefaultValue(item) {
                 class="h-4 w-4 accent-green-600 text-white rounded border-gray-200"
               />
             </Tcell>
-          </Tcell>
           <Tcell class="uppercase"> {{ item.name }}</Tcell>
     
           <Tcell class="flex items-center justify-center">
@@ -251,7 +250,7 @@ function getDefaultValue(item) {
             :links="$props.campuses.links"
           />
         </div>
-    </div>
+    
 
     <sk-dialog :transition="'slide-down'" :persistent="true" :isOpen="show_form">
       <main class="p-2">
@@ -333,17 +332,22 @@ function getDefaultValue(item) {
         </div>
       </main>
     </sk-dialog>  
-  </adminlayout>
+  </campusandorganization>
 </template>
 
 <script>
-import adminlayout from "@/layouts/adminlayout.vue";
+
+
+import campusandorganization from '@/pages/osas/campusandorganization.vue';
+
+
 import schoolYearSelect from "@/components/schoolYearSelect.vue";
 
 export default {
   components: {
-    adminlayout,
+
     schoolYearSelect,
+    campusandorganization
   },
 };
 </script>

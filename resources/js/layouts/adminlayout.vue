@@ -8,8 +8,11 @@
 
 
 <div class="min-h-full">
-  <header class="bg-gradient-to-r from-green-800 to-green-900 pb-24">
-    <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+  <header class="bg-gradient-to-r from-green-800 to-green-900   pb-24">
+  <div class="h-20 absolute opacity-20">
+  <!-- <img src="/assets/bg.jpg" alt=""> -->
+  </div>
+    <div class="relative z-50 mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
       <div class="relative flex flex-wrap items-center justify-center lg:justify-between">
         <SksuProfile/>
         <div class="w-full py-5 lg:border-t lg:border-white lg:border-opacity-20">
@@ -18,9 +21,8 @@
             <div class=" lg:col-span-2 lg:block">
               <nav class="flex space-x-4">
               <DashboardLink :href="route('schoolyear.index')" :active="$page.component=== 'osas/schoolyear'"> School Year </DashboardLink>
-              <DashboardLink :href="route('campus.index')" :active="$page.component === 'osas/campusindex'"> Campuses </DashboardLink>
+              <DashboardLink :href="route('campus.index')" :active="($page.component === 'osas/campusandorganization' || $page.component === 'osas/campusindex' || $page.component === 'osas/organizationindex')"> Campus & Organizations </DashboardLink>
               <DashboardLink :href="route('account.userpassword.index')" :active="($page.component === 'osas/accountpasswordindex' || $page.component === 'osas/campusadviserindex'  ) "> Accounts & Roles </DashboardLink>
-              <DashboardLink href="#" :active="$page.component=== 'organizations'"> Organizations </DashboardLink>
               <DashboardLink href="#" :active="$page.component=== 'campusDirector' "> Applications </DashboardLink>
               <DashboardLink href="#" :active="$page.component=== 'campusDirector' "> Endoresed </DashboardLink>
 

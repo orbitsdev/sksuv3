@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Role;
+use App\Models\CampusAdviser;
 use App\Models\SocialAccount;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
@@ -70,6 +71,10 @@ class User extends Authenticatable
             return true;
         }
         return false;
+    }
+
+    public function campus_advisers(){
+        return $this->hasMany(CampusAdviser::class);
     }
 
 

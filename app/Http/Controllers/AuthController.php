@@ -66,6 +66,16 @@ class AuthController extends Controller
                 return redirect()->intended('year');
             }
 
+            
+            if(Auth::user()->hasRole('sbo-adviser')){
+
+                if(count(Auth::user()->campus_advisers) <= 0 ){
+                        RoleChangerController::changeRoleTo(Auth::user()->id, 'guest');
+                }
+
+                return redirect()->intended('year');
+            }
+
 
 
         }

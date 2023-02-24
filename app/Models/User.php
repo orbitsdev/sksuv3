@@ -3,9 +3,11 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Vpa;
 use App\Models\Role;
 use App\Models\CampusAdviser;
 use App\Models\SocialAccount;
+use App\Models\CampusDirector;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -76,6 +78,15 @@ class User extends Authenticatable
     public function campus_advisers(){
         return $this->hasMany(CampusAdviser::class);
     }
+
+
+    public function campus_directors(){
+        return $this->hasMany(CampusDirector::class);
+    }
+    public function vpas(){
+        return $this->hasMany(Vpa::class);
+    }
+
 
 
 }

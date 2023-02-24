@@ -5,7 +5,7 @@ import { throttle } from "lodash";
 import { useForm } from "@inertiajs/vue3";
 
 const props = defineProps({
-  campus_advisers: Object,
+  campus_directors: Object,
   filters: Object,
 });
 
@@ -20,7 +20,6 @@ const has_warning = ref(null);
 
 const form = useForm({
   school_year_id: null,
-  campus_id: null,
   user_id: null,
   id: null,
 });
@@ -39,18 +38,8 @@ function getDefaultValueOfYear(item) {
     form.school_year_id = item;
   }
 }
-function getValueOfCampus(item) {
-  form.campus_id = item;
 
 
-
-}
-
-function getDefaultValueOfCampus(item) {
-  if (item != null) {
-    form.campus_id = item;
-  }
-}
 function getValueOfUser(item) {
 
 
@@ -69,11 +58,15 @@ function getDefaultValueOfUser(item) {
 
 async function deleteSelected(){
 
+
+
   selected_item.value = null;
   is_deleting.value = true;
 
+
+
   try {
-    const response = await router.post(route('campusadviser.deleteselected'), {
+    const response = await router.post(route('campusdirector.deleteselected'), {
       ids: selected_items.value,
     });
 
@@ -86,6 +79,8 @@ async function deleteSelected(){
   } finally {
     is_deleting.value = false;
   }
+
+
 }
 
 
@@ -94,7 +89,7 @@ watch(
   search,
   throttle((value) => {
     router.get(
-      route("campusadviser.index"),
+      route("campusdirector.index"),
       { search: value },
       {
         preserveState: true,
@@ -117,7 +112,7 @@ show_form.value = true;
 function save() {
 
 
-  form.post(route("campusadviser.create"), {
+  form.post(route("campusdirector.create"), {
     preserveState: true,
     onSuccess: () => {
     show_form.value = false;
@@ -202,19 +197,19 @@ function save() {
               clip-rule="evenodd"
             />
           </svg>
-          Add Campus Adviser
+          Add Campus Director
         </sk-button2>
       </div>
     </div>
 
 
     <SkTable 
-    v-if="props.campus_advisers.data.length > 0"
+    v-if="props.campus_directors.data.length > 0"
 
     :headers="['', 'Name', 'Campus', 'School Year', ]"> 
      <tr
           class="divide-x divide-gray-200"
-          v-for="item in props.campus_advisers.data"
+          v-for="item in props.campus_directors.data"
           :key="item"
         >
          
@@ -231,7 +226,6 @@ function save() {
             
 
           <Tcell class="uppercase" v-if="item.user != null"> {{ item.user.first_name }} - {{ item.user.first_name }} </Tcell>
-          <Tcell class="uppercase" > {{ item.campus != null  ?  item.campus.name  : 'None'}} </Tcell>
           <Tcell>     {{  item.school_year != null ? 'SY.' +  item.school_year.from + ' - ' + item.school_year.to  : 'None'}} </Tcell> 
     
         
@@ -240,11 +234,11 @@ function save() {
 
       <EmptyCard   v-else class="flex items-center justify-center h-64" />
 
-        <div class="mt-6 py-4 bg-white" v-if="$props.campus_advisers.links.length > 0">
+        <div class="mt-6 py-4 bg-white" v-if="$props.campus_directors.links.length > 0">
           <Pagination
-            v-if="$props.campus_advisers.data.length > 0"
+            v-if="$props.campus_directors.data.length > 0"
             class="block"
-            :links="$props.campus_advisers.links"
+            :links="$props.campus_directors.links"
           />
         </div>
 
@@ -261,16 +255,7 @@ function save() {
          
           </div>
         </div>
-         <div class="mb-4">
-          <label for="email" class="block text-sm font-medium text-gray-700"
-            >Campus </label
-          >
-
-          <div class="mt-1">
-            <campusSelect @selectItem="getValueOfCampus" @setDefaultValue="getDefaultValueOfCampus" />
-         
-          </div>
-        </div>
+       
          <div class="mb-4">
           <label for="email" class="block text-sm font-medium text-gray-700"
             > User </label
@@ -288,7 +273,7 @@ function save() {
         <div class="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
           <SkButtonGray @click="show_form = false"> Close </SkButtonGray>
           <div>
-          <SkButton v-if="(form.school_year_id != null && form.campus_id != null && form.user_id != null )" @click="save"  :processing="form.processing">  Save</SkButton>
+          <SkButton v-if="(form.school_year_id != null &&  form.user_id != null )" @click="save"  :processing="form.processing">  Save</SkButton>
           </div>
         </div>
       </main>
@@ -318,11 +303,11 @@ function save() {
           </div>
           <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
             <h3 class="text-lg font-medium leading-6 text-gray-900" id="modal-title">
-              Delete campus adviser/s 
+              Delete campus Director/s 
             </h3>
             <div class="mt-2">
               <p class="text-sm text-gray-500">
-                Are you sure you want to delete advisers/es ? All of your data will be
+                Are you sure you want to delete Directors/es ? All of your data will be
                 permanently removed from our servers forever. This action cannot be
                 undone.
               </p>
@@ -345,14 +330,13 @@ function save() {
 <script>
 import accounts from "@/pages/osas/accounts.vue";
 import schoolYearSelect from "@/components/schoolYearSelect.vue";
-import campusSelect from "@/components/campusSelect.vue";
 import guestUserSelect from "@/components/guestUserSelect.vue";
 
 export default {
   components: {
     accounts,
      schoolYearSelect,
-     campusSelect,
+     
      guestUserSelect,
      
   },

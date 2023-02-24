@@ -39,7 +39,7 @@ let form = useForm({
 async function deleteSelected() {
   try {
     is_deleting.value = true;
-    await router.post("/year/delete-selected", {
+    await router.post(route('schoolyear.delete-selected'), {
       ids: selected_items.value,
     });
     is_deleting.value = false;
@@ -59,7 +59,7 @@ function saveSchoolYear() {
         toYear: data.toYear.getFullYear(),
       };
     })
-    .post("year/create", {
+    .post(route('schoolyear.create'), {
       preserveState: true,
       onSuccess: () => {
         is_open.value = false;
@@ -134,8 +134,7 @@ export default {
       class="bg-white rounded-xl shadow-xl mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8"
     >
       <div class="rounded pb-6">
-        <div class="">
-          <div class="">
+        
             <div class="pt-4  flex items-center justify-between">
               <p class="text-xl text-green-800 font-bold font-rubik uppercase">
                Manage School Year
@@ -184,7 +183,7 @@ export default {
             </div>
             <SkTable
               v-if="props.years.data.length > 0"
-              :headers="['', 'School Year', 'Campus Advisers', '' ]"
+              :headers="['', 'School Year', 'Campuses', 'Response' ]"
             >
               <tr
                 class="divide-x divide-gray-200"
@@ -202,14 +201,13 @@ export default {
                   />
                 </Tcell>
                 <Tcell> SY.{{ item.from }} - {{ item.to }}</Tcell>
-                <Tcell> <span class="px-2 py-1 bg-green-600 rounded text-white"> {{ item.campus_advisers_count }}</span> </Tcell>
+                <Tcell> <span class="px-2 py-1 bg-green-700 rounded text-white"> {{ item.campus_advisers_count }}</span> </Tcell>
                 <Tcell> </Tcell>
               </tr>
             </SkTable>
 
             <EmptyCard class="flex items-center justify-center h-64" v-else />
-          </div>
-        </div>
+         
         <div class="mt-6 bg-white" v-if="$props.years.links.length > 0">
           <Pagination
             v-if="$props.years.data.length > 0"

@@ -19,12 +19,16 @@
           <div class="lg:grid lg:grid-cols-3 lg:items-center lg:gap-8">
             <!-- Left nav -->
             <div class=" lg:col-span-2 lg:block">
+
+
+
               <nav class="flex space-x-4">
               <DashboardLink :href="route('schoolyear.index')" :active="$page.component=== 'osas/schoolyear'"> School Year </DashboardLink>
-              <DashboardLink :href="route('campus.index')" :active="($page.component === 'osas/campusandorganization' || $page.component === 'osas/campusindex' || $page.component === 'osas/organizationindex')"> Campus & Organizations </DashboardLink>
-              <DashboardLink :href="route('account.userpassword.index')" :active="($page.component === 'osas/accountpasswordindex' || $page.component === 'osas/campusadviserindex'  ) "> Accounts & Roles </DashboardLink>
-              <DashboardLink href="#" :active="$page.component=== 'campusDirector' "> Applications </DashboardLink>
-              <DashboardLink href="#" :active="$page.component=== 'campusDirector' "> Endoresed </DashboardLink>
+              <DashboardLink :href="route('campus.index')" :active="($page.component === 'osas/campusandorganization' || $page.component === 'osas/campusindex' || $page.component === 'osas/organizationindex')"> Campus </DashboardLink>
+              <DashboardLink :href="route('account.userpassword.index')" :active="($page.component === 'osas/accountpasswordindex' || $page.component === 'osas/campusadviserindex' || $page.component === 'osas/campusdirectorindex' || $page.component === 'osas/vpaindex' ) "> Accounts & Roles </DashboardLink>
+              <DashboardLink :href="route('requirement.index')" :active="$page.component=== 'osas/requirementsindex' "> Requirements  </DashboardLink>
+              <!-- <DashboardLink :href="route('requirement.index')" :active="$page.component=== 'osas/requirementsindex' "> Organizations  </DashboardLink> -->
+              <!-- <DashboardLink href="#" :active="$page.component=== 'campusDirector' "> Endoresed </DashboardLink> -->
 
 
 <!--               

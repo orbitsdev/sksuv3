@@ -5,7 +5,7 @@ import { throttle } from "lodash";
 import { useForm } from "@inertiajs/vue3";
 
 const props = defineProps({
-  campuses: Object,
+  requirements: Object,
   filters: Object,
 });
 
@@ -28,7 +28,7 @@ watch(
   search,
   throttle((value) => {
     router.get(
-      route("campus.index"),
+      route("requirement.index"),
       { search: value },
       {
         preserveState: true,
@@ -59,7 +59,7 @@ function showUpdateForm(item){
 
 
 function saveCampus() {
-  form.post(route("campus.create"), {
+  form.post(route("requirement.create"), {
     preserveState: true,
     onSuccess: () => {
       show_form.value = false;
@@ -75,7 +75,7 @@ function saveCampus() {
 function updateCampus() {
 
 
-  form.post(route("campus.update"), {
+  form.post(route("requirement.update"), {
     preserveState: true,
     onSuccess: () => {
     form.id = null;
@@ -91,11 +91,11 @@ function updateCampus() {
 
 async function deleteSelected(){
 
-  selected_item.value = null;
+    selected_item.value = null;
   is_deleting.value = true;
 
   try {
-    const response = await router.post(route('campus.deleteSelected'), {
+    const response = await router.post(route('requirement.deleteselected'), {
       ids: selected_items.value,
     });
 
@@ -159,7 +159,7 @@ function getDefaultValue(item) {
     >
        <div class="pt-4  flex items-center justify-between">
               <p class="text-xl text-green-800 font-bold font-rubik uppercase">
-               Manage Campus
+               Manage Requirements
               </p>
                 <div class="flex items-center">
                 <sk-button2
@@ -196,18 +196,18 @@ function getDefaultValue(item) {
               clip-rule="evenodd"
             />
           </svg>
-          Add Campus
+          Add Requirement
         </sk-button2>
                 </div>
 
        
       </div>
       <SkTable 
-         v-if="props.campuses.data.length > 0"
+         v-if="props.requirements.data.length > 0"
       :headers="['', 'Name',  '']">
         <tr
           class="divide-x divide-gray-200"
-          v-for="item in props.campuses.data"
+          v-for="item in props.requirements.data"
           :key="item"
         >
           
@@ -246,11 +246,11 @@ function getDefaultValue(item) {
 
             <EmptyCard class="flex items-center justify-center h-64" v-else />
 
-        <div class="mt-6 py-4 bg-white" v-if="$props.campuses.links.length > 0">
+        <div class="mt-6 py-4 bg-white" v-if="$props.requirements.links.length > 0">
           <Pagination
-            v-if="$props.campuses.data.length > 0"
+            v-if="$props.requirements.data.length > 0"
             class="block"
-            :links="$props.campuses.links"
+            :links="$props.requirements.links"
           />
         </div>
         </div>
@@ -274,7 +274,7 @@ function getDefaultValue(item) {
 
         <div>
           <label for="email" class="block text-sm font-medium text-gray-700"
-            >Campus Name</label
+            >Requirement Name</label
           >
 
           <div class="mt-1">
@@ -318,7 +318,7 @@ function getDefaultValue(item) {
           </div>
           <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
             <h3 class="text-lg font-medium leading-6 text-gray-900" id="modal-title">
-              Delete campuses 
+              Delete requirements 
             </h3>
             <div class="mt-2">
               <p class="text-sm text-gray-500">

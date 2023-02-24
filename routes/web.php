@@ -11,8 +11,11 @@ use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CampusAdviserController;
+use App\Http\Controllers\CampusDirectorController;
 use App\Http\Controllers\OrganizationController;
+use App\Http\Controllers\RequirementController;
 use App\Http\Controllers\SchoolYearController;
+use App\Http\Controllers\VpaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,11 +30,11 @@ use App\Http\Controllers\SchoolYearController;
 
 
 
- 
+
 
 
 Route::middleware('guest')->group(function () {
-    Route::get('/', function () {       
+    Route::get('/', function () {
 
         return Inertia::render('login');
     })->name('login');
@@ -57,67 +60,118 @@ Route::middleware('guest')->group(function () {
 Route::group(['middleware' => ['auth',]], function () {
     Route::get('dashboard', function () {
 
-            if(Auth::user()->hasRole('osas')){
-                return redirect()->route('schoolyear.index');
-            }
+        if (Auth::user()->hasRole('osas')) {
+            return redirect()->route('schoolyear.index');
+        }
         return Inertia::render('dashboard');
-
-
-
     })->name('dashboard'); //name goes here
     Route::post('logout', [AuthController::class, 'logout']);
 
-    // Route::get('page1', function () {  
+    Route::group([
+        'prefix' => 'school-year',
+        'as' => 'schoolyear.'
+    ], function () {
+
+        Route::get('/',  [SchoolYearController::class, 'index'])->name('index');
+        Route::post('create', [SchoolYearController::class, 'create'])->name('create');
+        Route::post('delete-selected', [SchoolYearController::class, 'deleteSelected'])->name('delete-selected');
+    });
 
 
-    //      return Inertia::render('sample/page1', [
-    //         'users'=> User::query()
-    //         ->when(Request::input('search'), function($query, $search){
-    //                 $query->where('first_name', 'like', "%{$search}%");
-    //             })
-    //             ->paginate(20)
-    //             ->withQueryString()
-    //             ->through(fn($user)=>[
-    //                 'id'=> $user->id,
-    //                 'first_name'=> $user->first_name,
-    //                 'email'=> $user->email,
-    //             ]),
-    //         'filters'=>Request::only(['search'])
-    //      ]);
+    Route::group([
+        'prefix' => 'user/acount',
+        'as' => 'account.'
+    ], function () {
 
-    //     })->name('users');
+        Route::get('/', [AccountController::class, 'index'])->name('index');
+        Route::get('passwords', [AccountController::class, 'userPasswordIndex'])->name('userpassword.index');
+        Route::post('password/update', [AccountController::class, 'userPasswordUpdate'])->name('userpassword.update');
+    });
 
 
+    Route::group([
+        'prefix' => 'user/acount/campus-adviser',
+        'as' => 'campusadviser.'
+    ], function () {
+
+        Route::get('/', [CampusAdviserController::class, 'index'])->name('index');
+        Route::post('create', [CampusAdviserController::class, 'create'])->name('create');
+        Route::post('delete-selected', [CampusAdviserController::class, 'deleteSelected'])->name('deleteselected');
+    });
 
 
-    Route::get('year',  [SchoolYearController::class, 'index'])->name('schoolyear.index');
-    Route::post('year/create', [SchoolYearController::class, 'create']);
-    Route::post('year/delete-selected', [SchoolYearController::class, 'deleteSelected'])->name('delete-selected');
+    Route::group([
+        'prefix' => 'user/acount/campus-directors',
+        'as' => 'campusdirector.'
+    ], function () {
+
+        Route::get('/', [CampusDirectorController::class, 'index'])->name('index');
+        Route::post('create', [CampusDirectorController::class, 'create'])->name('create');
+        Route::post('update', [CampusDirectorController::class, 'update'])->name('update');
+        Route::post('delete-selected', [CampusDirectorController::class, 'deleteSelected'])->name('deleteselected');
+    });
+
+
+    Route::group([
+        'prefix' => 'user/acount/vpa',
+        'as' => 'vpa.'
+    ], function () {
+
+        Route::get('/', [VpaController::class, 'index'])->name('index');
+        Route::post('create', [VpaController::class, 'create'])->name('create');
+        Route::post('update', [VpaController::class, 'update'])->name('update');
+        Route::post('delete-selected', [VpaController::class, 'deleteSelected'])->name('deleteselected');
+    });
 
 
 
 
-    Route::get('user/account', [AccountController::class, 'index'])->name('account.index');
-    Route::get('user/account/passwords', [AccountController::class, 'userPasswordIndex'])->name('account.userpassword.index');
-    Route::post('user/account/password/update', [AccountController::class, 'userPasswordUpdate'])->name('account.userpassword.update');
+    Route::group([
+        'prefix' => 'campus-and-organizations',
+        'as' => 'campusandorganization.'
+    ], function () {
+
+        Route::get('/', function () {
+            return Inertia::render('osas/campusandorganization');
+        })->name('index');
+    });
+
+
+
+    Route::group([
+        'prefix' => 'campus-and-organizations',
+        'as' => 'campus.'
+    ], function () {
+
+        Route::get('campus', [CampusController::class, 'index'])->name('index');
+        Route::post('campus/create', [CampusController::class, 'create'])->name('create');
+        Route::post('campus/update', [CampusController::class, 'update'])->name('update');
+        Route::post('campus/delete-selected', [CampusController::class, 'deleteSelected'])->name('deleteSelected');
+    });
+
+    Route::group([
+        'prefix' => 'campus-and-organizations',
+        'as' => 'organization.'
+    ], function () {
+
+        Route::get('organization', [OrganizationController::class, 'index'])->name('index');
+        Route::post('organization/create', [OrganizationController::class, 'create'])->name('create');
+        Route::post('organization/update', [OrganizationController::class, 'update'])->name('update');
+        Route::post('organization/delete-selected', [OrganizationController::class, 'deleteSelected'])->name('deleteSelected');
+    });
+
+
+
+    Route::group([
+        'prefix' => 'requirements',
+        'as' => 'requirement.'
+    ], function () {
+
+        Route::get('/', [RequirementController::class, 'index'])->name('index');
+        Route::post('create', [RequirementController::class, 'create'])->name('create');
+        Route::post('update', [RequirementController::class, 'update'])->name('update');
+        Route::post('delete-selected', [RequirementController::class, 'deleteSelected'])->name('deleteselected');
+    });
+
    
-    Route::get('user/account/campus-advisers', [CampusAdviserController::class, 'index'])->name('campusadviser.index');
-    Route::post('user/account/campus-advisers/create', [CampusAdviserController::class, 'create'])->name('campusadviser.create');
-    Route::post('user/account/campus-advisers/delete-selected', [CampusAdviserController::class, 'deleteSelected'])->name('campusadviser.deleteselected');
-    
-    Route::get('campus-and-organizations', function(){
-        return Inertia::render('osas/campusandorganization');
-    })->name('campusandorganization.index');
-
-    Route::get('campus-and-organizations/campus', [CampusController::class, 'index'])->name('campus.index');
-    Route::post('campus-and-organizations/campus/create', [CampusController::class, 'create'])->name('campus.create');
-    Route::post('campus-and-organizations/campus/update', [CampusController::class, 'update'])->name('campus.update');
-    Route::post('campus-and-organizations/campus/delete-selected', [CampusController::class, 'deleteSelected'])->name('campus.deleteSelected');
-    
-    Route::get('campus-and-organizations/organization', [OrganizationController::class, 'index'])->name('organization.index');
-    Route::post('campus-and-organizations/organization/create', [OrganizationController::class, 'create'])->name('organization.create');
-    Route::post('campus-and-organizations/organization/update', [OrganizationController::class, 'update'])->name('organization.update');
-    Route::post('campus-and-organizations/organization/delete-selected', [OrganizationController::class, 'deleteSelected'])->name('organization.deleteSelected');
-    
-
 });

@@ -63,7 +63,7 @@ class AuthController extends Controller
 
             
             if(Auth::user()->hasRole('osas')){
-                return redirect()->intended('year');
+                return redirect()->route('schoolyear.index');
             }
 
             

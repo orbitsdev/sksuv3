@@ -38,23 +38,21 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         return array_merge(parent::share($request), [
-            'auth'=> [
-                'user'=> Auth::user()
-            ],
+           
             'notification'=> session('notification'),
             'flash'=> [
                 'warning' => session('warning'), 
                 'success' => session('success'), 
             ],
             'can'=> [
-                'isOsas' => Auth::user()->hasRole('osas'),
-                'isSboAdviser' => Auth::user()->hasRole('sbo-adviser'),
-                'isSboStudent' => Auth::user()->hasRole('sbo-student'),
-                'isGuest' => Auth::user()->hasRole('guest'),
-                'isSuperAdmin' => Auth::user()->hasRole('super-admin'),
-                'isDeveloper' => Auth::user()->hasRole('developer'),
-                'isDirector' => Auth::user()->hasRole('campus-director'),
-                'isVpa' => Auth::user()->hasRole('vpaa'),
+                'isOsas' => Auth::user() ?  Auth::user()->hasRole('osas') : null,
+                'isSboAdviser' => Auth::user() ?  Auth::user()->hasRole('sbo-adviser') : null,
+                'isSboStudent' => Auth::user() ?  Auth::user()->hasRole('sbo-student') : null,
+                'isGuest' => Auth::user() ?  Auth::user()->hasRole('guest') : null,
+                'isSuperAdmin' => Auth::user() ?  Auth::user()->hasRole('super-admin') : null,
+                'isDeveloper' => Auth::user() ?  Auth::user()->hasRole('developer') : null,
+                'isDirector' => Auth::user() ?  Auth::user()->hasRole('campus-director') : null,
+                'isVpa' => Auth::user() ?  Auth::user()->hasRole('vpaa') : null,
             ],
                         
 

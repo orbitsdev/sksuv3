@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\User;
 use App\Models\SchoolYear;
+use App\Models\OrganizationProcess;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -18,5 +19,9 @@ class CampusDirector extends Model
     }
     public function user(){
         return $this->belongsTo(User::class);
+    }
+    
+    public function organization_processes(){
+        return $this->belongsTo(OrganizationProcess::class);
     }
 }

@@ -20,6 +20,10 @@ class Campus extends Model
         return $this->hasMany(CampusAdviser::class);
     }
 
+    public function campus_adviser(){
+        return $this->hasOne(CampusAdviser::class);
+    }
+
 
 
    

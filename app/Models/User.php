@@ -80,6 +80,10 @@ class User extends Authenticatable
         return $this->hasMany(CampusAdviser::class);
     }
 
+    public function campus_adviser(){
+        return $this->hasOne(CampusAdviser::class);
+    }
+
 
     public function campus_directors(){
         return $this->hasMany(CampusDirector::class);
@@ -95,6 +99,14 @@ class User extends Authenticatable
 
     public function officer(){
         return $this->hasOne(Officer::class);
+    }
+
+    public function organization_processes_osas(){
+        return $this->hasMany(OrganizationProcess::class, 'osas_id');
+    }
+
+    public function organization_processes_vpa(){
+        return $this->hasMany(OrganizationProcess::class, 'vpa_id');
     }
 
 

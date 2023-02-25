@@ -2,12 +2,18 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Organization;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Requirement extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
+
+    public function organizations(){
+        return $this->belongsToMany(Organization::class, 'organization_requirements', 'requirement_id', 'organization_id');
+    }
+
 }

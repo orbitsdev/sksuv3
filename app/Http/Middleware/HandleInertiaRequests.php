@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Controllers\RoleChangerController;
 use Inertia\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -38,7 +39,9 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         return array_merge(parent::share($request), [
-           
+           'auth'=> [
+                'user'=> Auth::user() ? Auth::user() : null
+           ],
             'notification'=> session('notification'),
             'flash'=> [
                 'warning' => session('warning'), 
@@ -54,6 +57,9 @@ class HandleInertiaRequests extends Middleware
                 'isDirector' => Auth::user() ?  Auth::user()->hasRole('campus-director') : null,
                 'isVpa' => Auth::user() ?  Auth::user()->hasRole('vpaa') : null,
             ],
+            'sbocurrentschool' => Auth::user() ? RoleChangerController::sboCurrentSchool() : null
+
+            // 'currentschool'=> Auth::user() ?  Auth::user()->hasRole('sbo-adviser') ? Auth::user()->campus : null : null
                         
 
                 

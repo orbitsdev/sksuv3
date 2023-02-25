@@ -10,7 +10,9 @@ use App\Http\Controllers\CampusController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\ApplyApplicationController;
 use App\Http\Controllers\CampusAdviserController;
+use App\Http\Controllers\CampusAdviserOrganizationController;
 use App\Http\Controllers\CampusDirectorController;
 use App\Http\Controllers\OfficerController;
 use App\Http\Controllers\OrganizationController;
@@ -28,6 +30,7 @@ use App\Http\Controllers\VpaController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 
 
 
@@ -59,14 +62,7 @@ Route::group(['middleware' => ['auth',]], function () {
 
     
 Route::get('/', function () {
-
-    if (Auth::user()->hasRole('osas')) {
-        return redirect()->route('schoolyear.index');
-    }
-    if (Auth::user()->hasRole('sbo-adviser')) {
-        return redirect()->route('officers.index');
-    }
-   
+    return redirect()->route('dashboard');
 });
 
 
@@ -75,6 +71,13 @@ Route::get('/', function () {
         if (Auth::user()->hasRole('osas')) {
             return redirect()->route('schoolyear.index');
         }
+        if (Auth::user()->hasRole('sbo-adviser')) {
+            return redirect()->route('officers.index');
+        }
+        if (Auth::user()->hasRole('sbo-student')) {
+            return redirect()->route('application.index');
+        }
+       
         return Inertia::render('dashboard');
     })->name('dashboard'); //name goes here
     Route::post('logout', [AuthController::class, 'logout']);
@@ -218,6 +221,39 @@ Route::get('/', function () {
     ], function () {
 
         Route::get('/', [OfficerController::class, 'index'])->name('index');
+        Route::get('/{campus}/manage', [OfficerController::class, 'manageIndex'])->name('manageindex');
+        Route::post('create', [OfficerController::class, 'create'])->name('create');
+        Route::post('update', [OfficerController::class, 'update'])->name('update');
+        Route::post('delete-selected', [OfficerController::class, 'deleteSelected'])->name('deleteselected');
+    
+    });
+    Route::group([
+        'middleware'=> [
+            'can:is-adviser'
+        ],
+        'prefix' => 'organizations',
+        'as' => 'campusadviser.organization.'
+    ], function () {
+
+        Route::get('/', [CampusAdviserOrganizationController::class, 'index'])->name('index');
+      
+    
+    });
+    Route::group([
+        'middleware'=> [
+            'can:is-student'
+        ],
+        'prefix' => 'applications',
+        'as' => 'application.'
+        
+    ], function () {
+
+        Route::get('/', [ApplyApplicationController::class, 'index'])->name('index');
+        Route::post('create', [ApplyApplicationController::class, 'create'])->name('create');
+        Route::post('update', [ApplyApplicationController::class, 'update'])->name('update');
+        Route::post('delete-selected', [ApplyApplicationController::class, 'deleteSelected'])->name('deleteselected');
+    
+      
     
     });
 

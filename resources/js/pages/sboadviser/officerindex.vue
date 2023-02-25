@@ -18,17 +18,20 @@ const selected_item = ref(null);
 const has_warning = ref(null);
 
 
+
+
+
+
 const form = useForm({
   name: "",
   id: null,
 });
 
-
 watch(
   search,
   throttle((value) => {
     router.get(
-      route("requirement.index"),
+      route("officers.index"),
       { search: value },
       {
         preserveState: true,
@@ -39,46 +42,24 @@ watch(
 );
 
 function showForm() {
-//   form.school_year_id = null;
-form.name = "";
-selected_item.value = null;
-form.id  = null;
+  //   form.school_year_id = null;
+  form.name = "";
+  selected_item.value = null;
+  form.id = null;
   show_form.value = true;
 }
 
-
-
-function showUpdateForm(item){
-    // selected_item.value = item;
-    form.name = item.name;
-    form.id = item.id;
-    show_form.value = true;
+function showUpdateForm(item) {
+  // selected_item.value = item;
+  form.name = item.name;
+  form.id = item.id;
+  show_form.value = true;
 }
-
-
-
 
 function saveCampus() {
   form.post(route("requirement.create"), {
     preserveState: true,
     onSuccess: () => {
-      show_form.value = false;
-    form.reset();
-    },
-    onError: (error) => {
-      has_warning.value = error;
-    },
-  });
-}
-
-
-function updateCampus() {
-
-
-  form.post(route("requirement.update"), {
-    preserveState: true,
-    onSuccess: () => {
-    form.id = null;
       show_form.value = false;
       form.reset();
     },
@@ -88,19 +69,30 @@ function updateCampus() {
   });
 }
 
+function updateCampus() {
+  form.post(route("requirement.update"), {
+    preserveState: true,
+    onSuccess: () => {
+      form.id = null;
+      show_form.value = false;
+      form.reset();
+    },
+    onError: (error) => {
+      has_warning.value = error;
+    },
+  });
+}
 
-async function deleteSelected(){
-
-    selected_item.value = null;
+async function deleteSelected() {
+  selected_item.value = null;
   is_deleting.value = true;
 
   try {
-    const response = await router.post(route('requirement.deleteselected'), {
+    const response = await router.post(route("requirement.deleteselected"), {
       ids: selected_items.value,
     });
 
-
-    form.name = '';
+    form.name = "";
     confirm_delete.value = false;
     selected_items.value = [];
   } catch (error) {
@@ -122,7 +114,6 @@ function getDefaultValue(item) {
 </script>
 <template>
   <adminlayout>
-
     <template #search>
       <div class="mx-auto w-full max-w-xs lg:max-w-md">
         <label for="search" class="sr-only">Search</label>
@@ -158,37 +149,49 @@ function getDefaultValue(item) {
       class="bg-white rounded-xl shadow-xl mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8"
     >
 
-     <TableTitle class="pt-4"> Campuses </TableTitle>
+    <div class="flex items-center justify-between pt-4">
+      <TableTitle class=""> Campuses </TableTitle>
+        
+    </div>
+      
 
-       
-      <SkTable 
-         v-if="props.campuses.data.length > 0"
-      :headers="['', 'Name',  '']">
+      <SkTable
+        v-if="props.campuses.data.length > 0"
+        :headers="['Name', 'Officers', '']"
+      >
         <tr
           class="divide-x divide-gray-200"
           v-for="item in props.campuses.data"
           :key="item"
         >
-          
-          <Tcell
-              :c="'whitespace-nowrap align-center text-center text-sm items-center  font-medium text-gray-900'"
+         
+          <Tcell class="uppercase align-top pt-2"> {{ item.name }}</Tcell>
+          <Tcell class="align-top pt-2">
+
+            {{ item.campus_advisers }}
+            <div class="pr-4" v-if="item.campus_adviser != null">
+            <div v-if="item.campus_adviser.officers.length > 0">
+              <div class="border-b mb-1" v-for="i in item.campus_adviser.officers" :key="i">
+              <p class="truncate text-xs font-medium text-indigo-600 capitalize"> {{ i.position }}</p>
+              <dd class="text-sm text-gray-900 capitalize ">{{ i.user.first_name }} {{ i.user.last_name }}</dd>
+            </div>
+            </div>
+ 
+           
+            </div>
+          </Tcell>
+
+          <Tcell class="flex align-top pt-2 items-center justify-center">
+            <Link :href="route('officers.manageindex', {campus: item.id})"
+              :disabled="selected_items.length > 0"
+              class="max-w-40 inline-flex  justify-center rounded-md  px-4 py-2 font-medium shadow-sm text-sm"
+             
             >
-              <input
-                v-model="selected_items"
-                :value="item.id"
-                type="checkbox"
-                class="h-4 w-4 accent-green-600 text-white rounded border-gray-200"
-              />
-            </Tcell>
-          <Tcell class="uppercase"> {{ item.name }}</Tcell>
-    
-          <Tcell class="flex items-center justify-center">
-            <SkButtonGray :disabled="selected_items.length > 0" class="max-w-40" @click="showUpdateForm(item)">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 fill="currentColor"
-                class="w-5 h-5  mr-2"
+                class="w-5 h-5 mr-2"
               >
                 <path
                   d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32l8.4-8.4z"
@@ -197,26 +200,22 @@ function getDefaultValue(item) {
                   d="M5.25 5.25a3 3 0 00-3 3v10.5a3 3 0 003 3h10.5a3 3 0 003-3V13.5a.75.75 0 00-1.5 0v5.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5V8.25a1.5 1.5 0 011.5-1.5h5.25a.75.75 0 000-1.5H5.25z"
                 />
               </svg>
-              <span class=""> Update </span>
-            </SkButtonGray>
+              <span class=""> Manage Officer </span>
+            </Link>
           </Tcell>
         </tr>
       </SkTable>
 
-            <EmptyCard class="flex items-center justify-center h-64" v-else />
+      <EmptyCard class="flex items-center justify-center h-64" v-else />
 
-        <div class="mt-6 py-4 bg-white" v-if="$props.campuses.links.length > 0">
-          <Pagination
-            v-if="$props.campuses.data.length > 0"
-            class="block"
-            :links="$props.campuses.links"
-          />
-        </div>
-        </div>
-
-
-      
-    
+      <div class="mt-6 py-4 bg-white" v-if="$props.campuses.links.length > 0">
+        <Pagination
+          v-if="$props.campuses.data.length > 0"
+          class="block"
+          :links="$props.campuses.links"
+        />
+      </div>
+    </div>
 
     <sk-dialog :transition="'slide-down'" :persistent="true" :isOpen="show_form">
       <main class="p-2">
@@ -247,13 +246,20 @@ function getDefaultValue(item) {
 
         <div class="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
           <SkButtonGray @click="show_form = false"> Close </SkButtonGray>
-          <SkButton v-if="form.id == null" @click="saveCampus"  :processing="form.processing">  Save</SkButton>
-          <SkButton v-else @click="updateCampus"  :processing="form.processing">  Update</SkButton>
+          <SkButton
+            v-if="form.id == null"
+            @click="saveCampus"
+            :processing="form.processing"
+          >
+            Save</SkButton
+          >
+          <SkButton v-else @click="updateCampus" :processing="form.processing">
+            Update</SkButton
+          >
         </div>
       </main>
     </sk-dialog>
 
-    
     <sk-dialog :transition="'slide-down'" :persistent="true" :isOpen="confirm_delete">
       <main class="p-2">
         <div class="sm:flex sm:items-start">
@@ -277,7 +283,7 @@ function getDefaultValue(item) {
           </div>
           <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
             <h3 class="text-lg font-medium leading-6 text-gray-900" id="modal-title">
-              Delete campuses 
+              Delete campuses
             </h3>
             <div class="mt-2">
               <p class="text-sm text-gray-500">
@@ -290,30 +296,25 @@ function getDefaultValue(item) {
         </div>
         <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
           <SkDeleteButton @click="deleteSelected" :processing="is_deleting" class="w-24">
-           Yes
+            Yes
           </SkDeleteButton>
-          <SkButtonGray @click="confirm_delete = false" :c="'w-24'">
-            No
-          </SkButtonGray>
+          <SkButtonGray @click="confirm_delete = false" :c="'w-24'"> No </SkButtonGray>
         </div>
       </main>
-    </sk-dialog>  
+    </sk-dialog>
   </adminlayout>
 </template>
 
 <script>
-
-
-import campusandorganization from '@/pages/osas/campusandorganization.vue';
+import campusandorganization from "@/pages/osas/campusandorganization.vue";
 
 import adminlayout from "../../layouts/adminlayout.vue";
 import schoolYearSelect from "@/components/schoolYearSelect.vue";
 
 export default {
   components: {
-
     schoolYearSelect,
-    adminlayout
+    adminlayout,
   },
 };
 </script>

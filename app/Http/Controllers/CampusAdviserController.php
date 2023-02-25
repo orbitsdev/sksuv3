@@ -19,7 +19,7 @@ class CampusAdviserController extends Controller
             'campus_advisers' => CampusAdviser::query()
             ->when(supportrequest::input('search'), function($query, $search){
                 $query->whereHas('user', function($query ,$search){
-                    $query->where('name', 'like', "%{$search}%");
+                    $query->where('first_name', 'like', "%{$search}%")->orWhere('last_name', 'like', "%{$search}%");
                 });
             })
             ->latest()

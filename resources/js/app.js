@@ -29,6 +29,11 @@ import Pagination from "./components/Pagination.vue";
 import EmptyCard from "./components/EmptyCard.vue";
 import Notification from "./components/Notification.vue";
 import AccountLink from "./components/AccountLink.vue";
+import StatusCard from "./components/StatusCard.vue";
+import approveSvg from "./components/approveSvg.vue";
+import deniedSvg from "./components/deniedSvg.vue";
+import checkedSvg from "./components/checkedSvg.vue";
+import timeSvg from "./components/timeSvg.vue";
 import Datepicker from 'vue3-datepicker';
 
 
@@ -67,6 +72,11 @@ createInertiaApp({
             .component("AccountLink", AccountLink)
             .component("TableTitle", TableTitle)
             .component("Notification", Notification)
+            .component("approveSvg", approveSvg)
+            .component("deniedSvg", deniedSvg)
+            .component("checkedSvg", checkedSvg)
+            .component("timeSvg", timeSvg)
+            .component("StatusCard", StatusCard)
             .component("DashboardLink", DashboardLink);
 
         return app.mount(el);

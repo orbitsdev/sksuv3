@@ -4,7 +4,9 @@ namespace App\Models;
 
 use App\Models\User;
 use App\Models\Campus;
+use App\Models\Officer;
 use App\Models\SchoolYear;
+use App\Models\Organization;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -29,6 +31,21 @@ class CampusAdviser extends Model
     public function user(){
         return $this->belongsTo(User::class);
     }
+
+    public function officers(){
+        return $this->hasMany(Officer::class);
+    }
+
+
+    public function organization_processes(){
+        return $this->hasMany(Organization::class);
+    }
+
+    
+
+
+
+
 
 
 }

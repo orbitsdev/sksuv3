@@ -17,13 +17,15 @@ class ApplyApplicationController extends Controller
 
 
     public function index(){
+
+
         return Inertia::render('student/applicationindex',[
             'organizations' => Organization::query()
             ->when(supportrequest::input('search'), function($query, $search){
                 $query->where('name', 'like', "%{$search}%");
             })
             ->latest()->
-            with(['requirements','organization_process'])
+            with(['requirements.organization_requirements','organization_requirements.file', 'organization_process'])
             ->paginate(10)
             ->withQueryString(),
             'filters'=> supportrequest::only('search'),

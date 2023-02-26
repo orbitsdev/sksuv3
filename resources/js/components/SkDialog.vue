@@ -6,7 +6,7 @@
         :model-value="isOpen"
         :content-class="contentClass"
         :dialog-class="dialogClass"
-        :full-screen="fullScreen"
+        :fullscreen="fullScreen"
         :peristent="peristent"
         :overlay-color="overlayColor"
         :width="width"
@@ -14,7 +14,7 @@
         title="">
 
         
-            <div>
+            <div class="">
                 <slot></slot>
             </div>
      

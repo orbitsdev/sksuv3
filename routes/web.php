@@ -4,21 +4,22 @@ use App\Models\User;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\VpaController;
 use Illuminate\Support\Facades\Request;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\CampusController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\AccountController;
-use App\Http\Controllers\ApplyApplicationController;
-use App\Http\Controllers\CampusAdviserController;
-use App\Http\Controllers\CampusAdviserOrganizationController;
-use App\Http\Controllers\CampusDirectorController;
 use App\Http\Controllers\OfficerController;
-use App\Http\Controllers\OrganizationController;
-use App\Http\Controllers\RequirementController;
 use App\Http\Controllers\SchoolYearController;
-use App\Http\Controllers\VpaController;
+use App\Http\Controllers\RequirementController;
+use App\Http\Controllers\OrganizationController;
+use App\Http\Controllers\CampusAdviserController;
+use App\Http\Controllers\CampusDirectorController;
+use App\Http\Controllers\ApplyApplicationController;
+use App\Http\Controllers\CampusAdviserOrganizationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,7 +34,8 @@ use App\Http\Controllers\VpaController;
 
 
 
-
+Route::post('file/upload', [FileController::class, 'uploadToTemporaryStorage'])->name('uploadtolocal');
+Route::delete('file/delete', [FileController::class, 'deleteFromLocalStorage'])->name('deletefromlocal');
 
 
 
@@ -245,7 +247,7 @@ Route::get('/', function () {
         ],
         'prefix' => 'applications',
         'as' => 'application.'
-        
+
     ], function () {
 
         Route::get('/', [ApplyApplicationController::class, 'index'])->name('index');

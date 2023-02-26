@@ -22,7 +22,17 @@
         "@inertiajs/inertia": "^0.11.1",
         "@inertiajs/inertia-vue3": "^0.6.0",
         "@inertiajs/vue3": "^1.0.2",
+        "filepond": "^4.30.4",
+        "filepond-plugin-file-poster": "^2.5.1",
+        "filepond-plugin-file-validate-size": "^2.2.8",
+        "filepond-plugin-file-validate-type": "^1.2.8",
+        "filepond-plugin-get-file": "^1.1.0",
+        "filepond-plugin-image-overlay": "^1.0.9",
+        "filepond-plugin-image-preview": "^4.6.11",
+        "filepond-plugin-image-validate-size": "^1.2.7",
+        "filepond-plugin-pdf-preview": "^1.0.4",
         "loadash": "^1.0.0",
+        "vue-filepond": "^7.0.3",
         "vue3-datepicker": "^0.3.4",
         "wave-ui": "^3.0.4"
     }

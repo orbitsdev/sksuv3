@@ -12,8 +12,10 @@ class Requirement extends Model
 
     protected $guarded = [];
 
-    public function organizations(){
+    public function organization_requirements(){
         return $this->belongsToMany(Organization::class, 'organization_requirements', 'requirement_id', 'organization_id');
     }
+
+
 
 }

@@ -57,11 +57,11 @@ class HandleInertiaRequests extends Middleware
                 'isDirector' => Auth::user() ?  Auth::user()->hasRole('campus-director') : null,
                 'isVpa' => Auth::user() ?  Auth::user()->hasRole('vpaa') : null,
             ],
-            'sbocurrentschool' => Auth::user() ? RoleChangerController::sboCurrentSchool() : null
+            'sbocurrentschool' => Auth::user() ? RoleChangerController::sboCurrentSchool() : null,
 
             // 'currentschool'=> Auth::user() ?  Auth::user()->hasRole('sbo-adviser') ? Auth::user()->campus : null : null
                         
-
+            'csrf_token' => csrf_token(),
                 
         ]);
     }

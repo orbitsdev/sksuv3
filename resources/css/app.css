@@ -3,7 +3,9 @@
 @tailwind utilities;
 
 
-
+.filepond--fullsize-overlay{
+    z-index: 100000 !important;
+}
 *{
     font-family: 'Rubik';
 }

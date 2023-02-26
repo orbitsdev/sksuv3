@@ -8,7 +8,6 @@ import { Head } from '@inertiajs/vue3';
 import  {Link} from '@inertiajs/vue3';
 
 
-
 import SkDialog from "./components/SkDialog.vue";
 import SksuLink from "./components/SksuLink.vue";
 import Loader1 from "./components/Loader1.vue";
@@ -34,6 +33,9 @@ import approveSvg from "./components/approveSvg.vue";
 import deniedSvg from "./components/deniedSvg.vue";
 import checkedSvg from "./components/checkedSvg.vue";
 import timeSvg from "./components/timeSvg.vue";
+import FileCard from "./components/FileCard.vue";
+import FilePondBase from "./components/FilePondBase.vue";
+import FileUpload from "./components/FileUpload.vue";
 import Datepicker from 'vue3-datepicker';
 
 
@@ -77,6 +79,9 @@ createInertiaApp({
             .component("checkedSvg", checkedSvg)
             .component("timeSvg", timeSvg)
             .component("StatusCard", StatusCard)
+            .component("FileCard", FileCard)
+            .component("FilePondBase", FilePondBase)
+            .component("FileUpload", FileUpload)
             .component("DashboardLink", DashboardLink);
 
         return app.mount(el);

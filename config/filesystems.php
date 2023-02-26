@@ -56,6 +56,27 @@ return [
             'throw' => false,
         ],
 
+        'public_uploads' => [
+            'driver' => 'local',
+            'root'   => public_path() . '/uploads',
+        ],
+
+        'oss' => [
+            'driver'        => 'oss',
+            'access_key_id'     => env('OSS_ACCESS_KEY_ID'),
+            'access_key_secret'    => env('OSS_SECRET_ACCESS_KEY'),
+            'bucket'        => env('OSS_BUCKET'),
+            'endpoint'      => env('OSS_ENDPOINT'),
+            'region'        => env('OSS_REGION'),
+            'acs'           => env('OSS_ACS'),
+            'user'          => env('OSS_USER'),
+            'is_ssl'        => false,
+            'is_cname'      => false,
+            'cdn_domain'    => '',
+            'timeout'       => 3600,
+        ],    
+
+
     ],
 
     /*

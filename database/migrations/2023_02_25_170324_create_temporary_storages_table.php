@@ -13,14 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('files', function (Blueprint $table) {
+        Schema::create('temporary_storages', function (Blueprint $table) {
             $table->id();
-            $table->morphs('fileable');
-            $table->string('owned_by');
-            $table->text('folder');
-            $table->string('file_name');
-            $table->string('file_type');
-            $table->string('url')->nullable();
             $table->timestamps();
         });
     }
@@ -32,6 +26,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('files');
+        Schema::dropIfExists('temporary_storages');
     }
 };

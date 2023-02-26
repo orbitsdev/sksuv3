@@ -11,6 +11,7 @@ const props = defineProps({
 
 const search = ref("");
 const show_form = ref(false);
+const show_manage_form = ref(false);
 const confirm_delete = ref(false);
 const is_deleting = ref(false);
 const selected_items = ref([]);
@@ -65,7 +66,7 @@ function save() {
   });
 }
 
-function updateCampus() {
+function update() {
   form.post(route("requirement.update"), {
     preserveState: true,
     onSuccess: () => {
@@ -106,6 +107,13 @@ function getDefaultValue(item) {
   if (item != null) {
     form.campus_adviser_id = parseInt(item);
   }
+}
+
+function showManageForm(item) {
+  show_manage_form.value = true;
+  selected_item.value = item;
+  form.name = item.name;
+  form.id = item.id;
 }
 </script>
 <template>
@@ -152,7 +160,7 @@ function getDefaultValue(item) {
           <sk-button2
             v-if="selected_items.length > 0"
             @click="confirm_delete = true"
-            :c="'bg-white border '"
+            :c="'bg-white border'"
             class="w-40 flex items-center justify-center mr-2 h-10"
           >
             <svg
@@ -280,7 +288,7 @@ function getDefaultValue(item) {
                     :c="'bg-gray-50 text-gray-400'"
                     class="inline-flex items-center"
                   >
-                    <timeSvg/>
+                    <timeSvg />
 
                     {{ item.organization_process.campus_adviser_approved_status }}
                   </status-card>
@@ -301,7 +309,8 @@ function getDefaultValue(item) {
                 </div>
 
                 <div class="mb-0.5">
-                  <status-card  v-if="
+                  <status-card
+                    v-if="
                       item.organization_process.campus_adviser_approved_status ===
                       'denied'
                     "
@@ -312,7 +321,6 @@ function getDefaultValue(item) {
 
                     Denied
                   </status-card>
-
                 </div>
 
                 <div class="mb-0.5">
@@ -338,7 +346,7 @@ function getDefaultValue(item) {
             <div class="mb-1 border py-2 px-2 mr-4 rounded">
               <p class="truncate text-sm t text-gray-900 uppercase">Campus Director</p>
 
-                 <div class="px-2">
+              <div class="px-2">
                 <div class="mb-0.5">
                   <status-card
                     v-if="
@@ -348,7 +356,7 @@ function getDefaultValue(item) {
                     :c="'bg-gray-50 text-gray-400'"
                     class="inline-flex items-center"
                   >
-                    <timeSvg/>
+                    <timeSvg />
 
                     {{ item.organization_process.campus_director_approved_status }}
                   </status-card>
@@ -369,7 +377,8 @@ function getDefaultValue(item) {
                 </div>
 
                 <div class="mb-0.5">
-                  <status-card  v-if="
+                  <status-card
+                    v-if="
                       item.organization_process.campus_director_approved_status ===
                       'denied'
                     "
@@ -380,7 +389,6 @@ function getDefaultValue(item) {
 
                     Denied
                   </status-card>
-
                 </div>
 
                 <div class="mb-0.5">
@@ -415,18 +423,14 @@ function getDefaultValue(item) {
                     :c="'bg-gray-50 text-gray-400'"
                     class="inline-flex items-center"
                   >
-                    <timeSvg/>
+                    <timeSvg />
 
                     {{ item.organization_process.osas_approved_status }}
                   </status-card>
                 </div>
                 <div class="mb-0.5">
- 
                   <status-card
-                    v-if="
-                      item.organization_process.osas_approved_status ===
-                      'approved'
-                    "
+                    v-if="item.organization_process.osas_approved_status === 'approved'"
                     :c="'bg-green-50 text-green-600'"
                     class="inline-flex items-center"
                   >
@@ -437,10 +441,8 @@ function getDefaultValue(item) {
                 </div>
 
                 <div class="mb-0.5">
-                  <status-card  v-if="
-                      item.organization_process.osas_approved_status ===
-                      'denied'
-                    "
+                  <status-card
+                    v-if="item.organization_process.osas_approved_status === 'denied'"
                     :c="'bg-red-50 text-red-600'"
                     class="inline-flex items-center"
                   >
@@ -448,7 +450,6 @@ function getDefaultValue(item) {
 
                     Denied
                   </status-card>
-
                 </div>
 
                 <div class="mb-0.5">
@@ -484,18 +485,14 @@ function getDefaultValue(item) {
                     :c="'bg-gray-50 text-gray-400'"
                     class="inline-flex items-center"
                   >
-                    <timeSvg/>
+                    <timeSvg />
 
                     {{ item.organization_process.vpa_approved_status }}
                   </status-card>
                 </div>
                 <div class="mb-0.5">
- 
                   <status-card
-                    v-if="
-                      item.organization_process.vpa_approved_status ===
-                      'approved'
-                    "
+                    v-if="item.organization_process.vpa_approved_status === 'approved'"
                     :c="'bg-green-50 text-green-600'"
                     class="inline-flex items-center"
                   >
@@ -506,10 +503,8 @@ function getDefaultValue(item) {
                 </div>
 
                 <div class="mb-0.5">
-                  <status-card  v-if="
-                      item.organization_process.vpa_approved_status ===
-                      'denied'
-                    "
+                  <status-card
+                    v-if="item.organization_process.vpa_approved_status === 'denied'"
                     :c="'bg-red-50 text-red-600'"
                     class="inline-flex items-center"
                   >
@@ -517,13 +512,9 @@ function getDefaultValue(item) {
 
                     Denied
                   </status-card>
-
                 </div>
-
-              
               </div>
             </div>
-            
           </Tcell>
           <!-- <Tcell class="align-top pt-2">
             <div> 
@@ -546,7 +537,7 @@ function getDefaultValue(item) {
             <SkButtonGray
               :disabled="selected_items.length > 0"
               class="max-w-40 mr-2"
-              @click="showUpdateForm(item)"
+              @click="showManageForm(item)"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -623,7 +614,7 @@ function getDefaultValue(item) {
           <SkButton v-if="form.id == null" @click="save" :processing="form.processing">
             Submit
           </SkButton>
-          <SkButton v-else @click="updateCampus" :processing="form.processing">
+          <SkButton v-else @click="update" :processing="form.processing">
             Update</SkButton
           >
         </div>
@@ -631,7 +622,7 @@ function getDefaultValue(item) {
     </sk-dialog>
 
     <sk-dialog :transition="'slide-down'" :persistent="true" :isOpen="confirm_delete">
-      <main class="p-2">
+      <main class="">
         <div class="sm:flex sm:items-start">
           <div
             class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10"
@@ -672,19 +663,42 @@ function getDefaultValue(item) {
         </div>
       </main>
     </sk-dialog>
+
+    <sk-dialog
+      :transition="'slide-down'"
+      :persistent="true"
+      :width="'640'"
+      :isOpen="show_manage_form"
+    >
+      <main class="p-2">
+
+            <manageApplicationCard :organization="selected_item"/>
+
+        <div class="mt-5 flex items-center justify-end">
+          <SkButtonGray class="w-40 mr-4" @click="show_manage_form = false">
+            Close
+          </SkButtonGray>
+
+          <SkButton :c="['w-40']" @click="update" :processing="form.processing">
+            Update
+          </SkButton>
+        </div>
+      </main>
+    </sk-dialog>
   </adminlayout>
 </template>
 
 <script>
 import campusandorganization from "@/pages/osas/campusandorganization.vue";
-
 import adminlayout from "../../layouts/adminlayout.vue";
 import campusAdviserSelect from "@/components/campusAdviserSelect.vue";
+import manageApplicationCard from "@/components/manageApplicationCard.vue";
 
 export default {
   components: {
     campusAdviserSelect,
     adminlayout,
+    manageApplicationCard,
   },
 };
 </script>

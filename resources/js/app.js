@@ -32,10 +32,13 @@ import StatusCard from "./components/StatusCard.vue";
 import approveSvg from "./components/approveSvg.vue";
 import deniedSvg from "./components/deniedSvg.vue";
 import checkedSvg from "./components/checkedSvg.vue";
+import fileSvg from "./components/fileSvg.vue";
 import timeSvg from "./components/timeSvg.vue";
+import roundedCheckSvg from "./components/roundedCheckSvg.vue";
 import FileCard from "./components/FileCard.vue";
 import FilePondBase from "./components/FilePondBase.vue";
 import FileUpload from "./components/FileUpload.vue";
+import FileViewLink from "./components/FileViewLink.vue";
 import Datepicker from 'vue3-datepicker';
 
 
@@ -77,11 +80,14 @@ createInertiaApp({
             .component("approveSvg", approveSvg)
             .component("deniedSvg", deniedSvg)
             .component("checkedSvg", checkedSvg)
+            .component("fileSvg", fileSvg)
+            .component("roundedCheckSvg", roundedCheckSvg)
             .component("timeSvg", timeSvg)
             .component("StatusCard", StatusCard)
             .component("FileCard", FileCard)
             .component("FilePondBase", FilePondBase)
             .component("FileUpload", FileUpload)
+            .component("FileViewLink", FileViewLink)
             .component("DashboardLink", DashboardLink);
 
         return app.mount(el);

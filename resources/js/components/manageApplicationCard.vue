@@ -1,8 +1,10 @@
 <script setup>
-import { ref, watch, defineProps } from "vue";
+import { ref, watch, defineProps, onMounted } from "vue";
 import { router } from "@inertiajs/core";
 import { throttle } from "lodash";
 import { useForm } from "@inertiajs/vue3";
+
+
 
 const props = defineProps({
   organization: Object,
@@ -15,6 +17,17 @@ const form = useForm({
   campus_adviser_id: null,
   id: null,
 });
+
+function deleteFile(file){
+ router.post(route("application.deletefile"),{
+  file_id:file.id
+ },
+ 
+ );
+
+
+
+}
 </script>
 
 <template>
@@ -40,18 +53,27 @@ const form = useForm({
     <p class="mt-2 uppercase  leading-8 text-black font-medium">Requirements</p>
     <div v-if="organization.requirements.length > 0">
            <!-- {{ organization.organization_requirements }} -->
-    <aside class="my-1" v-for="r in organization.requirements" :key="r">
+    <aside class="my-1" v-for="r in organization.organization_requirements" :key="r">
 
 
     <div>
       <p class="text-gray-900 mb-1 capitalize">{{ r.name }}</p>
       <div class="bg-gradient-to-r from-lime-50 to-green-100 py-2 px-2 rounded">
-        <!-- <FileCard class="mt-1 mr-1"> {{r}}</FileCard> -->
+      {{ r.requirement.name }}
+      <!-- {{ r.file  }} -->
+      <div v-if="r.file.length > 0">
+        <span v-for="file in r.file" :key="file">
+          <!-- <span class="badge badge-primary" > {{ file.file_name }}  </span> -->
+             <FileCard @click="deleteFile(file)" class="mt-1 mr-1"> {{ file.file_name }}</FileCard>
+        </span>
+      </div>
+      <!-- {{ r.organization_requirements }} -->
+     
         
 
       </div>
  
-      <FileUpload :model_id="r.id"/>
+      <FileUpload  :model_id="r.id"/>
     </div>
     </aside>
 

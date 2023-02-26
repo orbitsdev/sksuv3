@@ -1,18 +1,19 @@
 <script setup>
-import { ref, defineComponent, defineProps } from "vue";
+import { ref, defineComponent, defineProps, defineEmits } from "vue";
 
 import { useForm } from "@inertiajs/vue3";
 import { router } from "@inertiajs/vue3";
 
 const props = defineProps({
-  model_id: Object,
+  model_id: Number,
 });
 
+const emit = defineEmits('uploadSuccess','uploadStart','uploadFinish');
 
 const files = ref([]);
 
 const form = useForm({
- model_id: props.model_id,
+  model_id: props.model_id,
   name: null,
   file: null,
 });
@@ -20,17 +21,24 @@ const form = useForm({
 function hanldeFile(e) {
   form.file = e.target.files[0];
 
-  form.post(route("uploadtolocal"),
-  {
-    preserveState:true,
- }
+  form.post(route("uploadtolocal"), {
+    preserveState: true,
+    onStart: ()=>{
+      emit('uploadStart');
+    },
+    onSuccess: ()=>{
+      emit('uploadSuccess');
+    },
+    onFinish: ()=>{
+      emit('uploadFinish');
+    },
+  }
+  
   );
 }
 </script>
 
 <template>
-
-{{ model_id }}
   <label
     class="block text-sm font-medium text-gray-900 dark:text-white"
     for="default_size"
@@ -42,9 +50,9 @@ function hanldeFile(e) {
     type="file"
   />
 
-    <progress v-if="form.progress" :value="form.progress.percentage" max="100">
-      {{ form.progress.percentage }}%
-    </progress>
+  <progress v-if="form.progress" :value="form.progress.percentage" max="100">
+    {{ form.progress.percentage }}%
+  </progress>
 </template>
 
 <script>

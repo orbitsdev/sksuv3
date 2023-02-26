@@ -2,19 +2,43 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Organization;
-use App\Models\OrganizationProcess;
-use App\Models\Requirement;
-use Illuminate\Http\Request;
+use App\Models\File;
 use Inertia\Inertia;
+use App\Models\Requirement;
+use App\Models\Organization;
+use Illuminate\Http\Request;
 
 
+use App\Models\OrganizationProcess;
 use Illuminate\Support\Facades\Request as supportrequest;
 
 
 class ApplyApplicationController extends Controller
+
+
 {
 
+    public function __construct( )
+    {
+            $fcontroller = app('App\Http\Controllers\FileController');
+    }
+
+    public function deleteFile(Request $request){
+
+        if($request->file_id)
+        {
+            $file = File::find($request->file_id);
+
+            if($file)
+            {
+              $status = $this->deleteImageOss($file->url);
+            }
+            $file->delete();
+            // $this->deleteFile();
+         
+        }
+        return redirect()->route('application.index');
+    }
 
     public function index(){
 
@@ -25,7 +49,9 @@ class ApplyApplicationController extends Controller
                 $query->where('name', 'like', "%{$search}%");
             })
             ->latest()->
-            with(['requirements.organization_requirements','organization_requirements.file', 'organization_process'])
+            with(['requirements.organization_requirements','organization_requirements' => function($org) {
+                $org->with(['requirement', 'file']);
+            },'organization_process'])
             ->paginate(10)
             ->withQueryString(),
             'filters'=> supportrequest::only('search'),
@@ -99,8 +125,56 @@ class ApplyApplicationController extends Controller
 
     public function deleteSelected(Request $request){
         
+        // dd($request->all());
         // $campus = Campus::wheeIn('id', $request->input('ids'))->get();
-         Campus::whereIn('id', $request->input('ids'))->delete();
+       $collection =   Organization::whereIn('id', $request->input('ids'))
+                        ->with(['organization_requirements' => function($org) {
+                            $org->with(['file']);
+                        }])
+                            ->get();
+
+
+         foreach($collection as  $data){
+          
+             
+
+             if($data->organization_requirements)
+             {
+                $data->organization_requirements->each( function($org) {
+                    if($org->file)
+                    {
+                        $org->file->each(function($file) {
+                            if($file)
+                            {
+                                $this->deleteImageOss($file->url);
+
+                                $file->delete();
+                            }
+                        });
+                    }
+
+                    $org->delete();
+                });
+             }
+              
+             if($data->requirements)
+             {
+                 //  $data->requirements()->detach();
+             }
+
+       
+     
+            // $data->organization_requirement->file->each(function($file){
+            //         // $this->fcontroller->deleteFromOss($file->url);
+            //         $this->deleteImageOss($file->url);
+            //     });
+            //  $data->organization_requirement->file->each( function($file) { $this->deleteFromOss($file->url)})->delete();
+
+
+            //delete file
+         }
+
+          Organization::whereIn('id', $request->input('ids'))->delete();
         
         return redirect()->back()->with('notification', 'Campus Delete'); 
     }

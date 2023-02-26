@@ -45,11 +45,11 @@ class FileController extends Controller
             // $file_name = $image->getClientOriginalName();
             // $folder = uniqid() . strtotime(now());
             // $file_type =  $image->getClientMimeType();
-        Storage::disk("oss")->put($full_path, file_get_contents($file));
+        $storage->put($full_path, file_get_contents($file));
         return [
             'owned_by'=>$path,
             'folder'=>$path ,
-            'file_name'=> $filename,
+            'file_name'=> $file->getClientOriginalName(),
             'file_type'=>$file->getClientOriginalExtension(),
             'url'=>$full_path,
 
@@ -80,10 +80,10 @@ class FileController extends Controller
         $file_data =     $this->uploadFileOss('requrements/', $request->file);
         
         $organzation_requiremnets =  OrganizationRequirement::find($request->model_id);
-        // dd($organzation_requiremnets);
         
-         $n =  $organzation_requiremnets->file()->create($file_data);
-        dd($n);
+        
+         $organzation_requiremnets->file()->create($file_data);
+   
         // $organzation->requirements
         // $new_record = File::create($file_data);
         
@@ -112,7 +112,7 @@ class FileController extends Controller
         // return ['folder' => $folder, 'file_name' => $file_name, 'file_type'=> $file_type];
 
         }
-        dd($request->all());
+        // dd($request->all());
 
     }
 

@@ -14,6 +14,7 @@ const show_form = ref(false);
 const show_manage_form = ref(false);
 const confirm_delete = ref(false);
 const is_deleting = ref(false);
+const is_updating = ref(false);
 const selected_items = ref([]);
 const selected_item = ref(null);
 const has_warning = ref(null);
@@ -67,12 +68,15 @@ function save() {
 }
 
 function update() {
-  form.post(route("requirement.update"), {
+  form.post(route("application.update"), {
     preserveState: true,
     onSuccess: () => {
       form.id = null;
       show_form.value = false;
       form.reset();
+    },
+    onFinish: (error) => {
+      handleManageForm();
     },
     onError: (error) => {
       has_warning.value = error;
@@ -85,7 +89,7 @@ async function deleteSelected() {
   is_deleting.value = true;
 
   try {
-    const response = await router.post(route("requirement.deleteselected"), {
+    const response = await router.post(route("application.deleteselected"), {
       ids: selected_items.value,
     });
 
@@ -114,6 +118,31 @@ function showManageForm(item) {
   selected_item.value = item;
   form.name = item.name;
   form.id = item.id;
+}
+
+function deleteFile(file) {
+  router.post(
+    route("application.deletefile"),
+    { file_id: file.id },
+    {
+      onSuccess: () => {
+        handleManageForm();
+      },
+
+      onStart: () => {
+        is_updating.value = true;
+      },
+
+      onFinish: () => {
+        handleManageForm();
+      },
+    }
+  );
+}
+
+function handleManageForm() {
+  is_updating.value = false;
+  show_manage_form.value = false;
 }
 </script>
 <template>
@@ -154,7 +183,7 @@ function showManageForm(item) {
     >
       <div class="pt-4 flex items-center justify-between">
         <p class="text-xl text-green-800 font-bold font-rubik uppercase">
-          Applied Organizations
+          Applied Organizations 
         </p>
         <div class="flex items-center">
           <sk-button2
@@ -223,6 +252,7 @@ function showManageForm(item) {
           >
             <input
               v-model="selected_items"
+              :value="item.id"
               type="checkbox"
               class="h-4 w-4 accent-green-600 text-white rounded border-gray-200"
             />
@@ -232,26 +262,43 @@ function showManageForm(item) {
             <div>
               <p class="truncate text-sm font-medium text-gray-900">Requirements</p>
 
-              <div class="mt-1" v-if="item.requirements.length > 0">
-                <div v-for="r in item.requirements" :key="r.id">
-                  <p
+              <div class="mt-1" v-if="item.organization_requirements.length > 0">
+               
+         <!-- <p
                     class="white-spcace flex items-center text-sm text-gray-500 whitespace-normal"
-                  >
-                    <svg
-                      class="mr-1.5 h-4 w-4 flex-shrink-0 text-green-600"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                    <span class="mr-2 text"> {{ r.name }} </span>
-                  </p>
-                </div>
+                  > -->
+
+                <!-- <fileSvg class="mr-2"/>
+                   
+                    <span class="mr-2 text"> {{ r.requirement.name }} </span>
+                  </p> -->
+        
+        <aside
+              class="my-1 mb-2"
+              v-for="og in item.organization_requirements"
+              :key="og"
+            >
+
+
+            <div v-if="og.file.length > 0">
+               <div class="my=2">
+               {{ og.requirement.name }}
+               <FileViewLink :href="file.file_url" _target="_blank" class="mb-1" v-for="file in og.file" :key="file" :file='file'>
+                        {{ file.file_name }}
+               
+               </FileViewLink>
+
+                  </div>
+            </div>
+            </aside>
+                
+                 
+
+
+                  <div>
+
+                  </div>
+                
 
                 <!-- <div>
                 <p
@@ -554,26 +601,7 @@ function showManageForm(item) {
               </svg>
               <span class=""> Manage </span>
             </SkButtonGray>
-            <SkButtonGray
-              :disabled="selected_items.length > 0"
-              class="max-w-40"
-              @click="showUpdateForm(item)"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                class="w-4 h-4 mr-2"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-
-              <span class=""> Delete </span>
-            </SkButtonGray>
+           
           </Tcell>
         </tr>
       </SkTable>
@@ -671,8 +699,66 @@ function showManageForm(item) {
       :isOpen="show_manage_form"
     >
       <main class="p-2">
+        <div class="form-max-h overflow-y-auto">
+          <div class="">
+            <label for="email" class="block te font-medium text-gray-700"
+              >Organization Name</label
+            >
 
-            <manageApplicationCard :organization="selected_item"/>
+            <div class="mt-1">
+              <Authfield1 type="email" autocomplete="email" v-model="form.name" />
+              <!-- <input id="email" v-model="form.email" name="email" type="email" autocomplete="email"  class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"> -->
+            </div>
+            <p class="text-red-700 text-sm" v-if="$page.props.errors.name">
+              {{ $page.props.errors.name }}
+            </p>
+          </div>
+
+          <p class="mt-2 uppercase leading-8 text-black font-medium">Requirements</p>
+          <div v-if="selected_item.requirements.length > 0">
+            <!-- {{ selected_item.organization_requirements }} -->
+            <aside
+              class="my-1 mb-2"
+              v-for="r in selected_item.organization_requirements"
+              :key="r"
+            >
+              <p class="text-gray-900 mb-1 capitalize">{{ r.name }}</p>
+              <div class="border rounded p-2 bg-gray-100">
+                <p class="mb-2">
+                  {{ r.requirement.name }}
+                </p>
+                <div
+                  v-if="r.file.length > 0"
+                  class="bg-gradient-to-r from-green-200 to-green-300 py-2 px-2 rounded-lg"
+                >
+                  <!-- {{ r.file  }} -->
+                  <div class="my=2">
+
+             
+                    <span v-for="file in r.file" :key="file">
+                      <!-- <span class="badge badge-primary" > {{ file.file_name }}  </span> -->
+                      <FileCard @click="deleteFile(file)" class="mt-1 mr-1">
+                        {{ file.file_name }}</FileCard
+                      >
+                    </span>
+                  </div>
+                  <!-- {{ r.organization_requirements }} -->
+                </div>
+
+                <div v-else class="mt-2 bg-gray-100 px-2 rouned-lg inline-block">
+                  No File
+                </div>
+
+                <FileUpload
+                  @uploadSuccess="handleManageForm"
+                  @uploadStart="is_updating = true"
+                  @uploadFinish="handleManageForm"
+                  :model_id="r.id"
+                />
+              </div>
+            </aside>
+          </div>
+        </div>
 
         <div class="mt-5 flex items-center justify-end">
           <SkButtonGray class="w-40 mr-4" @click="show_manage_form = false">
@@ -686,6 +772,18 @@ function showManageForm(item) {
       </main>
     </sk-dialog>
   </adminlayout>
+
+  <SkDialog :persistent="true" :isOpen="is_updating" :width="'260'">
+    <div class="flex items-center justify-center">
+      <w-progress
+        :size="'24'"
+        class="text-green-900 mr-8"
+        color="green"
+        circle
+      ></w-progress>
+      <p class="">Updating</p>
+    </div>
+  </SkDialog>
 </template>
 
 <script>

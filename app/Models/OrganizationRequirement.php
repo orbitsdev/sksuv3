@@ -18,7 +18,10 @@ class OrganizationRequirement extends Model
     {
         return $this->morphMany(File::class, 'fileable');
     }
-    
+    public function requirement()
+    {
+        return $this->belongsTo(Requirement::class);
+    }
 
 
     

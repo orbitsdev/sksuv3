@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 
 
 use App\Models\OrganizationProcess;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request as supportrequest;
 
 
@@ -47,9 +48,11 @@ class ApplyApplicationController extends Controller
             'organizations' => Organization::query()
             ->when(supportrequest::input('search'), function($query, $search){
                 $query->where('name', 'like', "%{$search}%");
+            })->whereHas('user', function($query){
+                $query->where('id', Auth::user('id')->id);
             })
             ->latest()->
-            with(['requirements.organization_requirements','organization_requirements' => function($org) {
+            with(['campus_adviser.user', 'campus_adviser.school_year', 'requirements.organization_requirements','organization_requirements' => function($org) {
                 $org->with(['requirement', 'file']);
             },'organization_process'])
             ->paginate(10)
@@ -67,6 +70,8 @@ class ApplyApplicationController extends Controller
 
 
         $new_record = Organization::create([
+            'campus_adviser_id'=> $request->campus_adviser_id,
+            'user_id'=> Auth::user()->id,
             'name'=> $request->input('name')
         ]);
 
@@ -162,19 +167,10 @@ class ApplyApplicationController extends Controller
                  //  $data->requirements()->detach();
              }
 
-       
-     
-            // $data->organization_requirement->file->each(function($file){
-            //         // $this->fcontroller->deleteFromOss($file->url);
-            //         $this->deleteImageOss($file->url);
-            //     });
-            //  $data->organization_requirement->file->each( function($file) { $this->deleteFromOss($file->url)})->delete();
-
-
-            //delete file
          }
 
-          Organization::whereIn('id', $request->input('ids'))->delete();
+         OrganizationProcess::whereIn('id', $request->input('ids'))->delete();
+        Organization::whereIn('id', $request->input('ids'))->delete();
         
         return redirect()->back()->with('notification', 'Campus Delete'); 
     }

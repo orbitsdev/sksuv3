@@ -5,7 +5,10 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Vpa;
 use App\Models\Role;
+use App\Models\Remark;
 use App\Models\Officer;
+use App\Models\Notification;
+use App\Models\Organization;
 use App\Models\CampusAdviser;
 use App\Models\SocialAccount;
 use App\Models\CampusDirector;
@@ -109,5 +112,27 @@ class User extends Authenticatable
         return $this->hasMany(OrganizationProcess::class, 'vpa_id');
     }
 
+
+    public function organizations(){
+        return $this->hasMany(Organization::class);
+    }
+
+   
+    public function notfication_senders(){
+        return $this->hasMany(Notification::class, 'sender_id');
+    }
+
+    public function notfication_recievers(){
+        return $this->hasMany(Notification::class, 'reciever_id');
+    }
+    
+
+    public function remark_senders(){
+        return $this->hasMany(Remark::class, 'sender_id');
+    }
+
+    public function remark_recievers(){
+        return $this->hasMany(Remark::class, 'reciever_id');
+    }
 
 }

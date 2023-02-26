@@ -74,7 +74,7 @@ Route::get('/', function () {
             return redirect()->route('schoolyear.index');
         }
         if (Auth::user()->hasRole('sbo-adviser')) {
-            return redirect()->route('officers.index');
+            return redirect()->route('campusadviser.organization.index');
         }
         if (Auth::user()->hasRole('sbo-student')) {
             return redirect()->route('application.index');
@@ -238,6 +238,8 @@ Route::get('/', function () {
     ], function () {
 
         Route::get('/', [CampusAdviserOrganizationController::class, 'index'])->name('index');
+        Route::post('/approve', [CampusAdviserOrganizationController::class, 'approve'])->name('approve');
+        Route::post('/deny', [CampusAdviserOrganizationController::class, 'deny'])->name('deny');
       
     
     });

@@ -23,7 +23,7 @@ class CampusAdviserController extends Controller
                 });
             })
             ->latest()
-            ->with(['user', 'school_year', 'campus'])
+            ->with(['user' , 'school_year', 'campus'])
             ->paginate(10)
             ->withQueryString(),
             'filters'=> supportrequest::only('search'),

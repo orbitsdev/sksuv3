@@ -183,7 +183,7 @@ function handleManageForm() {
     >
       <div class="pt-4 flex items-center justify-between">
         <p class="text-xl text-green-800 font-bold font-rubik uppercase">
-          Applied Organizations 
+          Applied Organizations
         </p>
         <div class="flex items-center">
           <sk-button2
@@ -236,7 +236,9 @@ function handleManageForm() {
         :headers="[
           '',
           'Organization Name',
-          'Information ',
+          'Campus Adviser ',
+          ' School Year',
+          ' Requirements &  attachment',
           ' Application Process Status',
 
           '',
@@ -258,67 +260,39 @@ function handleManageForm() {
             />
           </Tcell>
           <Tcell class="uppercase align-top pt-2"> {{ item.name }} </Tcell>
+          <Tcell class="uppercase align-top pt-2 "> {{ item.campus_adviser.user.first_name }} {{ item.campus_adviser.user.last_name }} </Tcell>
+          <Tcell class="uppercase align-top pt-2">     {{  item.campus_adviser.school_year != null ? 'SY.' +  item.campus_adviser.school_year.from + ' - ' + item.campus_adviser.school_year.to  : 'None'}} </Tcell> 
+
           <Tcell class="align-top pt-2 whitespace-normal">
             <div>
               <p class="truncate text-sm font-medium text-gray-900">Requirements</p>
 
               <div class="mt-1" v-if="item.organization_requirements.length > 0">
-               
-         <!-- <p
-                    class="white-spcace flex items-center text-sm text-gray-500 whitespace-normal"
-                  > -->
-
-                <!-- <fileSvg class="mr-2"/>
-                   
-                    <span class="mr-2 text"> {{ r.requirement.name }} </span>
-                  </p> -->
-        
-        <aside
-              class="my-1 mb-2"
-              v-for="og in item.organization_requirements"
-              :key="og"
-            >
-
-
-            <div v-if="og.file.length > 0">
-               <div class="my=2">
-               {{ og.requirement.name }}
-               <FileViewLink :href="file.file_url" _target="_blank" class="mb-1" v-for="file in og.file" :key="file" :file='file'>
-                        {{ file.file_name }}
-               
-               </FileViewLink>
-
-                  </div>
-            </div>
-            </aside>
-                
-                 
-
-
-                  <div>
-
-                  </div>
-                
-
-                <!-- <div>
-                <p
-                  class="white-spcace flex items-center text-sm text-gray-500 whitespace-normal"
+         
+                <aside
+                  class="my-1 mb-2"
+                  v-for="og in item.organization_requirements"
+                  :key="og"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    class="mr-1.5 h-4 w-4 flex-shrink-0 text-gray-600"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z"
-                      clip-rule="evenodd"
-                    />
-                  </svg>
-                  <span class="mr-2 text"> Application Letters </span>
-                </p>
-              </div> -->
+                  <div v-if="og.file.length > 0">
+                    <div class="my=2">
+                      {{ og.requirement.name }}
+                      <FileViewLink
+                        :href="file.file_url"
+                        _target="_blank"
+                        class="mb-1"
+                        v-for="file in og.file"
+                        :key="file"
+                        :file="file"
+                      >
+                        {{ file.file_name }}
+                      </FileViewLink>
+                    </div>
+                  </div>
+                </aside>
+
+  
+
               </div>
             </div>
           </Tcell>
@@ -601,7 +575,6 @@ function handleManageForm() {
               </svg>
               <span class=""> Manage </span>
             </SkButtonGray>
-           
           </Tcell>
         </tr>
       </SkTable>
@@ -698,7 +671,7 @@ function handleManageForm() {
       :width="'640'"
       :isOpen="show_manage_form"
     >
-      <main class="p-2">
+      <main class="p-2 form-max-h">
         <div class="form-max-h overflow-y-auto">
           <div class="">
             <label for="email" class="block te font-medium text-gray-700"
@@ -733,8 +706,6 @@ function handleManageForm() {
                 >
                   <!-- {{ r.file  }} -->
                   <div class="my=2">
-
-             
                     <span v-for="file in r.file" :key="file">
                       <!-- <span class="badge badge-primary" > {{ file.file_name }}  </span> -->
                       <FileCard @click="deleteFile(file)" class="mt-1 mr-1">

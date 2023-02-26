@@ -39,6 +39,8 @@ import FileCard from "./components/FileCard.vue";
 import FilePondBase from "./components/FilePondBase.vue";
 import FileUpload from "./components/FileUpload.vue";
 import FileViewLink from "./components/FileViewLink.vue";
+import thumbsUpSvg from "./components/thumbsUpSvg.vue";
+import thumbsDownSvg from "./components/thumbsDownSvg.vue";
 import Datepicker from 'vue3-datepicker';
 
 
@@ -83,6 +85,8 @@ createInertiaApp({
             .component("fileSvg", fileSvg)
             .component("roundedCheckSvg", roundedCheckSvg)
             .component("timeSvg", timeSvg)
+            .component("thumbsUpSvg", thumbsUpSvg)
+            .component("thumbsDownSvg", thumbsDownSvg)
             .component("StatusCard", StatusCard)
             .component("FileCard", FileCard)
             .component("FilePondBase", FilePondBase)

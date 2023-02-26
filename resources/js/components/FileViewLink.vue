@@ -10,7 +10,7 @@
                 <span class="ml-2 w-0 flex-1 truncate"><slot></slot></span>
               </div>
               <div class="ml-4 flex-shrink-0">
-                <p  class="font-medium text-indigo-600 hover:text-indigo-500">Download</p>
+                <p  class="font-medium text-indigo-600 hover:text-indigo-500">View</p>
               </div>
             </a>
 </template>

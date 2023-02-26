@@ -33,3 +33,35 @@
     background-color: #12af51 !important;
 }
 
+
+
+.form-max-h {
+    max-height: 85vh;
+  }
+  
+  /* ===== Scrollbar CSS ===== */
+  /* Firefox */
+  .form-max-h {
+    scrollbar-width: auto;
+    scrollbar-color: #d2d2d4 #ffffff;
+  }
+  
+  .form-max-h::-webkit-scrollbar {
+    width: 12px;
+    height: 200px !important;
+  }
+  
+  .form-max-h::-webkit-scrollbar-track {
+    background: #ffffff;
+  }
+  
+  .form-max-h::-webkit-scrollbar-thumb {
+    background-color: #dedee4;
+    border-radius: 10px;
+    border: 3px solid #ffffff;
+  }
+  .dialog-error {
+    padding: 10px;
+    max-height: 85vh;
+    overflow-y: auto;
+  }

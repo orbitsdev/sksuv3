@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\NotificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PublicController;
@@ -24,3 +25,6 @@ Route::get('public/school-year', [PublicController::class, 'getSchoolYear'])->na
 Route::get('public/school-year-with-campus', [PublicController::class, 'getCampus'])->name('public.campus');
 Route::get('public/guest-users', [PublicController::class, 'getGuestUsers'])->name('public.guestusers');
 Route::get('public/campus-advisers', [PublicController::class, 'getCampusAdviser'])->name('public.campusadvisers');
+
+
+

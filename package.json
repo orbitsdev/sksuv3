@@ -32,6 +32,7 @@
         "filepond-plugin-image-validate-size": "^1.2.7",
         "filepond-plugin-pdf-preview": "^1.0.4",
         "loadash": "^1.0.0",
+        "moment": "^2.29.4",
         "vue-filepond": "^7.0.3",
         "vue3-datepicker": "^0.3.4",
         "wave-ui": "^3.0.4"

@@ -40,6 +40,7 @@ import FilePondBase from "./components/FilePondBase.vue";
 import FileUpload from "./components/FileUpload.vue";
 import FileViewLink from "./components/FileViewLink.vue";
 import thumbsUpSvg from "./components/thumbsUpSvg.vue";
+import NotificationList from "./components/NotificationList.vue";
 import thumbsDownSvg from "./components/thumbsDownSvg.vue";
 import Datepicker from 'vue3-datepicker';
 
@@ -92,6 +93,7 @@ createInertiaApp({
             .component("FilePondBase", FilePondBase)
             .component("FileUpload", FileUpload)
             .component("FileViewLink", FileViewLink)
+            .component("NotificationList", NotificationList)
             .component("DashboardLink", DashboardLink);
 
         return app.mount(el);

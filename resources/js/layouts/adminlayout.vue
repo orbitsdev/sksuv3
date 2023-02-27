@@ -7,11 +7,10 @@
 
 
 
-<div class="min-h-full">
-  <header class="bg-gradient-to-r from-green-800 to-green-900   pb-24">
-  <div class="h-20 absolute opacity-20">
-  <!-- <img src="/assets/bg.jpg" alt=""> -->
-  </div>
+<div class="min-h-full ">
+  <header class="bg-gradient-to-r relative from-green-800 to-green-900   pb-24">
+<img src="/assets/bg.jpg" class="absolute w-full h-full object-cover opacity-20" alt="">
+  
     <div class="relative z-50 mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
       <div class="relative flex flex-wrap items-center justify-center lg:justify-between">
         <SksuProfile/>
@@ -29,19 +28,39 @@
               <DashboardLink :href="route('campus.index')" :active="($page.component === 'osas/campusandorganization' || $page.component === 'osas/campusindex' || $page.component === 'osas/organizationindex')"> Campus </DashboardLink>
               <DashboardLink :href="route('account.userpassword.index')" :active="($page.component === 'osas/accountpasswordindex' || $page.component === 'osas/campusadviserindex' || $page.component === 'osas/campusdirectorindex' || $page.component === 'osas/vpaindex' ) "> Accounts & Roles </DashboardLink>
               <DashboardLink :href="route('requirement.index')" :active="$page.component=== 'osas/requirementsindex' "> Requirements  </DashboardLink>
+              <DashboardLink :href="route('osas.organization.index')" :active="$page.component=== 'osas/organizationindex' "> Organizations  </DashboardLink>
+              <DashboardLink :href="route('osas.generatecerticate.index')" :active="$page.component=== 'osas/generatecertificateindex' "> Generate Certificate  </DashboardLink>
               </div>
               <div v-if="$page.props.can.isSboAdviser">
               <!-- <DashboardLink :href="route('officers.index')" :active="$page.component=== 'sboadviser/officerindex'"> Officers </DashboardLink> -->
               <DashboardLink :href="route('campusadviser.organization.index')" :active="$page.component=== 'sboadviser/organizationindex'"> Organizations </DashboardLink>
   
               </div>
+              <div v-if="$page.props.can.isDirector">
+              <!-- <DashboardLink :href="route('officers.index')" :active="$page.component=== 'sboadviser/officerindex'"> Officers </DashboardLink> -->
+              <DashboardLink :href="route('director.organization.index')" :active="$page.component=== 'director/index'"> Organizations </DashboardLink>
+  
+              </div>
+              <div v-if="($page.props.can.isSboStudent || $page.props.can.isGuest )">
+              <!-- <DashboardLink :href="route('officers.index')" :active="$page.component=== 'sboadviser/officerindex'"> Officers </DashboardLink> -->
           
+              <DashboardLink :href="route('application.index')" :active="$page.component=== 'student/applicationindex'"> Organizations </DashboardLink>
+  
+          
+              </div>
+              <div v-if="$page.props.can.isVpa">
+              <!-- <DashboardLink :href="route('officers.index')" :active="$page.component=== 'sboadviser/officerindex'"> Officers </DashboardLink> -->
+          
+              <DashboardLink :href="route('vpa.organization.index')" :active="$page.component=== 'vpa/organizationindex'"> Organizations </DashboardLink>
+  
+          
+              </div>
+
               </nav>
             </div>
             <div class="px-12 lg:px-0">
                 <slot name="search">
-                 
-              
+                             
                 </slot>
              
             </div>
@@ -70,7 +89,7 @@
     
   </header>
   
-  <main class="-mt-24 pb-8">
+  <main class="relative -mt-24 pb-8">
  
   <slot >
         

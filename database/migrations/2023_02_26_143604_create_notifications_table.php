@@ -17,7 +17,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('sender_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('reciever_id')->nullable()->constrained()->onDelete('cascade');
+            $table->string('approved_status')->nullable();
             $table->string('body')->nullable();
+            $table->string('status')->nullable();
             $table->timestamps();
         });
     }

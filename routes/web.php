@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use Inertia\Inertia;
+use App\Events\ApproveNotfication;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VpaController;
@@ -12,13 +13,19 @@ use App\Http\Controllers\CampusController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\ApproveController;
 use App\Http\Controllers\OfficerController;
+use App\Http\Controllers\GenerateController;
 use App\Http\Controllers\SchoolYearController;
 use App\Http\Controllers\RequirementController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\CampusAdviserController;
 use App\Http\Controllers\CampusDirectorController;
+use App\Http\Controllers\VpaOrganizationController;
 use App\Http\Controllers\ApplyApplicationController;
+use App\Http\Controllers\OsasOrganizationController;
+use App\Http\Controllers\DirectorOrganizationController;
 use App\Http\Controllers\CampusAdviserOrganizationController;
 
 /*
@@ -37,6 +44,14 @@ use App\Http\Controllers\CampusAdviserOrganizationController;
 Route::post('file/upload', [FileController::class, 'uploadToTemporaryStorage'])->name('uploadtolocal');
 Route::delete('file/delete', [FileController::class, 'deleteFromLocalStorage'])->name('deletefromlocal');
 
+
+
+Route::get('/event', function () {
+    $array = ['name' => 'Ekpono Ambrose']; //data we want to pass
+    event(new ApproveNotfication($array));
+    
+    return 'done';
+});
 
 
 Route::middleware('guest')->group(function () {
@@ -78,6 +93,14 @@ Route::get('/', function () {
         }
         if (Auth::user()->hasRole('sbo-student')) {
             return redirect()->route('application.index');
+        }
+        if (Auth::user()->hasRole('campus-director')) {
+                
+            return redirect()->route('director.organization.index');
+        }
+        if (Auth::user()->hasRole('vpaa')) {
+                
+            return redirect()->route('vpa.organization.index');
         }
        
         return Inertia::render('dashboard');
@@ -185,17 +208,17 @@ Route::get('/', function () {
         Route::post('campus/delete-selected', [CampusController::class, 'deleteSelected'])->name('deleteSelected');
     });
 
-    Route::group([
+    // Route::group([
 
-        'prefix' => 'campus-and-organizations',
-        'as' => 'organization.'
-    ], function () {
+    //     'prefix' => 'campus-and-organizations',
+    //     'as' => 'organization.'
+    // ], function () {
 
-        Route::get('organization', [OrganizationController::class, 'index'])->name('index');
-        Route::post('organization/create', [OrganizationController::class, 'create'])->name('create');
-        Route::post('organization/update', [OrganizationController::class, 'update'])->name('update');
-        Route::post('organization/delete-selected', [OrganizationController::class, 'deleteSelected'])->name('deleteSelected');
-    });
+    //     Route::get('organization', [OrganizationController::class, 'index'])->name('index');
+    //     Route::post('organization/create', [OrganizationController::class, 'create'])->name('create');
+    //     Route::post('organization/update', [OrganizationController::class, 'update'])->name('update');
+    //     Route::post('organization/delete-selected', [OrganizationController::class, 'deleteSelected'])->name('deleteSelected');
+    // });
 
 
 
@@ -211,6 +234,27 @@ Route::get('/', function () {
         Route::post('create', [RequirementController::class, 'create'])->name('create');
         Route::post('update', [RequirementController::class, 'update'])->name('update');
         Route::post('delete-selected', [RequirementController::class, 'deleteSelected'])->name('deleteselected');
+    });
+
+
+    Route::group([
+        'middleware'=> [
+            'can:is-osas'
+        ],
+        'prefix' => 'osas/organization',
+        'as' => 'osas.organization.'
+    ], function () {
+
+        Route::get('/', [OsasOrganizationController::class, 'index'])->name('index');
+    });
+    Route::group([
+        'middleware'=> [
+            'can:is-osas'
+        ],
+        'prefix' => 'osas/certifcate',
+        'as' => 'osas.generatecerticate.'
+    ], function () {
+        Route::get('/', [ GenerateController::class, 'index'])->name('index');
     });
 
 
@@ -233,16 +277,45 @@ Route::get('/', function () {
         'middleware'=> [
             'can:is-adviser'
         ],
-        'prefix' => 'organizations',
+        'prefix' => 'adviser/organizations',
         'as' => 'campusadviser.organization.'
     ], function () {
 
         Route::get('/', [CampusAdviserOrganizationController::class, 'index'])->name('index');
-        Route::post('/approve', [CampusAdviserOrganizationController::class, 'approve'])->name('approve');
-        Route::post('/deny', [CampusAdviserOrganizationController::class, 'deny'])->name('deny');
+        // Route::post('/approve', [CampusAdviserOrganizationController::class, 'approve'])->name('approve');
+        // Route::post('/deny', [CampusAdviserOrganizationController::class, 'deny'])->name('deny');
       
     
     });
+    Route::group([
+        'middleware'=> [
+            'can:is-director'
+        ],
+        'prefix' => 'director/organizations',
+        'as' => 'director.organization.'
+    ], function () {
+
+        Route::get('/', [DirectorOrganizationController::class, 'index'])->name('index');
+
+      
+    
+    });
+    Route::group([
+        'middleware'=> [
+            'can:is-vpa'
+        ],
+        'prefix' => 'vpa/organizations',
+        'as' => 'vpa.organization.'
+    ], function () {
+
+        Route::get('/', [VpaOrganizationController::class, 'index'])->name('index');
+
+      
+    
+    });
+
+
+    
     Route::group([
         'middleware'=> [
             'can:is-student'
@@ -258,9 +331,27 @@ Route::get('/', function () {
         Route::post('delete-selected', [ApplyApplicationController::class, 'deleteSelected'])->name('deleteselected');
         Route::post('delete-file', [ApplyApplicationController::class, 'deleteFile'])->name('deletefile');
     
+    });
+
+    Route::group([
+        'middleware'=> [
+
+        ],
+        'prefix' => 'organizations',
+        'as' => 'organization.application.'
+    ], function () {
+
+        Route::post('/approve', [ApproveController::class, 'approve'])->name('approve');
+        Route::post('/deny', [ApproveController::class, 'deny'])->name('deny');
       
     
     });
+
+
+    Route::get('notification', [NotificationController::class, 'index'])->name('nottification.index');
+    
+
+
 
    
 });

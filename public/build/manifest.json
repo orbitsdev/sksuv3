@@ -1,0 +1,376 @@
+{
+  "_adminlayout-10455c20.js": {
+    "file": "assets/adminlayout-10455c20.js",
+    "imports": [
+      "resources/js/app.js"
+    ]
+  },
+  "_guestUserSelect-517d9360.js": {
+    "file": "assets/guestUserSelect-517d9360.js",
+    "imports": [
+      "resources/js/app.js"
+    ]
+  },
+  "_lodash-ade73c30.js": {
+    "file": "assets/lodash-ade73c30.js",
+    "imports": [
+      "resources/js/app.js"
+    ]
+  },
+  "_manageApplicationCard-c9c3afeb.js": {
+    "css": [
+      "assets/manageApplicationCard-a5de5831.css"
+    ],
+    "file": "assets/manageApplicationCard-c9c3afeb.js",
+    "imports": [
+      "resources/js/app.js",
+      "_lodash-ade73c30.js"
+    ]
+  },
+  "_schoolYearSelect-aa65a4c6.js": {
+    "file": "assets/schoolYearSelect-aa65a4c6.js",
+    "imports": [
+      "resources/js/app.js"
+    ]
+  },
+  "manageApplicationCard.css": {
+    "file": "assets/manageApplicationCard-a5de5831.css",
+    "src": "manageApplicationCard.css"
+  },
+  "resources/css/app.css": {
+    "file": "assets/app-08e91f9e.css",
+    "isEntry": true,
+    "src": "resources/css/app.css"
+  },
+  "resources/js/app.css": {
+    "file": "assets/app-c91ded2c.css",
+    "src": "resources/js/app.css"
+  },
+  "resources/js/app.js": {
+    "css": [
+      "assets/app-c91ded2c.css"
+    ],
+    "dynamicImports": [
+      "resources/js/pages/dashboard.vue",
+      "resources/js/pages/director/organizationindex.vue",
+      "resources/js/pages/login.vue",
+      "resources/js/pages/osas/accountpasswordindex.vue",
+      "resources/js/pages/osas/accounts.vue",
+      "resources/js/pages/osas/applicationrequirements.vue",
+      "resources/js/pages/osas/campusadviserindex.vue",
+      "resources/js/pages/osas/campusandorganization.vue",
+      "resources/js/pages/osas/campusdirectorindex.vue",
+      "resources/js/pages/osas/campusindex.vue",
+      "resources/js/pages/osas/certificate.vue",
+      "resources/js/pages/osas/endorseindex.vue",
+      "resources/js/pages/osas/generatecertificateindex.vue",
+      "resources/js/pages/osas/organizationindex.vue",
+      "resources/js/pages/osas/organizationindex2.vue",
+      "resources/js/pages/osas/requirementsindex.vue",
+      "resources/js/pages/osas/rewviewapplications.vue",
+      "resources/js/pages/osas/schoolyear.vue",
+      "resources/js/pages/osas/vpaindex.vue",
+      "resources/js/pages/register.vue",
+      "resources/js/pages/sample/page1.vue",
+      "resources/js/pages/sample/page2.vue",
+      "resources/js/pages/sample/page3.vue",
+      "resources/js/pages/sboadviser/endorsedindex.vue",
+      "resources/js/pages/sboadviser/manageofficerindex.vue",
+      "resources/js/pages/sboadviser/officerindex.vue",
+      "resources/js/pages/sboadviser/organizationindex.vue",
+      "resources/js/pages/student/applicationindex.vue",
+      "resources/js/pages/vpa/organizationindex.vue"
+    ],
+    "file": "assets/app-544d6b58.js",
+    "isEntry": true,
+    "src": "resources/js/app.js"
+  },
+  "resources/js/pages/dashboard.vue": {
+    "file": "assets/dashboard-6d0bd073.js",
+    "imports": [
+      "_adminlayout-10455c20.js",
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/pages/dashboard.vue"
+  },
+  "resources/js/pages/director/organizationindex.vue": {
+    "file": "assets/organizationindex-482caae5.js",
+    "imports": [
+      "resources/js/app.js",
+      "_lodash-ade73c30.js",
+      "_adminlayout-10455c20.js",
+      "_manageApplicationCard-c9c3afeb.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/pages/director/organizationindex.vue"
+  },
+  "resources/js/pages/login.vue": {
+    "file": "assets/login-9fb35e04.js",
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/pages/login.vue"
+  },
+  "resources/js/pages/osas/accountpasswordindex.vue": {
+    "file": "assets/accountpasswordindex-1de465e3.js",
+    "imports": [
+      "resources/js/app.js",
+      "_lodash-ade73c30.js",
+      "resources/js/pages/osas/accounts.vue",
+      "_adminlayout-10455c20.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/pages/osas/accountpasswordindex.vue"
+  },
+  "resources/js/pages/osas/accounts.vue": {
+    "file": "assets/accounts-c2c5dc13.js",
+    "imports": [
+      "_adminlayout-10455c20.js",
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/pages/osas/accounts.vue"
+  },
+  "resources/js/pages/osas/applicationrequirements.vue": {
+    "file": "assets/applicationrequirements-7e0d3a34.js",
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/pages/osas/applicationrequirements.vue"
+  },
+  "resources/js/pages/osas/campusadviserindex.vue": {
+    "file": "assets/campusadviserindex-cac99dd6.js",
+    "imports": [
+      "resources/js/app.js",
+      "_lodash-ade73c30.js",
+      "resources/js/pages/osas/accounts.vue",
+      "_schoolYearSelect-aa65a4c6.js",
+      "_guestUserSelect-517d9360.js",
+      "_adminlayout-10455c20.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/pages/osas/campusadviserindex.vue"
+  },
+  "resources/js/pages/osas/campusandorganization.vue": {
+    "file": "assets/campusandorganization-6134d05d.js",
+    "imports": [
+      "_adminlayout-10455c20.js",
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/pages/osas/campusandorganization.vue"
+  },
+  "resources/js/pages/osas/campusdirectorindex.vue": {
+    "file": "assets/campusdirectorindex-2fe8e997.js",
+    "imports": [
+      "resources/js/app.js",
+      "_lodash-ade73c30.js",
+      "resources/js/pages/osas/accounts.vue",
+      "_schoolYearSelect-aa65a4c6.js",
+      "_guestUserSelect-517d9360.js",
+      "_adminlayout-10455c20.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/pages/osas/campusdirectorindex.vue"
+  },
+  "resources/js/pages/osas/campusindex.vue": {
+    "file": "assets/campusindex-60b9a139.js",
+    "imports": [
+      "resources/js/app.js",
+      "_lodash-ade73c30.js",
+      "_adminlayout-10455c20.js",
+      "_schoolYearSelect-aa65a4c6.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/pages/osas/campusindex.vue"
+  },
+  "resources/js/pages/osas/certificate.vue": {
+    "file": "assets/certificate-4627a134.js",
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/pages/osas/certificate.vue"
+  },
+  "resources/js/pages/osas/endorseindex.vue": {
+    "file": "assets/endorseindex-52d4ae54.js",
+    "imports": [
+      "resources/js/app.js",
+      "_lodash-ade73c30.js",
+      "_adminlayout-10455c20.js",
+      "_manageApplicationCard-c9c3afeb.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/pages/osas/endorseindex.vue"
+  },
+  "resources/js/pages/osas/generatecertificateindex.vue": {
+    "file": "assets/generatecertificateindex-205259b3.js",
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/pages/osas/generatecertificateindex.vue"
+  },
+  "resources/js/pages/osas/organizationindex.vue": {
+    "file": "assets/organizationindex-4aea7c8e.js",
+    "imports": [
+      "resources/js/app.js",
+      "_lodash-ade73c30.js",
+      "_adminlayout-10455c20.js",
+      "_manageApplicationCard-c9c3afeb.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/pages/osas/organizationindex.vue"
+  },
+  "resources/js/pages/osas/organizationindex2.vue": {
+    "file": "assets/organizationindex2-88863287.js",
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/pages/osas/organizationindex2.vue"
+  },
+  "resources/js/pages/osas/requirementsindex.vue": {
+    "file": "assets/requirementsindex-27c766cf.js",
+    "imports": [
+      "resources/js/app.js",
+      "_lodash-ade73c30.js",
+      "_adminlayout-10455c20.js",
+      "_schoolYearSelect-aa65a4c6.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/pages/osas/requirementsindex.vue"
+  },
+  "resources/js/pages/osas/rewviewapplications.vue": {
+    "file": "assets/rewviewapplications-ca9f7f46.js",
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/pages/osas/rewviewapplications.vue"
+  },
+  "resources/js/pages/osas/schoolyear.vue": {
+    "file": "assets/schoolyear-7a505af7.js",
+    "imports": [
+      "resources/js/app.js",
+      "_lodash-ade73c30.js",
+      "_adminlayout-10455c20.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/pages/osas/schoolyear.vue"
+  },
+  "resources/js/pages/osas/vpaindex.vue": {
+    "file": "assets/vpaindex-ede8d9fd.js",
+    "imports": [
+      "resources/js/app.js",
+      "_lodash-ade73c30.js",
+      "resources/js/pages/osas/accounts.vue",
+      "_guestUserSelect-517d9360.js",
+      "_adminlayout-10455c20.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/pages/osas/vpaindex.vue"
+  },
+  "resources/js/pages/register.vue": {
+    "file": "assets/register-87406276.js",
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/pages/register.vue"
+  },
+  "resources/js/pages/sample/page1.vue": {
+    "file": "assets/page1-cae1dec0.js",
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/pages/sample/page1.vue"
+  },
+  "resources/js/pages/sample/page2.vue": {
+    "file": "assets/page2-3334efaf.js",
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/pages/sample/page2.vue"
+  },
+  "resources/js/pages/sample/page3.vue": {
+    "file": "assets/page3-12a35e48.js",
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/pages/sample/page3.vue"
+  },
+  "resources/js/pages/sboadviser/endorsedindex.vue": {
+    "file": "assets/endorsedindex-17e9865d.js",
+    "imports": [
+      "resources/js/app.js",
+      "_lodash-ade73c30.js",
+      "_adminlayout-10455c20.js",
+      "_manageApplicationCard-c9c3afeb.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/pages/sboadviser/endorsedindex.vue"
+  },
+  "resources/js/pages/sboadviser/manageofficerindex.vue": {
+    "file": "assets/manageofficerindex-01f30b07.js",
+    "imports": [
+      "resources/js/app.js",
+      "_lodash-ade73c30.js",
+      "_adminlayout-10455c20.js",
+      "_schoolYearSelect-aa65a4c6.js",
+      "_guestUserSelect-517d9360.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/pages/sboadviser/manageofficerindex.vue"
+  },
+  "resources/js/pages/sboadviser/officerindex.vue": {
+    "file": "assets/officerindex-699859e5.js",
+    "imports": [
+      "resources/js/app.js",
+      "_lodash-ade73c30.js",
+      "_adminlayout-10455c20.js",
+      "_schoolYearSelect-aa65a4c6.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/pages/sboadviser/officerindex.vue"
+  },
+  "resources/js/pages/sboadviser/organizationindex.vue": {
+    "file": "assets/organizationindex-fe37d042.js",
+    "imports": [
+      "resources/js/app.js",
+      "_lodash-ade73c30.js",
+      "_adminlayout-10455c20.js",
+      "_manageApplicationCard-c9c3afeb.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/pages/sboadviser/organizationindex.vue"
+  },
+  "resources/js/pages/student/applicationindex.vue": {
+    "file": "assets/applicationindex-0f2c9162.js",
+    "imports": [
+      "resources/js/app.js",
+      "_lodash-ade73c30.js",
+      "_adminlayout-10455c20.js",
+      "_manageApplicationCard-c9c3afeb.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/pages/student/applicationindex.vue"
+  },
+  "resources/js/pages/vpa/organizationindex.vue": {
+    "file": "assets/organizationindex-ed637ef7.js",
+    "imports": [
+      "resources/js/app.js",
+      "_lodash-ade73c30.js",
+      "_adminlayout-10455c20.js",
+      "_manageApplicationCard-c9c3afeb.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/pages/vpa/organizationindex.vue"
+  }
+}

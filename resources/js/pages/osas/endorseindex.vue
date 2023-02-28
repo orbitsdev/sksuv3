@@ -507,7 +507,7 @@ function handleManageForm() {
                       item.organization_process.campus_adviser_approved_status ===
                       'waiting for review'
                     "
-                    :c="'bg-gray-50 text-gray-400'"
+                                     :c="'cursor-pointer bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <timeSvg />
@@ -576,7 +576,7 @@ function handleManageForm() {
                       item.organization_process.campus_director_approved_status ===
                       'waiting for review'
                     "
-                    :c="'bg-gray-50 text-gray-400'"
+                                     :c="'cursor-pointer bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <timeSvg />
@@ -644,7 +644,7 @@ function handleManageForm() {
                       item.organization_process.osas_approved_status ===
                       'waiting for review'
                     "
-                    :c="'bg-gray-50 text-gray-400'"
+                                     :c="'cursor-pointer bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <timeSvg />
@@ -707,7 +707,7 @@ function handleManageForm() {
                       item.organization_process.vpa_approved_status ===
                       'waiting for review'
                     "
-                    :c="'bg-gray-50 text-gray-400'"
+                                     :c="'cursor-pointer bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <timeSvg />

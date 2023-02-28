@@ -64,9 +64,13 @@ class AuthController extends Controller
             return redirect()->route('vpa.organization.index');
 
         }
+        if(Auth::user()->hasRoleOF(['guest','sbo-student'])){
+                    
 
-
+            return redirect()->route('application.index');
+        }
         return redirect()->route('application.index');
+
        
     }
 
@@ -111,8 +115,13 @@ class AuthController extends Controller
 
             }
 
+            if(Auth::user()->hasRoleOF(['guest','sbo-student'])){
+                    
 
+                return redirect()->route('application.index');
+            }
             return redirect()->route('application.index');
+
 
 
         }

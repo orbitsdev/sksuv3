@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Socialite\Facades\Socialite;
 
+use Illuminate\Support\Facades\Request as supportrequest;
+
 class GoogleController extends Controller
 {
 
@@ -19,15 +21,24 @@ class GoogleController extends Controller
 
 
         //  Socialite::driver($provider)->stateless()->redirect()->getTargetUrl();
-        return Socialite::driver($provider)->stateless()->redirect();
+        // return Socialite::driver($provider)->stateless()->redirect();
+        return Socialite::driver($provider)->redirect();
          
     }
 
 
     public function handleProviderCallback($provider)
-    {
+    {       
 
-        $user = Socialite::driver($provider)->stateless()->user();
+
+        
+
+        // $user = Socialite::driver($provider)->stateless()->user();
+        $user = Socialite::driver($provider)->user();
+        
+
+
+
 
         $user_account = User::where('email', $user->email)->first();
     
@@ -49,7 +60,7 @@ class GoogleController extends Controller
                 $user_account->roles()->sync($guest);
             }
         } else {
-            if (count($user_account->socialAccounts) === 0) {
+            if (count($user_account->social_accounts) === 0) {
                 $account = SocialAccount::create([
                     'user_id' => $user_account->id,
                     'provider_user_id' => $user->id,
@@ -58,15 +69,40 @@ class GoogleController extends Controller
             }
         }
     
-        if (Auth::attempt(['email' => $user->email, 'password' => '@password2!!'])) {
-            Request::session()->regenerate();
-    
-            return redirect()->intended('/dashboard');
+        Auth::login($user_account);
+
+
+        if(Auth::user()->hasRole('osas')){
+            return redirect()->route('schoolyear.index');
         }
-    
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->onlyInput('email');
-    
+
+        
+        if(Auth::user()->hasRole('sbo-adviser')){
+
+            
+            return redirect()->route('campusadviser.organization.index');
+
+        }
+        if(Auth::user()->hasRole('campus-director')){
+
+            
+            return redirect()->route('director.organization.index');
+
+        }
+        if(Auth::user()->hasRole('vpaa')){
+
+            
+            return redirect()->route('vpa.organization.index');
+
+        }
+
+
+        if(Auth::user()->hasRoleOF(['guest','sbo-student'])){
+                    
+
+            return redirect()->route('application.index');
+        }
+        return redirect()->route('application.index');
+
     }
 }

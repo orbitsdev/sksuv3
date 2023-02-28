@@ -56,6 +56,7 @@ class HandleInertiaRequests extends Middleware
                 'isDeveloper' => Auth::user() ?  Auth::user()->hasRole('developer') : null,
                 'isDirector' => Auth::user() ?  Auth::user()->hasRole('campus-director') : null,
                 'isVpa' => Auth::user() ?  Auth::user()->hasRole('vpaa') : null,
+                'isGuestOrStudent' => Auth::user() ?  Auth::user()->hasRoleOf(['guest','sbo-student']) : null,
             ],
             'sbocurrentschool' => Auth::user() ? RoleChangerController::sboCurrentSchool() : null,
 

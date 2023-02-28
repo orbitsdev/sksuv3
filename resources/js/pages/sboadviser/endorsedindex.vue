@@ -26,7 +26,7 @@ const has_warning = ref(null);
 
 const form = useForm({
   comment: "",
-  approver_type:"vpa",
+  approver_type:"campus_adviser",
   item_id: null,
   id: null,
 });
@@ -35,7 +35,7 @@ watch(
   search,
   throttle((value) => {
     router.get(
-      route("vpa.organization.index"),
+      route("campusadviser.organization.endorsedindex"),
       { search: value },
       {
         preserveState: true,
@@ -264,10 +264,9 @@ function handleManageForm() {
           '',
           'Name of Organization',
           'Campus',
-          'Adviser',
           'School Year',
-          'Documents',
-          'Status',
+          'Appication Documents & Remarks ',
+          'Application Process Status',
           '',
         ]"
       >
@@ -279,20 +278,17 @@ function handleManageForm() {
           <Tcell
             :c="'whitespace-nowrap align-center text-center text-sm items-center  font-medium text-gray-900 align-top pt-2'"
           >
-            <!-- <input
+            <input
               v-model="selected_items"
               :value="item.id"
               type="checkbox"
               class="h-4 w-4 accent-green-600 text-white rounded border-gray-200"
-            /> -->
+            />
           </Tcell>
 
           <Tcell class="uppercase align-top pt-2"> {{ item.name }} </Tcell>
           <Tcell class="uppercase align-top pt-2">
             {{ item.campus_adviser.campus.name }}
-          </Tcell>
-          <Tcell class="uppercase align-top pt-2">
-            {{ item.campus_adviser.user.first_name }} {{ item.campus_adviser.user.last_name }}
           </Tcell>
           <Tcell class="uppercase align-top pt-2">
             SY.{{ item.campus_adviser.school_year.from }}
@@ -372,11 +368,145 @@ function handleManageForm() {
               </div>
             </div>
           </Tcell>
-          <Tcell class="align-top pt-2">
+          <Tcell class="align-top pt-2 capitalize">
+            <div class="mb-1 border py-2 px-2 mr-4 rounded">
+                          <p class="truncate text-sm t text-gray-900 uppercase">You</p>
 
-          
+              <div class="px-2">
+                <div class="mb-0.5">
+                  <status-card
+                    v-if="
+                      item.organization_process.campus_adviser_approved_status ===
+                      'waiting for review'
+                    "
+                    :c="'bg-gray-50 text-gray-400'"
+                    class="inline-flex items-center"
+                  >
+                    <timeSvg />
 
-<div class="mb-1 border py-2 px-2 mr-4 rounded">
+                    {{ item.organization_process.campus_adviser_approved_status }}
+                  </status-card>
+                </div>
+                <div class="mb-0.5">
+                  <status-card
+                    v-if="
+                      item.organization_process.campus_adviser_approved_status ===
+                      'approved'
+                    "
+                        :c="'cursor-pointer bg-gradient-to-r from-green-700 via-green-600 to-green-500 text-white'"
+                    class="inline-flex items-center"
+                  >
+                    <approveSvg />
+
+                    {{ item.organization_process.campus_adviser_approved_status }}
+                  </status-card>
+                </div>
+
+                <div class="mb-0.5">
+                  <status-card
+                    v-if="
+                      item.organization_process.campus_adviser_approved_status ===
+                      'denied'
+                    "
+                      :c="'cursor-pointer bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white'"
+                    class="inline-flex items-center"
+                  >
+                    <deniedSvg />
+
+                    Denied
+                  </status-card>
+                </div>
+
+                <div class="mb-0.5">
+
+                  <status-card
+                    :c="[
+                      item.organization_process.campus_adviser_endorsed_status === 'true'
+                        ? 'cursor-pointer bg-gradient-to-r from-green-700 via-green-600 to-green-500 text-white'
+                        : 'bg-gray-50 text-gray-400',
+                    ]"
+                    class="inline-flex items-center"
+                  >
+                    <checkedSvg />
+
+                    {{
+                      item.organization_process.campus_adviser_endorsed_status === "true"
+                        ? "Endorsed"
+                        : "Not endorsed yet"
+                    }}
+                  </status-card>
+                </div>
+              </div>
+               </div>
+ <div class="mb-1 border py-2 px-2 mr-4 rounded">
+              <p class="truncate text-sm t text-gray-900 uppercase">Campus Director</p>
+
+              <div class="px-2">
+                <div class="mb-0.5">
+                  <status-card
+                    v-if="
+                      item.organization_process.campus_director_approved_status ===
+                      'waiting for review'
+                    "
+                    :c="'bg-gray-50 text-gray-400'"
+                    class="inline-flex items-center"
+                  >
+                    <timeSvg />
+
+                    {{ item.organization_process.campus_director_approved_status }}
+                  </status-card>
+                </div>
+                <div class="mb-0.5">
+                  <status-card
+                    v-if="
+                      item.organization_process.campus_director_approved_status ===
+                      'approved'
+                    "
+                     :c="'cursor-pointer bg-gradient-to-r from-green-700 via-green-600 to-green-500 text-white'"
+                    class="inline-flex items-center"
+                  >
+                    <approveSvg />
+
+                    {{ item.organization_process.campus_director_approved_status }}
+                  </status-card>
+                </div>
+
+                <div class="mb-0.5">
+                  <status-card
+                    v-if="
+                      item.organization_process.campus_director_approved_status ===
+                      'denied'
+                    "
+                      :c="'cursor-pointer bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white'"
+                    class="inline-flex items-center"
+                  >
+                    <deniedSvg />
+
+                    Denied
+                  </status-card>
+                </div>
+
+                <!-- <div class="mb-0.5">
+                  <status-card
+                    :c="[
+                      item.organization_process.campus_director_endorsed_status === 'true'
+                        ? 'bg-green-100 text-green-600'
+                        : 'bg-gray-50 text-gray-400',
+                    ]"
+                    class="inline-flex items-center"
+                  >
+                    <checkedSvg />
+
+                    {{
+                      item.organization_process.campus_director_endorsed_status === "true"
+                        ? "Endorsed"
+                        : "Not endorsed yet"
+                    }}
+                  </status-card>
+                </div> -->
+              </div>
+            </div>
+               <div class="mb-1 border py-2 px-2 mr-4 rounded">
               <p class="truncate text-sm t text-gray-900 uppercase">Osas</p>
               <div class="px-2">
                 <div class="mb-0.5">
@@ -385,8 +515,7 @@ function handleManageForm() {
                       item.organization_process.osas_approved_status ===
                       'waiting for review'
                     "
-                                       :c="'cursor-pointer bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white'"
-
+                    :c="'bg-gray-50 text-gray-400'"
                     class="inline-flex items-center"
                   >
                     <timeSvg />
@@ -397,8 +526,7 @@ function handleManageForm() {
                 <div class="mb-0.5">
                   <status-card
                     v-if="item.organization_process.osas_approved_status === 'approved'"
-                                     :c="'cursor-pointer bg-gradient-to-r from-green-700 via-green-600 to-green-500 text-white'"
-
+                       :c="'cursor-pointer bg-gradient-to-r from-green-700 via-green-600 to-green-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <approveSvg />
@@ -410,8 +538,7 @@ function handleManageForm() {
                 <div class="mb-0.5">
                   <status-card
                     v-if="item.organization_process.osas_approved_status === 'denied'"
-                                      :c="'cursor-pointer bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white'"
-
+                      :c="'cursor-pointer bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <deniedSvg />
@@ -440,9 +567,10 @@ function handleManageForm() {
                 </div> -->
               </div>
             </div>
-            
- <div class="mb-1 border py-2 px-2 mr-4 rounded">
-              <p class="truncate text-sm t text-gray-900 uppercase">You</p>
+
+
+             <div class="mb-1 border py-2 px-2 mr-4 rounded">
+              <p class="truncate text-sm t text-gray-900 uppercase">Vpa</p>
               <div class="px-2">
                 <div class="mb-0.5">
                   <status-card
@@ -450,8 +578,7 @@ function handleManageForm() {
                       item.organization_process.vpa_approved_status ===
                       'waiting for review'
                     "
-                                       :c="'cursor-pointer bg-gradient-to-r from-green-700 via-green-600 to-green-500 text-white'"
-
+                    :c="'bg-gray-50 text-gray-400'"
                     class="inline-flex items-center"
                   >
                     <timeSvg />
@@ -462,8 +589,7 @@ function handleManageForm() {
                 <div class="mb-0.5">
                   <status-card
                     v-if="item.organization_process.vpa_approved_status === 'approved'"
-                                     :c="'cursor-pointer bg-gradient-to-r from-green-700 via-green-600 to-green-500 text-white'"
-
+                     :c="'cursor-pointer bg-gradient-to-r from-green-700 via-green-600 to-green-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <approveSvg />
@@ -475,8 +601,7 @@ function handleManageForm() {
                 <div class="mb-0.5">
                   <status-card
                     v-if="item.organization_process.vpa_approved_status === 'denied'"
-                                      :c="'cursor-pointer bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white'"
-
+                      :c="'cursor-pointer bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <deniedSvg />
@@ -486,7 +611,7 @@ function handleManageForm() {
                 </div>
               </div>
             </div>
-            
+           
           </Tcell>
           <!-- <Tcell class="align-top pt-2">
             <div> 
@@ -588,14 +713,14 @@ function handleManageForm() {
         <div class="grid grid-cols-1">
        
           
-          <button  :disabled="form.processing" v-if="selected_item.organization_process.vpa_approved_status != 'approved' "  @click="handleSubmit('approve')" class="border rounded-lg hover:scale-95 transition-all ease-in-out hover:bg-green-700 bg-green-600 text-white">
+          <button  :disabled="form.processing" v-if="selected_item.organization_process.campus_adviser_approved_status != 'approved' "  @click="handleSubmit('approve')" class="border rounded-lg hover:scale-95 transition-all ease-in-out hover:bg-green-700 bg-green-600 text-white">
             <div class="col-span-1 h-40 flex items-center justify-center flex-col">
               <thumbsUpSvg :active="form.processing && marker =='approve' "/>
 
               <p class="text-2xl mt-2">Approve</p>
             </div>
           </button>
-          <button :disabled="form.processing" v-if="selected_item.organization_process.vpa_approved_status != 'denied'" @click="handleSubmit('deny')" class="border rounded-lg hover:scale-95 transition-all ease-in-out hover:bg-red-800 bg-red-700 text-white">
+          <button :disabled="form.processing" v-if="selected_item.organization_process.campus_adviser_approved_status != 'denied'" @click="handleSubmit('deny')" class="border rounded-lg hover:scale-95 transition-all ease-in-out hover:bg-red-800 bg-red-700 text-white">
             <div class="col-span-1 h-40 flex items-center justify-center flex-col">
               <thumbsDownSvg :active="form.processing && marker =='deny' "/>
             

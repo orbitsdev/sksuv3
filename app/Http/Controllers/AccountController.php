@@ -25,7 +25,7 @@ class AccountController extends Controller
             'users'=> User::query()->
             when(supportrequest::input('search'), function($query, $search){
                 $query->where('first_name', 'like', "%{$search}%")->orWhere('last_name', 'like', "%{$search}%")->orWhere('email', 'like', "%{$search}%");
-            })->paginate(10)->withQueryString(),
+            })->whereDoesntHave('social_accounts')->latest()->paginate(10)->withQueryString(),
             'filters'=> supportrequest::only(['search'])
         ]);
 

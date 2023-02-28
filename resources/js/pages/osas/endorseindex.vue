@@ -39,12 +39,11 @@ function showEndorsedConfirmation(item){
       confirm_endorse.value = true;
 }
 
-
 watch(
   search,
   throttle((value) => {
     router.get(
-      route("osas.organization.index"),
+      route("osas.organization.endorsedindex"),
       { search: value },
       {
         preserveState: true,
@@ -472,7 +471,7 @@ function handleManageForm() {
                     </div>
                   </aside>
                 </div>
-
+<!-- 
                 <div
                   @click="viewRemarks(item)"
                   class="cursor-pointer bg-gradient-to-r hover:scale-95 transition-all ease-in-out from-rose-500 via-red-500 to-pink-500 text-white rounded py-2 text px-1 mr-2 mt-4"
@@ -493,7 +492,7 @@ function handleManageForm() {
                     </svg>
                     Comments {{ item.remarks.length }}
                   </div>
-                </div>
+                </div> -->
               </div>
             </div>
           </Tcell>
@@ -783,7 +782,7 @@ function handleManageForm() {
                 <span class=""> Decide </span>
               </SkButtonGray>
             </div>
-            <div class="mt2">
+            <!-- <div class="mt2">
               <SkButtonGray
                 :disabled="selected_items.length > 0"
                 class="max-w-40 mr-2"
@@ -827,7 +826,7 @@ function handleManageForm() {
 
                 <span class=""> Endorse </span>
               </SkButtonGray>
-            </div>
+            </div> -->
           </Tcell>
         </tr>
       </SkTable>

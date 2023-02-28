@@ -279,12 +279,12 @@ function handleManageForm() {
           <Tcell
             :c="'whitespace-nowrap align-center text-center text-sm items-center  font-medium text-gray-900 align-top pt-2'"
           >
-            <input
+            <!-- <input
               v-model="selected_items"
               :value="item.id"
               type="checkbox"
               class="h-4 w-4 accent-green-600 text-white rounded border-gray-200"
-            />
+            /> -->
           </Tcell>
 
           <Tcell class="uppercase align-top pt-2"> {{ item.name }} </Tcell>
@@ -397,7 +397,7 @@ function handleManageForm() {
                       item.organization_process.campus_adviser_approved_status ===
                       'approved'
                     "
-                    :c="'bg-green-50 text-green-600'"
+                       :c="'cursor-pointer bg-gradient-to-r from-green-700 via-green-600 to-green-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <approveSvg />
@@ -467,7 +467,7 @@ function handleManageForm() {
                       item.organization_process.campus_director_approved_status ===
                       'approved'
                     "
-                    :c="'bg-green-50 text-green-600'"
+                  :c="'cursor-pointer bg-gradient-to-r from-green-700 via-green-600 to-green-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <approveSvg />
@@ -482,7 +482,7 @@ function handleManageForm() {
                       item.organization_process.campus_director_approved_status ===
                       'denied'
                     "
-                    :c="'bg-red-50 text-red-600'"
+                      :c="'cursor-pointer bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <deniedSvg />

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 use App\Models\Organization;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request as supportrequest;
 
 
@@ -23,7 +23,9 @@ class OsasOrganizationController extends Controller
             })->whereHas('organization_process', function($query){
                 $query->where('campus_adviser_approved_status', 'approved')->where('campus_director_approved_status', 'approved');
             })->latest()->
-            with(['campus_adviser.user', 'campus_adviser.campus', 'campus_adviser.school_year', 'requirements.organization_requirements','organization_requirements' => function($org) {
+            with(['remarks'=> function($query){
+                    $query->where('sender_id', Auth::user()->id);
+            }, 'campus_adviser.user', 'campus_adviser.campus', 'campus_adviser.school_year', 'requirements.organization_requirements','organization_requirements' => function($org) {
                 $org->with(['requirement', 'file']);
             },'organization_process'])
             ->paginate(10)

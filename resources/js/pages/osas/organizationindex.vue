@@ -11,9 +11,9 @@ const props = defineProps({
 
 const search = ref("");
 const show_form = ref(false);
-const marker = ref('');
+const marker = ref("");
 const show_manage_form = ref(false);
-const show_remark_form = ref(false);
+
 const confirm_delete = ref(false);
 const is_deleting = ref(false);
 const is_updating = ref(false);
@@ -21,13 +21,12 @@ const selected_items = ref([]);
 const selected_item = ref(null);
 const has_warning = ref(null);
 
-
-
-
 const form = useForm({
   comment: "",
-  approver_type:"osas",
+  approver_type: "osas",
   item_id: null,
+  comment_only: false,
+  remark_id: null,
   id: null,
 });
 
@@ -44,6 +43,76 @@ watch(
     );
   }, 500)
 );
+
+const show_remark_form = ref(false);
+const show_remarks = ref(false);
+
+function comment() {
+  form.post(route("organization.application.comment"), {
+    preserveState: true,
+    onStart: () => {},
+    onSuccess: () => {
+      show_remark_form.value = false;
+      form.reset();
+    },
+    onError: (error) => {
+      has_warning.value = error;
+      show_remark_form.value = false;
+    },
+
+    onFinish: () => {
+      show_remark_form.value = false;
+      form.reset();
+    },
+  });
+}
+
+function viewRemarks(item) {
+  selected_item.value = item;
+  show_remarks.value = true;
+}
+function closeRemark() {
+  show_remarks.value = false;
+  form.remark_id = null;
+}
+
+function showRemarkForm(item) {
+  form.comment_only = true;
+  show_remark_form.value = true;
+  selected_item.value = item;
+  form.id = item.id;
+}
+
+function closeRemarkForm(item) {
+  show_remark_form.value = false;
+  form.comment_only = false;
+}
+
+function  deleteRemark(organization,remark){
+    form.id = organization; 
+    form.remark_id = remark; 
+
+     form.post(route("organization.application.deletecomment"), {
+    preserveState: true,
+    preserveScroll: true,
+
+    onSuccess: () => {
+      closeRemark();
+    form.reset();
+
+    },
+    onError: (error) => {
+      has_warning.value = error;
+    },
+
+    onFinish: () => {
+      
+      closeRemark();
+      form.reset();
+    },
+  });
+
+}
 
 function showForm() {
   //   form.school_year_id = null;
@@ -63,6 +132,7 @@ function showUpdateForm(item) {
 function approve() {
   form.post(route("organization.application.approve"), {
     preserveState: true,
+    preserveScroll: true,
     onSuccess: () => {
       show_manage_form.value = false;
       form.reset();
@@ -71,20 +141,22 @@ function approve() {
       has_warning.value = error;
     },
 
-     onFinish: () => {
+    onFinish: () => {
       show_manage_form.value = false;
       form.reset();
     },
   });
 }
+
 function deny() {
   form.post(route("organization.application.deny"), {
-    preserveState: true,
-    onStart: () =>{
+   preserveState: true,
+    preserveScroll: true,
+    onStart: () => {
       show_remark_form.value = false;
     },
     onSuccess: () => {
-      show_manage_form.value = false; 
+      show_manage_form.value = false;
       show_remark_form.value = false;
       form.reset();
     },
@@ -94,7 +166,7 @@ function deny() {
       show_remark_form.value = false;
     },
 
-     onFinish: () => {
+    onFinish: () => {
       show_manage_form.value = false;
       show_remark_form.value = false;
       form.reset();
@@ -102,27 +174,21 @@ function deny() {
   });
 }
 
+function handleSubmit(type) {
+  marker.value = type;
 
- function handleSubmit(type){
-
-
-
-    
-    marker.value = type;
-
-    if(marker.value === 'approve'){
-            approve();      
-    }
-    if(marker.value === 'deny'){
-
-     show_remark_form.value = true;
-    }
-
- }
+  if (marker.value === "approve") {
+    approve();
+  }
+  if (marker.value === "deny") {
+    show_remark_form.value = true;
+  }
+}
 
 function update() {
   form.post(route("application.update"), {
-    preserveState: true,
+   preserveState: true,
+    preserveScroll: true,
     onSuccess: () => {
       form.id = null;
       show_form.value = false;
@@ -170,6 +236,11 @@ function showManageForm(item) {
   show_manage_form.value = true;
   selected_item.value = item;
   form.id = item.id;
+}
+
+function closeMangeForm() {
+  show_manage_form.value = false;
+  form.comment_only = false;
 }
 
 function deleteFile(file) {
@@ -266,7 +337,7 @@ function handleManageForm() {
           'Campus',
           'Adviser',
           'School Year',
-          'Documents',
+          'Information',
           'Status',
           '',
         ]"
@@ -292,7 +363,8 @@ function handleManageForm() {
             {{ item.campus_adviser.campus.name }}
           </Tcell>
           <Tcell class="uppercase align-top pt-2">
-            {{ item.campus_adviser.user.first_name }} {{ item.campus_adviser.user.last_name }}
+            {{ item.campus_adviser.user.first_name }}
+            {{ item.campus_adviser.user.last_name }}
           </Tcell>
           <Tcell class="uppercase align-top pt-2">
             SY.{{ item.campus_adviser.school_year.from }}
@@ -369,13 +441,35 @@ function handleManageForm() {
                     </div>
                   </aside>
                 </div>
+
+                <div
+                  @click="viewRemarks(item)"
+                  class="cursor-pointer bg-gradient-to-r hover:scale-95 transition-all ease-in-out from-rose-500 via-red-500 to-pink-500 text-white rounded py-2 text px-1 mr-2 mt-4"
+                  v-if="item.remarks.length > 0"
+                >
+                  <div class="truncate text-sm font-medium uppercase flex items-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      class="w-5 h-5 mr-2"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M12 2.25c-2.429 0-4.817.178-7.152.521C2.87 3.061 1.5 4.795 1.5 6.741v6.018c0 1.946 1.37 3.68 3.348 3.97.877.129 1.761.234 2.652.316V21a.75.75 0 001.28.53l4.184-4.183a.39.39 0 01.266-.112c2.006-.05 3.982-.22 5.922-.506 1.978-.29 3.348-2.023 3.348-3.97V6.741c0-1.947-1.37-3.68-3.348-3.97A49.145 49.145 0 0012 2.25zM8.25 8.625a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25zm2.625 1.125a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0zm4.875-1.125a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                    Comments {{ item.remarks.length }}
+                  </div>
+                </div>
               </div>
             </div>
           </Tcell>
           <Tcell class="align-top pt-2">
             <div class="mb-1 border py-2 px-2 mr-4 rounded">
               <div class="px-2">
-                            <p class="truncate text-sm t text-gray-900 uppercase">SBO ADVISER</p>
+                <p class="truncate text-sm t text-gray-900 uppercase">SBO ADVISER</p>
 
                 <div class="mb-0.5">
                   <status-card
@@ -420,7 +514,7 @@ function handleManageForm() {
                     Denied
                   </status-card>
                 </div>
-<!-- 
+                <!-- 
                 <div class="mb-0.5">
                   <status-card
                     :c="[
@@ -443,8 +537,7 @@ function handleManageForm() {
             </div>
 
             <div class="mb-1 border py-2 px-2 mr-4 rounded">
-                                      <p class="truncate text-sm t text-gray-900 uppercase">Campus Director</p>
-
+              <p class="truncate text-sm t text-gray-900 uppercase">Campus Director</p>
 
               <div class="px-2">
                 <div class="mb-0.5">
@@ -490,7 +583,7 @@ function handleManageForm() {
                     Denied
                   </status-card>
                 </div>
-<!-- 
+                <!-- 
                 <div class="mb-0.5">
                   <status-card
                     :c="[
@@ -512,9 +605,7 @@ function handleManageForm() {
               </div>
             </div>
 
-
-
-<div class="mb-1 border py-2 px-2 mr-4 rounded">
+            <div class="mb-1 border py-2 px-2 mr-4 rounded">
               <p class="truncate text-sm t text-gray-900 uppercase">You</p>
               <div class="px-2">
                 <div class="mb-0.5">
@@ -576,7 +667,6 @@ function handleManageForm() {
               </div>
             </div>
 
-            
             <div class="mb-1 border py-2 px-2 mr-4 rounded">
               <p class="truncate text-sm t text-gray-900 uppercase">Vpa</p>
               <div class="px-2">
@@ -619,7 +709,6 @@ function handleManageForm() {
                 </div>
               </div>
             </div>
-            
           </Tcell>
           <!-- <Tcell class="align-top pt-2">
             <div> 
@@ -638,35 +727,57 @@ function handleManageForm() {
             </div>
          </Tcell> -->
 
-          <Tcell class="flex items-center justify-center align-top pt-2">
-            <SkButtonGray
-              :disabled="selected_items.length > 0"
-              class="max-w-40 mr-2"
-              @click="showManageForm(item)"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                class="w-5 h-5 mr-2"
+          <Tcell class="align-top pt-2">
+            <div>
+              <SkButtonGray
+                :disabled="selected_items.length > 0"
+                class="max-w-40 mr-2"
+                @click="showManageForm(item)"
               >
-                <path
-                  d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32l8.4-8.4z"
-                />
-                <path
-                  d="M5.25 5.25a3 3 0 00-3 3v10.5a3 3 0 003 3h10.5a3 3 0 003-3V13.5a.75.75 0 00-1.5 0v5.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5V8.25a1.5 1.5 0 011.5-1.5h5.25a.75.75 0 000-1.5H5.25z"
-                />
-              </svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  class="w-5 h-5 mr-2"
+                >
+                  <path
+                    d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32l8.4-8.4z"
+                  />
+                  <path
+                    d="M5.25 5.25a3 3 0 00-3 3v10.5a3 3 0 003 3h10.5a3 3 0 003-3V13.5a.75.75 0 00-1.5 0v5.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5V8.25a1.5 1.5 0 011.5-1.5h5.25a.75.75 0 000-1.5H5.25z"
+                  />
+                </svg>
 
-              <span class=""> Decide </span>
-            </SkButtonGray>
+                <span class=""> Decide </span>
+              </SkButtonGray>
+            </div>
+            <div class="mt2">
+              <SkButtonGray
+                :disabled="selected_items.length > 0"
+                class="max-w-40 mr-2"
+                @click="showRemarkForm(item)"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  class="w-5 h-5 mr-2"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M4.848 2.771A49.144 49.144 0 0112 2.25c2.43 0 4.817.178 7.152.52 1.978.292 3.348 2.024 3.348 3.97v6.02c0 1.946-1.37 3.678-3.348 3.97a48.901 48.901 0 01-3.476.383.39.39 0 00-.297.17l-2.755 4.133a.75.75 0 01-1.248 0l-2.755-4.133a.39.39 0 00-.297-.17 48.9 48.9 0 01-3.476-.384c-1.978-.29-3.348-2.024-3.348-3.97V6.741c0-1.946 1.37-3.68 3.348-3.97zM6.75 8.25a.75.75 0 01.75-.75h9a.75.75 0 010 1.5h-9a.75.75 0 01-.75-.75zm.75 2.25a.75.75 0 000 1.5H12a.75.75 0 000-1.5H7.5z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+
+                <span class=""> Comment </span>
+              </SkButtonGray>
+            </div>
           </Tcell>
         </tr>
       </SkTable>
       <EmptyCard class="flex items-center justify-center h-64" v-else />
     </div>
-
-    
 
     <sk-dialog :transition="'slide-down'" :persistent="true" :isOpen="confirm_delete">
       <main class="">
@@ -719,19 +830,27 @@ function handleManageForm() {
     >
       <main class="p-2">
         <div class="grid grid-cols-1">
-       
-          
-          <button  :disabled="form.processing" v-if="selected_item.organization_process.osas_approved_status != 'approved' "  @click="handleSubmit('approve')" class="border rounded-lg hover:scale-95 transition-all ease-in-out hover:bg-green-700 bg-green-600 text-white">
+          <button
+            :disabled="form.processing"
+            v-if="selected_item.organization_process.osas_approved_status != 'approved'"
+            @click="handleSubmit('approve')"
+            class="border rounded-lg hover:scale-95 transition-all ease-in-out hover:bg-green-700 bg-green-600 text-white"
+          >
             <div class="col-span-1 h-40 flex items-center justify-center flex-col">
-              <thumbsUpSvg :active="form.processing && marker =='approve' "/>
+              <thumbsUpSvg :active="form.processing && marker == 'approve'" />
 
               <p class="text-2xl mt-2">Approve</p>
             </div>
           </button>
-          <button :disabled="form.processing" v-if="selected_item.organization_process.osas_approved_status != 'denied'" @click="handleSubmit('deny')" class="border rounded-lg hover:scale-95 transition-all ease-in-out hover:bg-red-800 bg-red-700 text-white">
+          <button
+            :disabled="form.processing"
+            v-if="selected_item.organization_process.osas_approved_status != 'denied'"
+            @click="handleSubmit('deny')"
+            class="border rounded-lg hover:scale-95 transition-all ease-in-out hover:bg-red-800 bg-red-700 text-white"
+          >
             <div class="col-span-1 h-40 flex items-center justify-center flex-col">
-              <thumbsDownSvg :active="form.processing && marker =='deny' "/>
-            
+              <thumbsDownSvg :active="form.processing && marker == 'deny'" />
+
               <p class="text-2xl mt-2">Deny</p>
             </div>
           </button>
@@ -751,31 +870,38 @@ function handleManageForm() {
       :isOpen="show_remark_form"
     >
       <main class="p-2">
-<div>
- <div
-              tabindex="0"
-              class="focus:outline-none text-sm bg-indigo-100 text-indigo-700 dark:text-indigo-600 rounded font-medium p-2"
-            >
-              Please specify if there is a mistake or missing files in the information
-              This way, the applicant can correct and resubmit the application for your
-              review.
-            </div>
-  <label for="comment" class="block  font-medium text-gray-700">Remark</label>
-  <div class="mt-1">
-    <textarea rows="4" v-model="form.comment" class="p-2 block w-full rounded-md border shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
-  </div>
-</div>
-
-       <div class="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
-          <SkButtonGray @click="show_remark_form  = false"> Close </SkButtonGray>
-
-          <sk-delete-button @click="deny" :processing="form.processing">
-          Submit
-          </sk-delete-button>
-         
-          
+        <div>
+          <div
+            tabindex="0"
+            class="focus:outline-none text-sm bg-indigo-100 text-indigo-700 dark:text-indigo-600 rounded font-medium p-2"
+          >
+            Please specify if there is a mistake or missing files in the information This
+            way, the applicant can correct and resubmit the application for your review.
+          </div>
+          <label for="comment" class="block font-medium text-gray-700">Remark</label>
+          <div class="mt-1">
+            <textarea
+              rows="4"
+              v-model="form.comment"
+              class="p-2 block w-full rounded-md border shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            ></textarea>
+          </div>
         </div>
-       
+
+        <div class="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
+          <SkButtonGray @click="closeRemarkForm"> Close </SkButtonGray>
+
+          <sk-delete-button
+            v-if="form.comment_only"
+            @click="comment"
+            :processing="form.processing"
+          >
+            Post
+          </sk-delete-button>
+          <sk-delete-button v-else @click="deny" :processing="form.processing">
+            Submit
+          </sk-delete-button>
+        </div>
       </main>
     </sk-dialog>
   </adminlayout>
@@ -790,6 +916,48 @@ function handleManageForm() {
       ></w-progress>
       <p class="">Updating</p>
     </div>
+  </SkDialog>
+  <SkDialog :persistent="true" :isOpen="show_remarks" :width="'540'">
+
+
+    <main class="form-max-h" v-if="selected_item.remarks.length > 0">
+      <div
+        class="flex items-center space-x-4 border-b mb-1 py-2"
+        v-for="remark in selected_item.remarks"
+        :key="remark"
+      >
+        <div class="min-w-0 flex-1">
+          <p class="truncate text-xs font-medium text-gray-900">
+            <DateCard :text="remark.created_at" />
+          </p>
+          
+        </div>
+        <div>
+          <button
+          @click="deleteRemark(selected_item.id, remark.id)"
+            class="inline-flex items-center rounded-full border border-gray-300 bg-white px-2.5 py-0.5 text-sm font-medium leading-5 text-gray-700 shadow-sm hover:bg-gray-50"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              class="w-6 h-6 text-red-700"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="mt-5">
+        <SkButtonGray class="w-40 mr-4" @click="closeRemark">
+          Close
+        </SkButtonGray>
+      </div>
+    </main>
   </SkDialog>
 </template>
 

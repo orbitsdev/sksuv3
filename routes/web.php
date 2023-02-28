@@ -343,6 +343,8 @@ Route::get('/', function () {
 
         Route::post('/approve', [ApproveController::class, 'approve'])->name('approve');
         Route::post('/deny', [ApproveController::class, 'deny'])->name('deny');
+        Route::post('/comment', [ApproveController::class, 'comment'])->name('comment');
+        Route::post('/delete-comment', [ApproveController::class, 'deletecomment'])->name('deletecomment');
       
     
     });

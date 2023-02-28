@@ -139,7 +139,15 @@ class ApproveController extends Controller
 
     }
 
+
+
+    
+
+
     public function deny(Request $request){
+
+
+        
 
         
         $organization = Organization::where('id', $request->id)->first();
@@ -288,6 +296,31 @@ class ApproveController extends Controller
         
         
     return redirect()->back();        
+
+    }
+
+
+    public function comment(Request $request){
+
+
+
+        $organization = Organization::where('id', $request->id)->first();
+        
+        $create_remark = Remark::create([
+            'organization_id'=> $organization->id,        
+            'sender_id'=> Auth::user()->id, 
+            'reciever_id'=> $organization->user_id, 
+            'body'=> $request->comment, 
+        ]);
+
+        return redirect()->back();
+
+
+    }
+
+    public function deletecomment(Request $request){
+        Remark::where('organization_id', $request->id)->where('id', $request->remark_id)->delete();
+        return redirect()->back();
 
     }
 }

@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('campus_directors', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('school_year_id')->constrained()->onDelete('cascade')->nullable();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade')->nullable();
+            $table->foreignId('school_year_id')->nullable();
+            $table->foreignId('user_id')->nullable();
             $table->timestamps();
         });
     }

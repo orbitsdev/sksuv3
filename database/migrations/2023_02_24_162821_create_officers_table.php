@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('officers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('campus_adviser_id')->constrained()->onDelete('cascade')->nullable();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade')->nullable();
+            $table->foreignId('campus_adviser_id');
+            $table->foreignId('user_id');
             $table->string('position');
             $table->timestamps();
         });

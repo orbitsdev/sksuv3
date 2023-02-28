@@ -16,20 +16,20 @@ return new class extends Migration
         Schema::create('organization_processes', function (Blueprint $table) {
 
             $table->id();
-            $table->foreignId('organization_id')->nullable()->constrained()->onDelete('cascade');
-            $table->foreignId('campus_adviser_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('organization_id')->nullable();
+            $table->foreignId('campus_adviser_id')->nullable();
             $table->string('campus_adviser_approved_status')->nullable();
             $table->string('campus_adviser_endorsed_status')->nullable();
             
-            $table->foreignId('campus_director_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('campus_director_id')->nullable();
             $table->string('campus_director_approved_status')->nullable();
             $table->string('campus_director_endorsed_status')->nullable();
 
-            $table->foreignId('osas_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('osas_id')->nullable();
             $table->string('osas_approved_status')->nullable();
             $table->string('osas_endorsed_status')->nullable();
             
-            $table->foreignId('vpa_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('vpa_id')->nullable();
             $table->string('vpa_approved_status')->nullable();
             $table->string('vpa_endorsed_status')->nullable();
 

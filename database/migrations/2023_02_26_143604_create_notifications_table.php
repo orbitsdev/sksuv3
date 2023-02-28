@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('sender_id')->nullable()->constrained()->onDelete('cascade');
-            $table->foreignId('reciever_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('sender_id')->nullable();
+            $table->foreignId('reciever_id')->nullable();
             $table->string('approved_status')->nullable();
             $table->string('body')->nullable();
             $table->string('status')->nullable();

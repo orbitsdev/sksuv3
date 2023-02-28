@@ -24,8 +24,29 @@ class CampusAdviserOrganizationController extends Controller
                 $query->where('name', 'like', "%{$search}%");
             })->whereHas('campus_adviser.user', function($query){
                 $query->where('id', Auth::user()->id);
-            })
-            ->latest()->
+            })->whereHas('organization_process',function($query){
+                $query->where('campus_adviser_endorsed_status', 'false');
+            })->latest()->
+            with(['campus_adviser.user', 'campus_adviser.campus', 'campus_adviser.school_year', 'requirements.organization_requirements','organization_requirements' => function($org) {
+                $org->with(['requirement', 'file']);
+            },'organization_process'])
+            ->paginate(10)
+            ->withQueryString(),
+            'filters'=> supportrequest::only('search'),
+        ]);
+    }
+
+    public function endorsedindex(){
+
+        return Inertia::render('sboadviser/endorsedindex',[
+            'organizations' => Organization::query()
+            ->when(supportrequest::input('search'), function($query, $search){
+                $query->where('name', 'like', "%{$search}%");
+            })->whereHas('campus_adviser.user', function($query){
+                $query->where('id', Auth::user()->id);
+            })->whereHas('organization_process',function($query){
+                $query->where('campus_adviser_endorsed_status', 'true')->where('campus_adviser_approved_status', 'approved');
+            })->latest()->
             with(['campus_adviser.user', 'campus_adviser.campus', 'campus_adviser.school_year', 'requirements.organization_requirements','organization_requirements' => function($org) {
                 $org->with(['requirement', 'file']);
             },'organization_process'])

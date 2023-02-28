@@ -11,22 +11,20 @@ const props = defineProps({
 
 const search = ref("");
 const show_form = ref(false);
-const marker = ref('');
+const marker = ref("");
 const show_manage_form = ref(false);
 const show_remark_form = ref(false);
 const confirm_delete = ref(false);
+const confirm_endorse = ref(false);
 const is_deleting = ref(false);
 const is_updating = ref(false);
 const selected_items = ref([]);
 const selected_item = ref(null);
 const has_warning = ref(null);
 
-
-
-
 const form = useForm({
   comment: "",
-  approver_type:"campus_adviser",
+  approver_type: "campus_adviser",
   item_id: null,
   id: null,
 });
@@ -44,6 +42,13 @@ watch(
     );
   }, 500)
 );
+
+function showEndorsedConfirmation(item){
+      form.id = item.id;
+      confirm_endorse.value = true;
+}
+
+
 
 function showForm() {
   //   form.school_year_id = null;
@@ -71,8 +76,28 @@ function approve() {
       has_warning.value = error;
     },
 
-     onFinish: () => {
+    onFinish: () => {
       show_manage_form.value = false;
+      form.reset();
+    },
+  });
+}
+function endorse() {
+  form.post(route("organization.application.endorse"), {
+    preserveState: true,
+    onSuccess: () => {
+      show_manage_form.value = false;
+      confirm_endorse.value = false;
+      form.reset();
+    },
+    onError: (error) => {
+      has_warning.value = error;
+    },
+
+    onFinish: () => {
+      show_manage_form.value = false;
+            confirm_endorse.value = false;
+
       form.reset();
     },
   });
@@ -80,11 +105,11 @@ function approve() {
 function deny() {
   form.post(route("organization.application.deny"), {
     preserveState: true,
-    onStart: () =>{
+    onStart: () => {
       show_remark_form.value = false;
     },
     onSuccess: () => {
-      show_manage_form.value = false; 
+      show_manage_form.value = false;
       show_remark_form.value = false;
       form.reset();
     },
@@ -94,7 +119,7 @@ function deny() {
       show_remark_form.value = false;
     },
 
-     onFinish: () => {
+    onFinish: () => {
       show_manage_form.value = false;
       show_remark_form.value = false;
       form.reset();
@@ -102,23 +127,16 @@ function deny() {
   });
 }
 
+function handleSubmit(type) {
+  marker.value = type;
 
- function handleSubmit(type){
-
-
-
-    
-    marker.value = type;
-
-    if(marker.value === 'approve'){
-            approve();      
-    }
-    if(marker.value === 'deny'){
-
-     show_remark_form.value = true;
-    }
-
- }
+  if (marker.value === "approve") {
+    approve();
+  }
+  if (marker.value === "deny") {
+    show_remark_form.value = true;
+  }
+}
 
 function update() {
   form.post(route("application.update"), {
@@ -265,8 +283,8 @@ function handleManageForm() {
           'Name of Organization',
           'Campus',
           'School Year',
-          'Documents',
-          'Status',
+          'Appication Documents & Remarks ',
+          'Application Process Status',
           '',
         ]"
       >
@@ -278,12 +296,12 @@ function handleManageForm() {
           <Tcell
             :c="'whitespace-nowrap align-center text-center text-sm items-center  font-medium text-gray-900 align-top pt-2'"
           >
-            <input
+            <!-- <input
               v-model="selected_items"
               :value="item.id"
               type="checkbox"
               class="h-4 w-4 accent-green-600 text-white rounded border-gray-200"
-            />
+            /> -->
           </Tcell>
 
           <Tcell class="uppercase align-top pt-2"> {{ item.name }} </Tcell>
@@ -370,7 +388,7 @@ function handleManageForm() {
           </Tcell>
           <Tcell class="align-top pt-2 capitalize">
             <div class="mb-1 border py-2 px-2 mr-4 rounded">
-                          <p class="truncate text-sm t text-gray-900 uppercase">You</p>
+              <p class="truncate text-sm t text-gray-900 uppercase">You</p>
 
               <div class="px-2">
                 <div class="mb-0.5">
@@ -393,7 +411,7 @@ function handleManageForm() {
                       item.organization_process.campus_adviser_approved_status ===
                       'approved'
                     "
-                    :c="'bg-green-50 text-green-600'"
+                    :c="'cursor-pointer bg-gradient-to-r from-green-700 via-green-600 to-green-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <approveSvg />
@@ -408,7 +426,7 @@ function handleManageForm() {
                       item.organization_process.campus_adviser_approved_status ===
                       'denied'
                     "
-                    :c="'bg-red-50 text-red-600'"
+                    :c="'cursor-pointer bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <deniedSvg />
@@ -416,28 +434,28 @@ function handleManageForm() {
                     Denied
                   </status-card>
                 </div>
+     <div class="mb-0.5">
 
-                <!-- <div class="mb-0.5">
                   <status-card
                     :c="[
                       item.organization_process.campus_adviser_endorsed_status === 'true'
-                        ? 'bg-green-100 text-green-600'
-                        : 'bg-gray-50 text-gray-400',
+                        ? 'cursor-pointer bg-gradient-to-r from-green-700 via-green-600 to-green-500 text-white'
+                        : 'cursor-pointer bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white',
                     ]"
                     class="inline-flex items-center"
                   >
                     <checkedSvg />
 
                     {{
-                      item.organization_process.campus_adviser_endorsed_status === "true"
+                      item.organization_process.campus_adviser_endorsed_status === "false"
                         ? "Endorsed"
                         : "Not endorsed yet"
                     }}
                   </status-card>
-                </div> -->
+                </div>
               </div>
-               </div>
- <div class="mb-1 border py-2 px-2 mr-4 rounded">
+            </div>
+            <div class="mb-1 border py-2 px-2 mr-4 rounded">
               <p class="truncate text-sm t text-gray-900 uppercase">Campus Director</p>
 
               <div class="px-2">
@@ -461,7 +479,7 @@ function handleManageForm() {
                       item.organization_process.campus_director_approved_status ===
                       'approved'
                     "
-                    :c="'bg-green-50 text-green-600'"
+                    :c="'cursor-pointer bg-gradient-to-r from-green-700 via-green-600 to-green-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <approveSvg />
@@ -476,7 +494,7 @@ function handleManageForm() {
                       item.organization_process.campus_director_approved_status ===
                       'denied'
                     "
-                    :c="'bg-red-50 text-red-600'"
+                    :c="'cursor-pointer bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <deniedSvg />
@@ -484,7 +502,7 @@ function handleManageForm() {
                     Denied
                   </status-card>
                 </div>
-<!-- 
+                <!-- 
                 <div class="mb-0.5">
                   <status-card
                     :c="[
@@ -505,7 +523,7 @@ function handleManageForm() {
                 </div> -->
               </div>
             </div>
-               <div class="mb-1 border py-2 px-2 mr-4 rounded">
+            <div class="mb-1 border py-2 px-2 mr-4 rounded">
               <p class="truncate text-sm t text-gray-900 uppercase">Osas</p>
               <div class="px-2">
                 <div class="mb-0.5">
@@ -525,7 +543,7 @@ function handleManageForm() {
                 <div class="mb-0.5">
                   <status-card
                     v-if="item.organization_process.osas_approved_status === 'approved'"
-                    :c="'bg-green-50 text-green-600'"
+                    :c="'cursor-pointer bg-gradient-to-r from-green-700 via-green-600 to-green-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <approveSvg />
@@ -537,7 +555,7 @@ function handleManageForm() {
                 <div class="mb-0.5">
                   <status-card
                     v-if="item.organization_process.osas_approved_status === 'denied'"
-                    :c="'bg-red-50 text-red-600'"
+                    :c="'cursor-pointer bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <deniedSvg />
@@ -567,8 +585,7 @@ function handleManageForm() {
               </div>
             </div>
 
-
-             <div class="mb-1 border py-2 px-2 mr-4 rounded">
+            <div class="mb-1 border py-2 px-2 mr-4 rounded">
               <p class="truncate text-sm t text-gray-900 uppercase">Vpa</p>
               <div class="px-2">
                 <div class="mb-0.5">
@@ -588,7 +605,7 @@ function handleManageForm() {
                 <div class="mb-0.5">
                   <status-card
                     v-if="item.organization_process.vpa_approved_status === 'approved'"
-                    :c="'bg-green-50 text-green-600'"
+                    :c="'cursor-pointer bg-gradient-to-r from-green-700 via-green-600 to-green-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <approveSvg />
@@ -600,7 +617,7 @@ function handleManageForm() {
                 <div class="mb-0.5">
                   <status-card
                     v-if="item.organization_process.vpa_approved_status === 'denied'"
-                    :c="'bg-red-50 text-red-600'"
+                    :c="'cursor-pointer bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <deniedSvg />
@@ -610,7 +627,6 @@ function handleManageForm() {
                 </div>
               </div>
             </div>
-           
           </Tcell>
           <!-- <Tcell class="align-top pt-2">
             <div> 
@@ -629,35 +645,58 @@ function handleManageForm() {
             </div>
          </Tcell> -->
 
-          <Tcell class="flex items-center justify-center align-top pt-2">
-            <SkButtonGray
-              :disabled="selected_items.length > 0"
-              class="max-w-40 mr-2"
-              @click="showManageForm(item)"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                class="w-5 h-5 mr-2"
+          <Tcell class="align-top pt-2">
+            <div>
+              <SkButtonGray
+                :disabled="selected_items.length > 0"
+                class="max-w-40 mr-2"
+                @click="showManageForm(item)"
               >
-                <path
-                  d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32l8.4-8.4z"
-                />
-                <path
-                  d="M5.25 5.25a3 3 0 00-3 3v10.5a3 3 0 003 3h10.5a3 3 0 003-3V13.5a.75.75 0 00-1.5 0v5.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5V8.25a1.5 1.5 0 011.5-1.5h5.25a.75.75 0 000-1.5H5.25z"
-                />
-              </svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  class="w-5 h-5 mr-2"
+                >
+                  <path
+                    d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32l8.4-8.4z"
+                  />
+                  <path
+                    d="M5.25 5.25a3 3 0 00-3 3v10.5a3 3 0 003 3h10.5a3 3 0 003-3V13.5a.75.75 0 00-1.5 0v5.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5V8.25a1.5 1.5 0 011.5-1.5h5.25a.75.75 0 000-1.5H5.25z"
+                  />
+                </svg>
 
-              <span class=""> Decide </span>
-            </SkButtonGray>
+                <span class=""> Decide </span>
+              </SkButtonGray>
+            </div>
+            <div  v-if="item.organization_process.campus_adviser_approved_status == 'approved'" class="mt-2">
+              <SkButtonGray
+                :disabled="selected_items.length > 0"
+                class="max-w-40 mr-2"
+                @click="showEndorsedConfirmation(item)"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  class="w-5 h-5 mr-2"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm4.28 10.28a.75.75 0 000-1.06l-3-3a.75.75 0 10-1.06 1.06l1.72 1.72H8.25a.75.75 0 000 1.5h5.69l-1.72 1.72a.75.75 0 101.06 1.06l3-3z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+
+                <span class=""> Endorse </span>
+              </SkButtonGray>
+            </div>
+            
           </Tcell>
         </tr>
       </SkTable>
       <EmptyCard class="flex items-center justify-center h-64" v-else />
     </div>
-
-    
 
     <sk-dialog :transition="'slide-down'" :persistent="true" :isOpen="confirm_delete">
       <main class="">
@@ -710,19 +749,33 @@ function handleManageForm() {
     >
       <main class="p-2">
         <div class="grid grid-cols-1">
-       
-          
-          <button  :disabled="form.processing" v-if="selected_item.organization_process.campus_adviser_approved_status != 'approved' "  @click="handleSubmit('approve')" class="border rounded-lg hover:scale-95 transition-all ease-in-out hover:bg-green-700 bg-green-600 text-white">
+          <button
+            :disabled="form.processing"
+            v-if="
+              selected_item.organization_process.campus_adviser_approved_status !=
+              'approved'
+            "
+            @click="handleSubmit('approve')"
+            class="border rounded-lg hover:scale-95 transition-all ease-in-out hover:bg-green-700 bg-green-600 text-white"
+          >
             <div class="col-span-1 h-40 flex items-center justify-center flex-col">
-              <thumbsUpSvg :active="form.processing && marker =='approve' "/>
+              <thumbsUpSvg :active="form.processing && marker == 'approve'" />
 
               <p class="text-2xl mt-2">Approve</p>
             </div>
           </button>
-          <button :disabled="form.processing" v-if="selected_item.organization_process.campus_adviser_approved_status != 'denied'" @click="handleSubmit('deny')" class="border rounded-lg hover:scale-95 transition-all ease-in-out hover:bg-red-800 bg-red-700 text-white">
+          <button
+            :disabled="form.processing"
+            v-if="
+              selected_item.organization_process.campus_adviser_approved_status !=
+              'denied'
+            "
+            @click="handleSubmit('deny')"
+            class="border rounded-lg hover:scale-95 transition-all ease-in-out hover:bg-red-800 bg-red-700 text-white"
+          >
             <div class="col-span-1 h-40 flex items-center justify-center flex-col">
-              <thumbsDownSvg :active="form.processing && marker =='deny' "/>
-            
+              <thumbsDownSvg :active="form.processing && marker == 'deny'" />
+
               <p class="text-2xl mt-2">Deny</p>
             </div>
           </button>
@@ -742,31 +795,31 @@ function handleManageForm() {
       :isOpen="show_remark_form"
     >
       <main class="p-2">
-<div>
- <div
-              tabindex="0"
-              class="focus:outline-none text-sm bg-indigo-100 text-indigo-700 dark:text-indigo-600 rounded font-medium p-2"
-            >
-              Please specify if there is a mistake or missing files in the information
-              This way, the applicant can correct and resubmit the application for your
-              review.
-            </div>
-  <label for="comment" class="block  font-medium text-gray-700">Remark</label>
-  <div class="mt-1">
-    <textarea rows="4" v-model="form.comment" class="p-2 block w-full rounded-md border shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
-  </div>
-</div>
+        <div>
+          <div
+            tabindex="0"
+            class="focus:outline-none text-sm bg-indigo-100 text-indigo-700 dark:text-indigo-600 rounded font-medium p-2"
+          >
+            Please specify if there is a mistake or missing files in the information This
+            way, the applicant can correct and resubmit the application for your review.
+          </div>
+          <label for="comment" class="block font-medium text-gray-700">Remark</label>
+          <div class="mt-1">
+            <textarea
+              rows="4"
+              v-model="form.comment"
+              class="p-2 block w-full rounded-md border shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            ></textarea>
+          </div>
+        </div>
 
-       <div class="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
-          <SkButtonGray @click="show_remark_form  = false"> Close </SkButtonGray>
+        <div class="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
+          <SkButtonGray @click="show_remark_form = false"> Close </SkButtonGray>
 
           <sk-delete-button @click="deny" :processing="form.processing">
-          Submit
+            Submit
           </sk-delete-button>
-         
-          
         </div>
-       
       </main>
     </sk-dialog>
   </adminlayout>
@@ -781,6 +834,29 @@ function handleManageForm() {
       ></w-progress>
       <p class="">Updating</p>
     </div>
+  </SkDialog>
+  <SkDialog :persistent="true" :isOpen="confirm_endorse" :width="'540'">
+        <div>
+          <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
+            <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+            </svg>
+          </div>
+          <div class="mt-3 text-center sm:mt-5">
+            <h3 class="text-base font-semibold leading-6 text-gray-900" id="modal-title">Endorsed </h3>
+            <div class="mt-2">
+              <p class="text-sm text-gray-500">Are you sure do you want to endorse this application</p>
+            </div>
+          </div>
+        </div>
+  <div class="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
+          <SkButtonGray @click="confirm_endorse = false"> No </SkButtonGray>
+              
+          <SkButton  @click="endorse" :processing="form.processing">
+            Yes</SkButton
+          >
+        </div>
+
   </SkDialog>
 </template>
 

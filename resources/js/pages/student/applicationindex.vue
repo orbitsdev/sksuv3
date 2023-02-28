@@ -306,7 +306,7 @@ function handleManageForm() {
                       item.organization_process.campus_adviser_approved_status ===
                       'waiting for review'
                     "
-                    :c="'bg-gray-50 text-gray-400'"
+          :c="'cursor-pointer bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <timeSvg />
@@ -320,7 +320,7 @@ function handleManageForm() {
                       item.organization_process.campus_adviser_approved_status ===
                       'approved'
                     "
-                    :c="'bg-green-50 text-green-600'"
+                              :c="'cursor-pointer bg-gradient-to-r from-green-700 via-green-600 to-green-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <approveSvg />
@@ -335,7 +335,7 @@ function handleManageForm() {
                       item.organization_process.campus_adviser_approved_status ===
                       'denied'
                     "
-                    :c="'bg-red-50 text-red-600'"
+                                     :c="'cursor-pointer bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <deniedSvg />
@@ -374,7 +374,8 @@ function handleManageForm() {
                       item.organization_process.campus_director_approved_status ===
                       'waiting for review'
                     "
-                    :c="'bg-gray-50 text-gray-400'"
+                                                        :c="'cursor-pointer bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white'"
+
                     class="inline-flex items-center"
                   >
                     <timeSvg />
@@ -388,7 +389,7 @@ function handleManageForm() {
                       item.organization_process.campus_director_approved_status ===
                       'approved'
                     "
-                    :c="'bg-green-50 text-green-600'"
+                             :c="'cursor-pointer bg-gradient-to-r from-green-700 via-green-600 to-green-500 text-white'" 
                     class="inline-flex items-center"
                   >
                     <approveSvg />
@@ -403,7 +404,7 @@ function handleManageForm() {
                       item.organization_process.campus_director_approved_status ===
                       'denied'
                     "
-                    :c="'bg-red-50 text-red-600'"
+                                     :c="'cursor-pointer bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <deniedSvg />
@@ -441,7 +442,8 @@ function handleManageForm() {
                       item.organization_process.osas_approved_status ===
                       'waiting for review'
                     "
-                    :c="'bg-gray-50 text-gray-400'"
+          :c="'cursor-pointer bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white'"
+
                     class="inline-flex items-center"
                   >
                     <timeSvg />
@@ -452,7 +454,8 @@ function handleManageForm() {
                 <div class="mb-0.5">
                   <status-card
                     v-if="item.organization_process.osas_approved_status === 'approved'"
-                    :c="'bg-green-50 text-green-600'"
+                                :c="'cursor-pointer bg-gradient-to-r from-green-700 via-green-600 to-green-500 text-white'"
+
                     class="inline-flex items-center"
                   >
                     <approveSvg />
@@ -464,7 +467,7 @@ function handleManageForm() {
                 <div class="mb-0.5">
                   <status-card
                     v-if="item.organization_process.osas_approved_status === 'denied'"
-                    :c="'bg-red-50 text-red-600'"
+                                     :c="'cursor-pointer bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <deniedSvg />
@@ -503,7 +506,9 @@ function handleManageForm() {
                       item.organization_process.vpa_approved_status ===
                       'waiting for review'
                     "
-                    :c="'bg-gray-50 text-gray-400'"
+
+                              :c="'cursor-pointer bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white'"
+
                     class="inline-flex items-center"
                   >
                     <timeSvg />
@@ -514,7 +519,7 @@ function handleManageForm() {
                 <div class="mb-0.5">
                   <status-card
                     v-if="item.organization_process.vpa_approved_status === 'approved'"
-                    :c="'bg-green-50 text-green-600'"
+                              :c="'cursor-pointer bg-gradient-to-r from-green-700 via-green-600 to-green-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <approveSvg />
@@ -526,7 +531,7 @@ function handleManageForm() {
                 <div class="mb-0.5">
                   <status-card
                     v-if="item.organization_process.vpa_approved_status === 'denied'"
-                    :c="'bg-red-50 text-red-600'"
+                                     :c="'cursor-pointer bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <deniedSvg />

@@ -48,6 +48,8 @@ class ApplyApplicationController extends Controller
             'organizations' => Organization::query()
             ->when(supportrequest::input('search'), function($query, $search){
                 $query->where('name', 'like', "%{$search}%");
+            })->whereHas('user', function($query){
+                $query->where('id', Auth::user()->id);
             })
             ->latest()->
             with(['campus_adviser.user', 'campus_adviser.school_year', 'requirements.organization_requirements','organization_requirements' => function($org) {

@@ -29,13 +29,14 @@
               <DashboardLink :href="route('account.userpassword.index')" :active="($page.component === 'osas/accountpasswordindex' || $page.component === 'osas/campusadviserindex' || $page.component === 'osas/campusdirectorindex' || $page.component === 'osas/vpaindex' ) "> Accounts & Roles </DashboardLink>
               <DashboardLink :href="route('requirement.index')" :active="$page.component=== 'osas/requirementsindex' "> Requirements  </DashboardLink>
               <DashboardLink :href="route('osas.organization.index')" :active="$page.component=== 'osas/organizationindex' "> Review Documents  </DashboardLink>
-              <DashboardLink   :href="route('osas.generatecerticate.index')" :active="$page.component=== 'osas/generatecertificateindex' "> Endorsed List  </DashboardLink>
+              <DashboardLink   :href="route('osas.organization.endorsedindex')" :active="$page.component=== 'osas/endorseindex' "> Endorsed List  </DashboardLink>
               <DashboardLink :href="route('osas.generatecerticate.index')" :active="$page.component=== 'osas/generatecertificateindex' "> Generate Certificate  </DashboardLink>
               <DashboardLink   :href="route('osas.generatecerticate.index')" :active="$page.component=== 'osas/generatecertificateindex' "> Accreditation  </DashboardLink>
               </div>
               <div v-if="$page.props.can.isSboAdviser">
               <!-- <DashboardLink :href="route('officers.index')" :active="$page.component=== 'sboadviser/officerindex'"> Officers </DashboardLink> -->
-              <DashboardLink :href="route('campusadviser.organization.index')" :active="$page.component=== 'sboadviser/organizationindex'"> Organizations </DashboardLink>
+              <DashboardLink :href="route('campusadviser.organization.index')" :active="$page.component=== 'sboadviser/organizationindex'"> Rewiew Submiited Documents </DashboardLink>
+              <DashboardLink :href="route('campusadviser.organization.endorsedindex')" :active="$page.component=== 'sboadviser/endorsedindex'"> Endorsed List </DashboardLink>
   
               </div>
               <div v-if="$page.props.can.isDirector">

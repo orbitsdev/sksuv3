@@ -41,8 +41,33 @@ class AuthController extends Controller
     if (Auth::attempt(['email' => $user->email, 'password' => $validated['password']])) {
         $request->session()->regenerate();
 
+        if(Auth::user()->hasRole('osas')){
+            return redirect()->route('schoolyear.index');
+        }
+
+        
+        if(Auth::user()->hasRole('sbo-adviser')){
+
+            
+            return redirect()->route('campusadviser.organization.index');
+
+        }
+        if(Auth::user()->hasRole('campus-director')){
+
+            
+            return redirect()->route('director.organization.index');
+
+        }
+        if(Auth::user()->hasRole('vpaa')){
+
+            
+            return redirect()->route('vpa.organization.index');
+
+        }
+
+
+        return redirect()->route('application.index');
        
-        return redirect()->intended('dashboard');
     }
 
     return back()->withErrors([
@@ -69,13 +94,25 @@ class AuthController extends Controller
             
             if(Auth::user()->hasRole('sbo-adviser')){
 
-                if(count(Auth::user()->campus_advisers) <= 0 ){
-                        RoleChangerController::changeRoleTo(Auth::user()->id, 'guest');
-                }
-
+                
                 return redirect()->route('campusadviser.organization.index');
+
+            }
+            if(Auth::user()->hasRole('campus-director')){
+
+                
+                return redirect()->route('director.organization.index');
+
+            }
+            if(Auth::user()->hasRole('vpaa')){
+
+                
+                return redirect()->route('vpa.organization.index');
+
             }
 
+
+            return redirect()->route('application.index');
 
 
         }

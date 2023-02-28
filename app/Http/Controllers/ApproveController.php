@@ -13,6 +13,101 @@ class ApproveController extends Controller
 {
     
 
+    public function endorse(Request $request){  
+        
+
+
+        $organization = Organization::where('id', $request->id)->first();
+        $organization_process  = $organization->organization_process()->where('organization_id', $request->id)->first();
+
+
+        if($request->approver_type == 'campus_adviser'){
+
+            $organization_process->update([
+                'campus_adviser_id'=> Auth::user()->id, 
+                // 'campus_adviser_approved_status'=> 'approved', 
+                'campus_adviser_endorsed_status'=> 'true', 
+            ]);
+
+
+            // $newnotfi = Notification::create([
+            //     'sender_id'=> Auth::user()->id, 
+            //     'reciever_id'=> $organization->user_id, 
+            //     'approved_status'=> 'approved', 
+            //     'status'=> 'unread', 
+            //     'body'=> 'Application has been approved', 
+            // ]);
+            
+        }
+
+        if($request->approver_type == 'osas'){
+            
+
+
+            $organization_process->update([
+                'osas_id'=> Auth::user()->id, 
+                // 'osas_approved_status'=> 'approved', 
+                'osas_endorsed_status'=> 'true', 
+            ]);
+
+            
+            // $newnotfi = Notification::create([
+            //     'sender_id'=> Auth::user()->id, 
+            //     'reciever_id'=> $organization->user_id, 
+            //     'approved_status'=> 'approved', 
+            //     'status'=> 'unread', 
+            //     'body'=> 'Application has been approved', 
+            // ]);
+           
+            
+            // $newnotfi = Notification::create([
+            //     'sender_id'=> Auth::user()->id, 
+            //     'reciever_id'=> $organization->campus_adviser->user->id, 
+            //     'approved_status'=> 'approved', 
+            //     'status'=> 'unread', 
+            //     'body'=> 'Application has been approved', 
+            // ]);
+           
+            
+        }
+        if($request->approver_type == 'vpa'){
+
+
+
+            $organization_process->update([
+                'vpa_id'=> Auth::user()->id, 
+                'vpa_approved_status'=> 'approved', 
+                'vpa_endorsed_status'=> 'true', 
+            ]);
+
+            
+            $newnotfi = Notification::create([
+                'sender_id'=> Auth::user()->id, 
+                'reciever_id'=> $organization->user_id, 
+                'approved_status'=> 'approved', 
+                'status'=> 'unread', 
+                'body'=> 'Application has been approved', 
+            ]);
+           
+            
+            $newnotfi = Notification::create([
+                'sender_id'=> Auth::user()->id, 
+                'reciever_id'=> $organization->campus_adviser->user->id, 
+                'approved_status'=> 'approved', 
+                'status'=> 'unread', 
+                'body'=> 'Application has been approved', 
+            ]);
+           
+            
+        }
+          
+
+       
+        
+        
+    return redirect()->back();        
+
+    }
     public function approve(Request $request){  
 
 
@@ -26,7 +121,7 @@ class ApproveController extends Controller
             $organization_process->update([
                 'campus_adviser_id'=> Auth::user()->id, 
                 'campus_adviser_approved_status'=> 'approved', 
-                'campus_adviser_endorsed_status'=> 'true', 
+                // 'campus_adviser_endorsed_status'=> 'true', 
             ]);
 
 
@@ -77,7 +172,7 @@ class ApproveController extends Controller
             $organization_process->update([
                 'osas_id'=> Auth::user()->id, 
                 'osas_approved_status'=> 'approved', 
-                'osas_endorsed_status'=> 'true', 
+                // 'osas_endorsed_status'=> 'true', 
             ]);
 
             

@@ -246,6 +246,7 @@ Route::get('/', function () {
     ], function () {
 
         Route::get('/', [OsasOrganizationController::class, 'index'])->name('index');
+        Route::get('/endorsedlist', [OsasOrganizationController::class, 'endorsedindex'])->name('endorsedindex');
     });
     Route::group([
         'middleware'=> [
@@ -282,6 +283,7 @@ Route::get('/', function () {
     ], function () {
 
         Route::get('/', [CampusAdviserOrganizationController::class, 'index'])->name('index');
+        Route::get('/endorsedlist', [CampusAdviserOrganizationController::class, 'endorsedindex'])->name('endorsedindex');
         // Route::post('/approve', [CampusAdviserOrganizationController::class, 'approve'])->name('approve');
         // Route::post('/deny', [CampusAdviserOrganizationController::class, 'deny'])->name('deny');
       
@@ -318,7 +320,7 @@ Route::get('/', function () {
     
     Route::group([
         'middleware'=> [
-            'can:is-student'
+        'can:is-guest-or-student'
         ],
         'prefix' => 'applications',
         'as' => 'application.'
@@ -343,6 +345,7 @@ Route::get('/', function () {
 
         Route::post('/approve', [ApproveController::class, 'approve'])->name('approve');
         Route::post('/deny', [ApproveController::class, 'deny'])->name('deny');
+        Route::post('/endorse', [ApproveController::class, 'endorse'])->name('endorse');
         Route::post('/comment', [ApproveController::class, 'comment'])->name('comment');
         Route::post('/delete-comment', [ApproveController::class, 'deletecomment'])->name('deletecomment');
       

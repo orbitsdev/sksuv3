@@ -18,12 +18,12 @@ class PublicController extends Controller
     public function getSchoolYear()
     {
 
-        return response()->json(['data' => SchoolYear::latest()->all()]);
+        return response()->json(['data' => SchoolYear::latest()->get()]);
     }
     public function getCampus()
     {
 
-        return response()->json(['data' => Campus::latest()->all()]);
+        return response()->json(['data' => Campus::latest()->get()]);
     }
 
 

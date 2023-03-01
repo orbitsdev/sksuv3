@@ -12,6 +12,7 @@ use App\Http\Controllers\FileController;
 use App\Http\Controllers\CampusController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\PublicController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\ApproveController;
 use App\Http\Controllers\OfficerController;
@@ -20,6 +21,7 @@ use App\Http\Controllers\SchoolYearController;
 use App\Http\Controllers\RequirementController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrganizationController;
+use App\Http\Controllers\AccreditationController;
 use App\Http\Controllers\CampusAdviserController;
 use App\Http\Controllers\CampusDirectorController;
 use App\Http\Controllers\VpaOrganizationController;
@@ -256,6 +258,24 @@ Route::get('/', function () {
         'as' => 'osas.generatecerticate.'
     ], function () {
         Route::get('/', [ GenerateController::class, 'index'])->name('index');
+    });
+    Route::group([
+        'middleware'=> [
+            'can:is-osas'
+        ],
+        'prefix' => 'osas/accreditation',
+        'as' => 'osas.accreditation.'
+    ], function () {
+        Route::get('/', [ AccreditationController::class, 'index'])->name('index');
+    });
+    Route::group([
+        'middleware'=> [
+            'can:is-osas'
+        ],
+        'prefix' => 'osas/reports',
+        'as' => 'osas.reports.'
+    ], function () {
+        Route::get('/', [ ReportController::class, 'index'])->name('index');
     });
 
 

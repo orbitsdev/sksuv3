@@ -46,7 +46,7 @@ function logout() {
       <span class="sr-only">Your Company</span>
       <img class="h-12 w-12" src="/assets/sksu1.png" alt="" />
     </div>
-    <p class="text-2xl text-gray-100 font-bold">Wrms-AC</p>
+    <p class="text-2xl text-gray-100 font-bold">WRMS-ACCREDITATION</p>
   </div>
 
   <div class="lg:ml-4 lg:flex lg:items-center lg:py-5 lg:pr-0.5">
@@ -82,7 +82,7 @@ function logout() {
      
         <NotificationList     v-if="isNotif"
         role="list"
-        class="w-96 absolute mt-4 right-0 transition-all ease-in-out z-50 origin-top-right bg-white py-1 px-2 shadow-lg rounded-md"/>
+        class="w-96 absolute mt-4 right-0 transition-all ease-in-out z-50 origin-top-right bg-white  shadow-lg rounded-md"/>
     
     </div>
 

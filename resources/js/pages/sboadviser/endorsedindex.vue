@@ -278,12 +278,12 @@ function handleManageForm() {
           <Tcell
             :c="'whitespace-nowrap align-center text-center text-sm items-center  font-medium text-gray-900 align-top pt-2'"
           >
-            <input
+            <!-- <input
               v-model="selected_items"
               :value="item.id"
               type="checkbox"
               class="h-4 w-4 accent-green-600 text-white rounded border-gray-200"
-            />
+            /> -->
           </Tcell>
 
           <Tcell class="uppercase align-top pt-2"> {{ item.name }} </Tcell>
@@ -379,7 +379,7 @@ function handleManageForm() {
                       item.organization_process.campus_adviser_approved_status ===
                       'waiting for review'
                     "
-                    :c="'bg-gray-50 text-gray-400'"
+                                   :c="'cursor-pointer bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <timeSvg />
@@ -448,7 +448,7 @@ function handleManageForm() {
                       item.organization_process.campus_director_approved_status ===
                       'waiting for review'
                     "
-                    :c="'bg-gray-50 text-gray-400'"
+                                   :c="'cursor-pointer bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <timeSvg />
@@ -515,7 +515,7 @@ function handleManageForm() {
                       item.organization_process.osas_approved_status ===
                       'waiting for review'
                     "
-                    :c="'bg-gray-50 text-gray-400'"
+                                   :c="'cursor-pointer bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <timeSvg />
@@ -578,7 +578,7 @@ function handleManageForm() {
                       item.organization_process.vpa_approved_status ===
                       'waiting for review'
                     "
-                    :c="'bg-gray-50 text-gray-400'"
+                                   :c="'cursor-pointer bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <timeSvg />

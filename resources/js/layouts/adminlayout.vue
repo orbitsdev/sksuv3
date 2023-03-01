@@ -15,13 +15,13 @@
       <div class="relative flex flex-wrap items-center justify-center lg:justify-between">
         <SksuProfile/>
         <div class="w-full py-5 lg:border-t lg:border-white lg:border-opacity-20">
-          <div class="lg:grid lg:grid-cols-3 lg:items-center lg:gap-8">
+          <div class="lg:grid lg:grid-cols-3 lg:items-center gap-8">
             <!-- Left nav -->
-            <div class=" lg:col-span-2 lg:block">
+            <div class="lg:col-span-2 lg:block">
 
 
        
-              <nav class="flex space-x-4">
+              <nav class="">
 
               <div v-if="$page.props.can.isOsas">
               <DashboardLink :href="route('schoolyear.index')" :active="$page.component=== 'osas/schoolyear'"> School Year </DashboardLink>
@@ -30,8 +30,10 @@
               <DashboardLink :href="route('requirement.index')" :active="$page.component=== 'osas/requirementsindex' "> Requirements  </DashboardLink>
               <DashboardLink :href="route('osas.organization.index')" :active="$page.component=== 'osas/organizationindex' "> Review Documents  </DashboardLink>
               <DashboardLink   :href="route('osas.organization.endorsedindex')" :active="$page.component=== 'osas/endorseindex' "> Endorsed List  </DashboardLink>
-              <DashboardLink :href="route('osas.generatecerticate.index')" :active="$page.component=== 'osas/generatecertificateindex' "> Generate Certificate  </DashboardLink>
-              <DashboardLink   :href="route('osas.generatecerticate.index')" :active="$page.component=== 'osas/generatecertificateindex' "> Accreditation  </DashboardLink>
+              <!-- <DashboardLink :href="route('osas.generatecerticate.index')" :active="$page.component=== 'osas/generatecertificateindex' "> Generate Certificate  </DashboardLink> -->
+              <DashboardLink   :href="route('osas.accreditation.index')" :active="$page.component=== 'osas/accreditationindex' "> Accreditation  </DashboardLink>
+            
+              <DashboardLink   :href="route('osas.reports.index')" :active="$page.component=== 'osas/reportindex' "> Reports  </DashboardLink>
               </div>
               <div v-if="$page.props.can.isSboAdviser">
               <!-- <DashboardLink :href="route('officers.index')" :active="$page.component=== 'sboadviser/officerindex'"> Officers </DashboardLink> -->

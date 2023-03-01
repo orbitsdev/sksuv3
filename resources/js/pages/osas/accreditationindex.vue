@@ -13,9 +13,8 @@ const search = ref("");
 const show_form = ref(false);
 const marker = ref("");
 const show_manage_form = ref(false);
-const show_remark_form = ref(false);
+
 const confirm_delete = ref(false);
-const confirm_endorse = ref(false);
 const is_deleting = ref(false);
 const is_updating = ref(false);
 const selected_items = ref([]);
@@ -24,16 +23,27 @@ const has_warning = ref(null);
 
 const form = useForm({
   comment: "",
-  approver_type: "campus_adviser",
+  approver_type: "osas",
   item_id: null,
+  comment_only: false,
+  remark_id: null,
   id: null,
 });
+
+
+const confirm_endorse = ref(false);
+
+
+function showEndorsedConfirmation(item){
+      form.id = item.id;
+      confirm_endorse.value = true;
+}
 
 watch(
   search,
   throttle((value) => {
     router.get(
-      route("campusadviser.organization.index"),
+      route("osas.accreditation.index"),
       { search: value },
       {
         preserveState: true,
@@ -43,12 +53,75 @@ watch(
   }, 500)
 );
 
-function showEndorsedConfirmation(item){
-      form.id = item.id;
-      confirm_endorse.value = true;
+const show_remark_form = ref(false);
+const show_remarks = ref(false);
+
+function comment() {
+  form.post(route("organization.application.comment"), {
+    preserveState: true,
+    onStart: () => {},
+    onSuccess: () => {
+      show_remark_form.value = false;
+      form.reset();
+    },
+    onError: (error) => {
+      has_warning.value = error;
+      show_remark_form.value = false;
+    },
+
+    onFinish: () => {
+      show_remark_form.value = false;
+      form.reset();
+    },
+  });
 }
 
+function viewRemarks(item) {
+  selected_item.value = item;
+  show_remarks.value = true;
+}
+function closeRemark() {
+  show_remarks.value = false;
+  form.remark_id = null;
+}
 
+function showRemarkForm(item) {
+  form.comment_only = true;
+  show_remark_form.value = true;
+  selected_item.value = item;
+  form.id = item.id;
+}
+
+function closeRemarkForm(item) {
+  show_remark_form.value = false;
+  form.comment_only = false;
+}
+
+function  deleteRemark(organization,remark){
+    form.id = organization; 
+    form.remark_id = remark; 
+
+     form.post(route("organization.application.deletecomment"), {
+    preserveState: true,
+    preserveScroll: true,
+
+    onSuccess: () => {
+      closeRemark();
+    form.reset();
+
+    },
+    onError: (error) => {
+      has_warning.value = error;
+    },
+
+    onFinish: () => {
+      
+      closeRemark();
+      form.reset();
+    },
+  });
+
+}
 
 function showForm() {
   //   form.school_year_id = null;
@@ -68,6 +141,7 @@ function showUpdateForm(item) {
 function approve() {
   form.post(route("organization.application.approve"), {
     preserveState: true,
+    preserveScroll: true,
     onSuccess: () => {
       show_manage_form.value = false;
       form.reset();
@@ -82,6 +156,7 @@ function approve() {
     },
   });
 }
+
 function endorse() {
   form.post(route("organization.application.endorse"), {
     preserveState: true,
@@ -102,9 +177,11 @@ function endorse() {
     },
   });
 }
+
 function deny() {
   form.post(route("organization.application.deny"), {
-    preserveState: true,
+   preserveState: true,
+    preserveScroll: true,
     onStart: () => {
       show_remark_form.value = false;
     },
@@ -140,7 +217,8 @@ function handleSubmit(type) {
 
 function update() {
   form.post(route("application.update"), {
-    preserveState: true,
+   preserveState: true,
+    preserveScroll: true,
     onSuccess: () => {
       form.id = null;
       show_form.value = false;
@@ -188,6 +266,11 @@ function showManageForm(item) {
   show_manage_form.value = true;
   selected_item.value = item;
   form.id = item.id;
+}
+
+function closeMangeForm() {
+  show_manage_form.value = false;
+  form.comment_only = false;
 }
 
 function deleteFile(file) {
@@ -282,6 +365,7 @@ function handleManageForm() {
           '',
           'Name of Organization',
           'Campus',
+          'Adviser',
           'School Year',
           'Appication Documents & Remarks ',
           'Application Process Status',
@@ -307,6 +391,10 @@ function handleManageForm() {
           <Tcell class="uppercase align-top pt-2"> {{ item.name }} </Tcell>
           <Tcell class="uppercase align-top pt-2">
             {{ item.campus_adviser.campus.name }}
+          </Tcell>
+          <Tcell class="uppercase align-top pt-2">
+            {{ item.campus_adviser.user.first_name }}
+            {{ item.campus_adviser.user.last_name }}
           </Tcell>
           <Tcell class="uppercase align-top pt-2">
             SY.{{ item.campus_adviser.school_year.from }}
@@ -383,14 +471,36 @@ function handleManageForm() {
                     </div>
                   </aside>
                 </div>
+<!-- 
+                <div
+                  @click="viewRemarks(item)"
+                  class="cursor-pointer bg-gradient-to-r hover:scale-95 transition-all ease-in-out from-rose-500 via-red-500 to-pink-500 text-white rounded py-2 text px-1 mr-2 mt-4"
+                  v-if="item.remarks.length > 0"
+                >
+                  <div class="truncate text-sm font-medium uppercase flex items-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      class="w-5 h-5 mr-2"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M12 2.25c-2.429 0-4.817.178-7.152.521C2.87 3.061 1.5 4.795 1.5 6.741v6.018c0 1.946 1.37 3.68 3.348 3.97.877.129 1.761.234 2.652.316V21a.75.75 0 001.28.53l4.184-4.183a.39.39 0 01.266-.112c2.006-.05 3.982-.22 5.922-.506 1.978-.29 3.348-2.023 3.348-3.97V6.741c0-1.947-1.37-3.68-3.348-3.97A49.145 49.145 0 0012 2.25zM8.25 8.625a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25zm2.625 1.125a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0zm4.875-1.125a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                    Comments {{ item.remarks.length }}
+                  </div>
+                </div> -->
               </div>
             </div>
           </Tcell>
-          <Tcell class="align-top pt-2 capitalize">
+          <Tcell class="align-top pt-2">
             <div class="mb-1 border py-2 px-2 mr-4 rounded">
-              <p class="truncate text-sm t text-gray-900 uppercase">You</p>
-
               <div class="px-2">
+                <p class="truncate text-sm t text-gray-900 uppercase">SBO ADVISER</p>
+
                 <div class="mb-0.5">
                   <status-card
                     v-if="
@@ -398,7 +508,6 @@ function handleManageForm() {
                       'waiting for review'
                     "
                                      :c="'cursor-pointer bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white'"
-
                     class="inline-flex items-center"
                   >
                     <timeSvg />
@@ -412,7 +521,7 @@ function handleManageForm() {
                       item.organization_process.campus_adviser_approved_status ===
                       'approved'
                     "
-                    :c="'cursor-pointer bg-gradient-to-r from-green-700 via-green-600 to-green-500 text-white'"
+                   :c="'cursor-pointer bg-gradient-to-r from-green-700 via-green-600 to-green-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <approveSvg />
@@ -427,7 +536,7 @@ function handleManageForm() {
                       item.organization_process.campus_adviser_approved_status ===
                       'denied'
                     "
-                    :c="'cursor-pointer bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white'"
+                     :c="'cursor-pointer bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <deniedSvg />
@@ -435,13 +544,13 @@ function handleManageForm() {
                     Denied
                   </status-card>
                 </div>
-     <div class="mb-0.5">
-
+                <!-- 
+                <div class="mb-0.5">
                   <status-card
                     :c="[
                       item.organization_process.campus_adviser_endorsed_status === 'true'
-                        ? 'cursor-pointer bg-gradient-to-r from-green-700 via-green-600 to-green-500 text-white'
-                        : 'cursor-pointer bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white',
+                        ? 'bg-green-100 text-green-600'
+                        : 'bg-gray-50 text-gray-400',
                     ]"
                     class="inline-flex items-center"
                   >
@@ -453,9 +562,10 @@ function handleManageForm() {
                         : "Not endorsed yet"
                     }}
                   </status-card>
-                </div>
+                </div> -->
               </div>
             </div>
+
             <div class="mb-1 border py-2 px-2 mr-4 rounded">
               <p class="truncate text-sm t text-gray-900 uppercase">Campus Director</p>
 
@@ -467,7 +577,6 @@ function handleManageForm() {
                       'waiting for review'
                     "
                                      :c="'cursor-pointer bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white'"
-
                     class="inline-flex items-center"
                   >
                     <timeSvg />
@@ -496,7 +605,7 @@ function handleManageForm() {
                       item.organization_process.campus_director_approved_status ===
                       'denied'
                     "
-                    :c="'cursor-pointer bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white'"
+                     :c="'cursor-pointer bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <deniedSvg />
@@ -525,8 +634,9 @@ function handleManageForm() {
                 </div> -->
               </div>
             </div>
+
             <div class="mb-1 border py-2 px-2 mr-4 rounded">
-              <p class="truncate text-sm t text-gray-900 uppercase">Osas</p>
+              <p class="truncate text-sm t text-gray-900 uppercase">You</p>
               <div class="px-2">
                 <div class="mb-0.5">
                   <status-card
@@ -535,7 +645,6 @@ function handleManageForm() {
                       'waiting for review'
                     "
                                      :c="'cursor-pointer bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white'"
-
                     class="inline-flex items-center"
                   >
                     <timeSvg />
@@ -558,7 +667,7 @@ function handleManageForm() {
                 <div class="mb-0.5">
                   <status-card
                     v-if="item.organization_process.osas_approved_status === 'denied'"
-                    :c="'cursor-pointer bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white'"
+                     :c="'cursor-pointer bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <deniedSvg />
@@ -567,12 +676,13 @@ function handleManageForm() {
                   </status-card>
                 </div>
 
-                <!-- <div class="mb-0.5">
+              <div class="mb-0.5">
+
                   <status-card
                     :c="[
                       item.organization_process.osas_endorsed_status === 'true'
-                        ? 'bg-green-100 text-green-600'
-                        : 'bg-gray-50 text-gray-400',
+                        ? 'cursor-pointer bg-gradient-to-r from-green-700 via-green-600 to-green-500 text-white'
+                        : 'cursor-pointer bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white',
                     ]"
                     class="inline-flex items-center"
                   >
@@ -584,7 +694,7 @@ function handleManageForm() {
                         : "Not endorsed yet"
                     }}
                   </status-card>
-                </div> -->
+                </div>
               </div>
             </div>
 
@@ -598,7 +708,6 @@ function handleManageForm() {
                       'waiting for review'
                     "
                                      :c="'cursor-pointer bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white'"
-
                     class="inline-flex items-center"
                   >
                     <timeSvg />
@@ -621,7 +730,7 @@ function handleManageForm() {
                 <div class="mb-0.5">
                   <status-card
                     v-if="item.organization_process.vpa_approved_status === 'denied'"
-                    :c="'cursor-pointer bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white'"
+                     :c="'cursor-pointer bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <deniedSvg />
@@ -650,7 +759,7 @@ function handleManageForm() {
          </Tcell> -->
 
           <Tcell class="align-top pt-2">
-            <div>
+            <!-- <div>
               <SkButtonGray
                 :disabled="selected_items.length > 0"
                 class="max-w-40 mr-2"
@@ -673,7 +782,30 @@ function handleManageForm() {
                 <span class=""> Decide </span>
               </SkButtonGray>
             </div>
-            <div  v-if="item.organization_process.campus_adviser_approved_status == 'approved'" class="mt-2">
+            <div class="mt2">
+              <SkButtonGray
+                :disabled="selected_items.length > 0"
+                class="max-w-40 mr-2"
+                @click="showRemarkForm(item)"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  class="w-5 h-5 mr-2"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M4.848 2.771A49.144 49.144 0 0112 2.25c2.43 0 4.817.178 7.152.52 1.978.292 3.348 2.024 3.348 3.97v6.02c0 1.946-1.37 3.678-3.348 3.97a48.901 48.901 0 01-3.476.383.39.39 0 00-.297.17l-2.755 4.133a.75.75 0 01-1.248 0l-2.755-4.133a.39.39 0 00-.297-.17 48.9 48.9 0 01-3.476-.384c-1.978-.29-3.348-2.024-3.348-3.97V6.741c0-1.946 1.37-3.68 3.348-3.97zM6.75 8.25a.75.75 0 01.75-.75h9a.75.75 0 010 1.5h-9a.75.75 0 01-.75-.75zm.75 2.25a.75.75 0 000 1.5H12a.75.75 0 000-1.5H7.5z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+
+                <span class=""> Comment </span>
+              </SkButtonGray>
+            </div>
+
+              <div  v-if="(item.organization_process.osas_endorsed_status == 'false' && item.organization_process.osas_approved_status)" class="mt-2">
               <SkButtonGray
                 :disabled="selected_items.length > 0"
                 class="max-w-40 mr-2"
@@ -694,8 +826,7 @@ function handleManageForm() {
 
                 <span class=""> Endorse </span>
               </SkButtonGray>
-            </div>
-            
+            </div> -->
           </Tcell>
         </tr>
       </SkTable>
@@ -755,10 +886,7 @@ function handleManageForm() {
         <div class="grid grid-cols-1">
           <button
             :disabled="form.processing"
-            v-if="
-              selected_item.organization_process.campus_adviser_approved_status !=
-              'approved'
-            "
+            v-if="selected_item.organization_process.osas_approved_status != 'approved'"
             @click="handleSubmit('approve')"
             class="border rounded-lg hover:scale-95 transition-all ease-in-out hover:bg-green-700 bg-green-600 text-white"
           >
@@ -770,10 +898,7 @@ function handleManageForm() {
           </button>
           <button
             :disabled="form.processing"
-            v-if="
-              selected_item.organization_process.campus_adviser_approved_status !=
-              'denied'
-            "
+            v-if="selected_item.organization_process.osas_approved_status != 'denied'"
             @click="handleSubmit('deny')"
             class="border rounded-lg hover:scale-95 transition-all ease-in-out hover:bg-red-800 bg-red-700 text-white"
           >
@@ -818,9 +943,16 @@ function handleManageForm() {
         </div>
 
         <div class="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
-          <SkButtonGray @click="show_remark_form = false"> Close </SkButtonGray>
+          <SkButtonGray @click="closeRemarkForm"> Close </SkButtonGray>
 
-          <sk-delete-button @click="deny" :processing="form.processing">
+          <sk-delete-button
+            v-if="form.comment_only"
+            @click="comment"
+            :processing="form.processing"
+          >
+            Post
+          </sk-delete-button>
+          <sk-delete-button v-else @click="deny" :processing="form.processing">
             Submit
           </sk-delete-button>
         </div>
@@ -839,6 +971,53 @@ function handleManageForm() {
       <p class="">Updating</p>
     </div>
   </SkDialog>
+  <SkDialog :persistent="true" :isOpen="show_remarks" :width="'540'">
+
+
+    <main class="form-max-h" v-if="selected_item.remarks.length > 0">
+      <div
+        class="flex items-center space-x-4 border-b mb-1 py-2"
+        v-for="remark in selected_item.remarks"
+        :key="remark"
+      >
+        <div class="min-w-0 flex-1">
+          <p class="truncate text-xs font-medium text-gray-900">
+            <DateCard :text="remark.created_at" />
+          </p>
+
+          <p>
+                {{ remark.body }}
+          </p>
+          
+        </div>
+        <div>
+          <button
+          @click="deleteRemark(selected_item.id, remark.id)"
+            class="inline-flex items-center rounded-full border border-gray-300 bg-white px-2.5 py-0.5 text-sm font-medium leading-5 text-gray-700 shadow-sm hover:bg-gray-50"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              class="w-6 h-6 text-red-700"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="mt-5">
+        <SkButtonGray class="w-40 mr-4" @click="closeRemark">
+          Close
+        </SkButtonGray>
+      </div>
+    </main>
+  </SkDialog>
+
   <SkDialog :persistent="true" :isOpen="confirm_endorse" :width="'540'">
         <div>
           <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">

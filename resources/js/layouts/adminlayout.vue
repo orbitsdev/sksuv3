@@ -14,10 +14,10 @@
     <div class="relative z-50 mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
       <div class="relative flex flex-wrap items-center justify-center lg:justify-between">
         <SksuProfile/>
-        <div class="w-full py-5 lg:border-t lg:border-white lg:border-opacity-20">
-          <div class="lg:grid lg:grid-cols-3 lg:items-center gap-8">
+        <div class="w-full py-5 lg:border-t border-white border-opacity-20">
+          <div class="grid grid-cols-3 items-center gap-y-8 ">
             <!-- Left nav -->
-            <div class="lg:col-span-2 lg:block">
+            <div class="col-span-2 ">
 
 
        

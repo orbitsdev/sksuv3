@@ -144,6 +144,10 @@ function handleManageForm() {
   is_updating.value = false;
   show_manage_form.value = false;
 }
+
+function openUrl(url){
+  window.open(url);
+}
 </script>
 <template>
   <adminlayout>
@@ -277,16 +281,27 @@ function handleManageForm() {
                   <div v-if="og.file.length > 0">
                     <div class="my=2">
                       {{ og.requirement.name }}
-                      <FileViewLink
+                      <!-- <FileViewLink
                         :href="file.file_url"
-                        _target="_blank"
+                        target="_blank"
                         class="mb-1"
                         v-for="file in og.file"
                         :key="file"
                         :file="file"
                       >
                         {{ file.file_name }}
-                      </FileViewLink>
+                      </FileViewLink> -->
+
+                      <button
+                        v-for="file in og.file"
+                        :key="file"
+                        :file="file"
+
+                        @click="openUrl(file.file_url)"
+                       class="p-1 border" >
+
+                        {{ file.file_name }}
+                      </button>
                     </div>
                   </div>
                 </aside>

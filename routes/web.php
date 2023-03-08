@@ -248,7 +248,7 @@ Route::get('/', function () {
     ], function () {
 
         Route::get('/', [OsasOrganizationController::class, 'index'])->name('index');
-        Route::get('/endorsedlist', [OsasOrganizationController::class, 'endorsedindex'])->name('endorsedindex');
+        Route::get('/generate/certficate', [OsasOrganizationController::class, 'endorsedindex'])->name('endorsedindex');
     });
     Route::group([
         'middleware'=> [
@@ -257,7 +257,10 @@ Route::get('/', function () {
         'prefix' => 'osas/certifcate',
         'as' => 'osas.generatecerticate.'
     ], function () {
+
         Route::get('/', [ GenerateController::class, 'index'])->name('index');
+        Route::get('issued', [ GenerateController::class, 'index'])->name('certificate.index');
+        Route::get('issued/{id}', [ GenerateController::class, 'generateCertificate'])->name('certificate.generate');
     });
     Route::group([
         'middleware'=> [

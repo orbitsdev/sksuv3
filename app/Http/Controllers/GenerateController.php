@@ -7,6 +7,7 @@ use App\Models\Organization;
 use Illuminate\Http\Request;
 
 
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
@@ -52,7 +53,17 @@ class GenerateController extends Controller
 
                 $organization = Organization::find($request->id);
 
-             
+
+
+                $orgnaization_name = 'PHILIPPINES SOCIETY OFINFORMATION TEHNOLOGY STUDENTS (PSITS)';
+                $usg_adviser = 'FLORLYNE MAE C. RENEGIO , MIT';
+                $director_student_affaire_service = 'HASSANAL P. ABUSAMA, MIT';
+                $date_year = Carbon::now()->format('F d, Y');
+        
+                $data = [$orgnaization_name, $usg_adviser, $director_student_affaire_service, $date_year];
+        
+              $paragraph =   explode(' ', $orgnaization_name);
+                // dd($paragraph);
 
 
 
@@ -63,24 +74,41 @@ class GenerateController extends Controller
         $fontFamily =  public_path("assets/fonts/helvetica/Helvetica-Bold.ttf");
         
         $fullname = 'Nairah';
-        $img->text($fullname, 515, 381, function ($font) use ($fontFamily) {
+        
+        $img->text($orgnaization_name, 520.99, 378, function ($font) use ($fontFamily) {
             $font->file($fontFamily);
             $font->size(18);
             $font->color('#000000');
             $font->align('center');
             $font->valign('top');
         });
-        $img->text('Maria Clara', 0, 0, function ($font) use ($fontFamily) {
+
+        $img->text($usg_adviser, 718.99, 571, function ($font) use ($fontFamily) {
             $font->file($fontFamily);
-            $font->size(18);
+            $font->size(12);
             $font->color('#000000');
             $font->align('center');
             $font->valign('top');
         });
         
+        // $img->text($director_student_affaire_service, 0, 181, function ($font) use ($fontFamily) {
+        //     $font->file($fontFamily);
+        //     $font->size(18);
+        //     $font->color('#000000');
+        //     $font->align('center');
+        //     $font->valign('top');
+        // });
+        // $img->text($date_year, 0, 81, function ($font) use ($fontFamily) {
+        //     $font->file($fontFamily);
+        //     $font->size(18);
+        //     $font->color('#000000');
+        //     $font->align('center');
+        //     $font->valign('top');
+        // });
+        
 
         // return $img->response('jpg');
-        $filename = "certificate-of-organization";
+        $filename = $orgnaization_name."accreditation-certificate";
         $path = 'assets/images/certificates/';
         
         // if(!file_exists(public_path($path))) {
@@ -106,11 +134,25 @@ class GenerateController extends Controller
         // specific font 
         $fontFamily =  public_path("assets/fonts/helvetica/Helvetica-Bold.ttf");
 
-        // client name
-        $fullname = 'Benito Orbino';
+        
+        
+        $orgnaization_name = 'PHILIPPINES SOCIETY INFROMATION TECHNOLOGY STUDENTS (PSIT)';
+        $usg_adviser = 'FLORLYNE MAE C. RENEGIO , MIT';
+        $director_student_affaire_service = 'HASSANAL P. ABUSAMA, MIT';
+        $date_year = Carbon::now()->format('F d, Y');
+
+
+        $paragraph = explode('', $orgnaization_name);
+
+        dd($paragraph);
+        $data = [$orgnaization_name, $usg_adviser, $director_student_affaire_service, $date_year];
+
+        dd($data);
+        // $school_year = Carbon::now()->format('F d, Y');
+    
 
         // ->text($string , (x-axis), (y-axis) )
-        $img->text($fullname, 515, 381, function ($font) use ($fontFamily) {
+        $img->text($orgnaization_name, 515, 381, function ($font) use ($fontFamily) {
             $font->file($fontFamily);
             $font->size(18);
             $font->color('#000000');

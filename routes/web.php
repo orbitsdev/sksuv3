@@ -29,6 +29,7 @@ use App\Http\Controllers\ApplyApplicationController;
 use App\Http\Controllers\OsasOrganizationController;
 use App\Http\Controllers\DirectorOrganizationController;
 use App\Http\Controllers\CampusAdviserOrganizationController;
+use App\Http\Controllers\PrintController;
 
 /*
 |--------------------------------------------------------------------------
@@ -248,8 +249,9 @@ Route::get('/', function () {
     ], function () {
 
         Route::get('/', [OsasOrganizationController::class, 'index'])->name('index');
-        Route::get('/generate/certficate', [OsasOrganizationController::class, 'endorsedindex'])->name('endorsedindex');
+        Route::get('/endorsedlist', [OsasOrganizationController::class, 'endorsedindex'])->name('endorsedindex');
     });
+   
     Route::group([
         'middleware'=> [
             'can:is-osas'
@@ -262,6 +264,22 @@ Route::get('/', function () {
         Route::get('issued', [ GenerateController::class, 'index'])->name('certificate.index');
         Route::get('issued/{id}', [ GenerateController::class, 'generateCertificate'])->name('certificate.generate');
     });
+   
+    Route::group([
+        'middleware'=> [
+            'can:is-osas'
+        ],
+        'prefix' => 'osas/print',
+        'as' => 'osas.print.'
+    ], function () {
+
+        Route::get('/list-of-organization-percampus', [ PrintController::class, 'lisoforganizationpercampus'])->name('lisoforganizationpercampus.index');
+
+        Route::get('/list-of-submiited-documents', [ PrintController::class, 'listofsubmitteddocuments'])->name('listofsubmitteddocuments.index');
+
+    });
+
+
     Route::group([
         'middleware'=> [
             'can:is-osas'

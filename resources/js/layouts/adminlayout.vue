@@ -33,7 +33,7 @@
               <!-- <DashboardLink :href="route('osas.generatecerticate.index')" :active="$page.component=== 'osas/generatecertificateindex' "> Generate Certificate  </DashboardLink> -->
               <DashboardLink   :href="route('osas.accreditation.index')" :active="$page.component=== 'osas/accreditationindex' "> Accreditation  </DashboardLink>
             
-              <DashboardLink   :href="route('osas.reports.index')" :active="$page.component=== 'osas/reportindex' "> Reports  </DashboardLink>
+              <DashboardLink   :href="route('osas.reports.index')" :active="$page.component=== 'osas/reportindex' "> Certificate & Printing  </DashboardLink>
               </div>
               <div v-if="$page.props.can.isSboAdviser">
               <!-- <DashboardLink :href="route('officers.index')" :active="$page.component=== 'sboadviser/officerindex'"> Officers </DashboardLink> -->

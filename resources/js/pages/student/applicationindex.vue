@@ -280,19 +280,18 @@ function openUrl(url){
                 >
                   <div v-if="og.file.length > 0">
                     <div class="my=2">
-                      {{ og.requirement.name }}
-                      <!-- <FileViewLink
+                      <FileViewLink
                         :href="file.file_url"
-                        target="_blank"
+                     
                         class="mb-1"
                         v-for="file in og.file"
                         :key="file"
                         :file="file"
                       >
                         {{ file.file_name }}
-                      </FileViewLink> -->
+                      </FileViewLink>
 
-                      <button
+                      <!-- <button
                         v-for="file in og.file"
                         :key="file"
                         :file="file"
@@ -301,7 +300,7 @@ function openUrl(url){
                        class="p-1 border" >
 
                         {{ file.file_name }}
-                      </button>
+                      </button> -->
                     </div>
                   </div>
                 </aside>

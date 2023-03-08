@@ -335,7 +335,7 @@ function handleManageForm() {
       class="bg-white rounded-xl shadow-xl mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8"
     >
       <div class="pt-4 flex items-center justify-between">
-        <p class="text-xl text-green-800 font-bold font-rubik uppercase">Organizations</p>
+        <p class="text-xl text-green-800 font-bold font-rubik uppercase">ENDORSED LIST </p>
         <div class="flex items-center">
           <sk-button2
             v-if="selected_items.length > 0"

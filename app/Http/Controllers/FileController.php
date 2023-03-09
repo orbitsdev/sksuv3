@@ -33,18 +33,15 @@ class FileController extends Controller
 
     public function uploadFileOss($path,  $file){
 
+    
         $storage = Storage::disk("oss");
 
         $filename = strtotime(now()) . '.'. $file->getClientOriginalExtension();        
         $full_path = $path . $filename;
+        $extension = $file->getClientOriginalExtension();
+        // dd($extension);
         try{
-           
-      
-
-            //     $image = $request->file('files');
-            // $file_name = $image->getClientOriginalName();
-            // $folder = uniqid() . strtotime(now());
-            // $file_type =  $image->getClientMimeType();
+       
         $storage->put($full_path, file_get_contents($file));
         return [
             'owned_by'=>$path,
@@ -69,9 +66,9 @@ class FileController extends Controller
     
     {
         
+          // dd($request->all());
         
-        
-    //   dd($request->all());
+
         
         if ($request->has('file')) {
 
@@ -84,35 +81,10 @@ class FileController extends Controller
         
          $organzation_requiremnets->file()->create($file_data);
    
-        // $organzation->requirements
-        // $new_record = File::create($file_data);
-        
-        
-        
-                // dd($path);
-        // $request->file('files')->store('uploads/tem', 'public');
-            
-        //     $image = $request->file('files');
-        //     $file_name = $image->getClientOriginalName();
-        //     $folder = uniqid() . strtotime(now());
-        //     $file_type =  $image->getClientMimeType();
-            
-        //     $image->storeAs('tmp/' . $folder, $file_name, 'public_uploads');
-        //     $filedata = ['folder' => $folder, 'file_name' => $file_name, 'file_type'=> $file_type];
-         
-
-        //     if ($image->storeAs('tmp/' . $folder, $file_name, 'public_uploads')) {
-        //         TemporaryStorage::create([
-        //             'folder' => $folder,
-        //             'file_name' => $file_name,
-        //             'file_type' => $file_type,
-        //         ]);
-        //     }
-
-        // return ['folder' => $folder, 'file_name' => $file_name, 'file_type'=> $file_type];
+       
 
         }
-        // dd($request->all());
+
 
     }
 

@@ -51,78 +51,150 @@ class GenerateController extends Controller
     {
 
 
-                $organization = Organization::find($request->id);
+        $organization = Organization::find($request->id);
 
 
 
-                $orgnaization_name = 'PHILIPPINES SOCIETY OFINFORMATION TEHNOLOGY STUDENTS (PSITS)';
-                $usg_adviser = 'FLORLYNE MAE C. RENEGIO , MIT';
-                $director_student_affaire_service = 'HASSANAL P. ABUSAMA, MIT';
-                $date_year = Carbon::now()->format('F d, Y');
+        $img = Image::make(public_path("assets/images/certificates/template2.png"));
+        $font_family =  public_path("assets/fonts/helvetica/Helvetica-Bold.ttf");
+
+        $orgnaization_name = 'PHILIPPINES SOCIETY OF INFORMATION TECHNOLOGY STUDENTS (PSIT)';
+        $held_location = 'Sultan Kudarat State University Isulan Campus';
+        // $orgnaization_name = 'ROBOTICS TECHXPLORERS (RTEX)';
+        $usg_adviser = 'FLORLYNE MAE C. RENEGIO , MIT';
+        // $usg_adviser = 'Maria Clara Juan Delacruz, MIT';
+        $director_student_affaire_service = 'HASSANAL P. ABUSAMA, MIT';
+        $date_year = Carbon::now()->format('F d, Y');
+
+
+
+        $paragraph = explode(' ',  $orgnaization_name);
         
-                $data = [$orgnaization_name, $usg_adviser, $director_student_affaire_service, $date_year];
-        
-              $paragraph =   explode(' ', $orgnaization_name);
-                // dd($paragraph);
+        $line1 = null;
+        $line2 = null;
+        $line3 = null;
+
+        // break seminar title into 3 lines
+        if (count($paragraph) > 0) {
+            foreach ($paragraph as $key => $word) {
+                if ($key > 5) {
+                    $line3 .= $paragraph[$key] . ' ';
+                } else if ($key > 2) {
+                    $line2 .= $paragraph[$key] . ' ';
+                } else {
+                    $line1 .= $paragraph[$key] . ' ';
+                }
+            }
+        }
+
+        $line1 = $line1 ? trim($line1) : null;
+        $line2 = $line2 ? trim($line2) : null;
+        $line3 = $line3 ? trim($line3) : null;
+
+        $line_1_position_y = 276;
+        $line_2_position_y = 276;
+        $line_3_position_y = 298;
+
+        // seminar name
+        if ($line3) {
+
+            $line_1_position_y = 252;
+            $line_2_position_y = 276;
+            $line_3_position_y = 298;
+            $img->text($line3, 284, $line_3_position_y, function ($font) use ($font_family) {
+                $font->file($font_family);
+                $font->size(22);
+                $font->color('#144967');
+                $font->align('center');
+                $font->valign('top');
+            });
+        }
+
+        if ($line2) {
+            if (!$line3) {
 
 
+                  $line_1_position_y = 252;
+            $line_2_position_y = 276;
+            }
+            $img->text($line2, 284, $line_2_position_y, function ($font) use ($font_family) {
+                $font->file($font_family);
+                $font->size(22);
+                $font->color('#144967');
+                $font->align('center');
+                $font->valign('top');
+            });
+        }
 
-        $img = Image::make(public_path("assets/images/certificates/template.jpg"));
+    
 
-       
+        $img->text($line1, 286, $line_1_position_y, function ($font) use ($font_family) {
+            $font->file($font_family);
+            $font->size(22);
+            $font->color('#144967');
+            $font->align('center');
+            $font->valign('top');
+        });
 
-        $fontFamily =  public_path("assets/fonts/helvetica/Helvetica-Bold.ttf");
-        
-        $fullname = 'Nairah';
-        
-        $img->text($orgnaization_name, 520.99, 378, function ($font) use ($fontFamily) {
-            $font->file($fontFamily);
-            $font->size(18);
+
+        //usg adviser
+        $img->text($usg_adviser, 185, 500, function ($font) use ($font_family) {
+            $font->file($font_family);
+            $font->size(14);
             $font->color('#000000');
             $font->align('center');
             $font->valign('top');
         });
 
-        $img->text($usg_adviser, 718.99, 571, function ($font) use ($fontFamily) {
-            $font->file($fontFamily);
-            $font->size(12);
+        // diretor afai
+        $img->text($director_student_affaire_service, 495, 500, function ($font) use ($font_family) {
+            $font->file($font_family);
+            $font->size(14);
             $font->color('#000000');
             $font->align('center');
             $font->valign('top');
         });
-        
-        // $img->text($director_student_affaire_service, 0, 181, function ($font) use ($fontFamily) {
-        //     $font->file($fontFamily);
-        //     $font->size(18);
-        //     $font->color('#000000');
-        //     $font->align('center');
-        //     $font->valign('top');
-        // });
-        // $img->text($date_year, 0, 81, function ($font) use ($fontFamily) {
-        //     $font->file($fontFamily);
-        //     $font->size(18);
-        //     $font->color('#000000');
-        //     $font->align('center');
-        //     $font->valign('top');
-        // });
-        
 
-        // return $img->response('jpg');
-        $filename = $orgnaization_name."accreditation-certificate";
+            // school_year        
+        $img->text($date_year, 575, 376, function ($font) use ($font_family) {
+            $font->file($font_family);
+            $font->size(14);
+            $font->color('#000000');
+            $font->align('center');
+            $font->valign('top');
+        });
+        $img->text('2023-2024', 90, 465, function ($font) use ($font_family) {
+            $font->file($font_family);
+            $font->size(14);
+            $font->color('#000000');
+            $font->align('center');
+            $font->valign('top');
+        });
+        $img->text($held_location, 80, 396, function ($font) use ($font_family) {
+            $font->file($font_family);
+            $font->size(14);
+            $font->color('#000000');
+            $font->align('left');
+            $font->valign('top');
+        });
+
+
+
+
+        $filename = "accreditation-certificate";
         $path = 'assets/images/certificates/';
-        
+
         // if(!file_exists(public_path($path))) {
         //     mkdir(public_path($path), 0755, true);
         // }
-        
-        $img->save(public_path($path . $filename . '.jpg'));
-        
-        $file = public_path($path . $filename . '.jpg');
+
+        $img->save(public_path($path . $filename . '.png'));
+
+        $file = public_path($path . $filename . '.png');
         if (file_exists($file)) {
 
             return response()->download($file);
         }
-
     }
 
 
@@ -132,10 +204,10 @@ class GenerateController extends Controller
         $img = Image::make(public_path("images/certificates/template.jpg"));
 
         // specific font 
-        $fontFamily =  public_path("assets/fonts/helvetica/Helvetica-Bold.ttf");
+        $font_family =  public_path("assets/fonts/helvetica/Helvetica-Bold.ttf");
 
-        
-        
+
+
         $orgnaization_name = 'PHILIPPINES SOCIETY INFROMATION TECHNOLOGY STUDENTS (PSIT)';
         $usg_adviser = 'FLORLYNE MAE C. RENEGIO , MIT';
         $director_student_affaire_service = 'HASSANAL P. ABUSAMA, MIT';
@@ -149,11 +221,11 @@ class GenerateController extends Controller
 
         dd($data);
         // $school_year = Carbon::now()->format('F d, Y');
-    
+
 
         // ->text($string , (x-axis), (y-axis) )
-        $img->text($orgnaization_name, 515, 381, function ($font) use ($fontFamily) {
-            $font->file($fontFamily);
+        $img->text($orgnaization_name, 515, 381, function ($font) use ($font_family) {
+            $font->file($font_family);
             $font->size(18);
             $font->color('#000000');
             $font->align('center');
@@ -208,13 +280,13 @@ class GenerateController extends Controller
         // if($data['certificate'] == 'attendance')
         // {
         // }
-        $fontFamily =  public_path("assets/fonts/helvetica/Helvetica-Bold.ttf") ;
+        $font_family =  public_path("assets/fonts/helvetica/Helvetica-Bold.ttf");
         // Client full name
 
         // client name
         $fullname =  ' Anna Maires';
-        $img->text($fullname, 515, 381, function($font) use ($fontFamily) {
-            $font->file($fontFamily);
+        $img->text($fullname, 515, 381, function ($font) use ($font_family) {
+            $font->file($font_family);
             $font->size(18);
             $font->color('#000000');
             $font->align('center');
@@ -223,75 +295,69 @@ class GenerateController extends Controller
 
         //client date
         $date = 'ScheDule';
-        $img->text($date, 532, 427, function($font) use ($fontFamily) {
-            $font->file($fontFamily);
+        $img->text($date, 532, 427, function ($font) use ($font_family) {
+            $font->file($font_family);
             $font->size(14);
             $font->color('#000000');
             $font->align('center');
             $font->valign('top');
         });
 
-        $img->text('added test', 186, 272, function($font) use ($fontFamily) {
-          $font->file($fontFamily);
-          $font->size(18);
-          $font->color('#000000');
-          $font->align('center');
-          $font->valign('top');
-      });
+        $img->text('added test', 186, 272, function ($font) use ($font_family) {
+            $font->file($font_family);
+            $font->size(18);
+            $font->color('#000000');
+            $font->align('center');
+            $font->valign('top');
+        });
 
 
-        $paragraph = explode(' ', 'Seminar Name' );
+        $paragraph = explode(' ', 'Seminar Name');
+
         $line1 = null;
         $line2 = null;
         $line3 = null;
 
         // break seminar title into 3 lines
-        if(count($paragraph) > 0)
-        {
-            foreach($paragraph as $key => $word)
-            {
-                if($key > 16)
-                {
-                    $line3 .= $paragraph[$key]. ' ';
-                }else if($key > 8)
-                {
-                    $line2 .= $paragraph[$key] .' ';
-                }else{
-                    $line1 .= $paragraph[$key]. ' ';
+        if (count($paragraph) > 0) {
+            foreach ($paragraph as $key => $word) {
+                if ($key > 16) {
+                    $line3 .= $paragraph[$key] . ' ';
+                } else if ($key > 8) {
+                    $line2 .= $paragraph[$key] . ' ';
+                } else {
+                    $line1 .= $paragraph[$key] . ' ';
                 }
             }
         }
 
-        $line1= $line1 ? trim($line1) : null;
-        $line2= $line2 ? trim($line2) : null;
-        $line3= $line3 ? trim($line3) : null;
+        $line1 = $line1 ? trim($line1) : null;
+        $line2 = $line2 ? trim($line2) : null;
+        $line3 = $line3 ? trim($line3) : null;
 
         $line_1_position_y = 483;
         $line_2_position_y = 496;
         $speaker_position_y = 537;
 
-         // seminar name
-         if($line3)
-         {
+        // seminar name
+        if ($line3) {
             $line_1_position_y  = 457;
             $line_2_position_y = 483;
-            $img->text($line3, 514, 509, function($font) use ($fontFamily) {
-                 $font->file($fontFamily);
-                 $font->size(22);
-                 $font->color('#000000');
-                 $font->align('center');
-                 $font->valign('top');
-             });
-         }
+            $img->text($line3, 514, 509, function ($font) use ($font_family) {
+                $font->file($font_family);
+                $font->size(22);
+                $font->color('#000000');
+                $font->align('center');
+                $font->valign('top');
+            });
+        }
 
-        if($line2)
-        {
-            if(!$line3)
-            {
+        if ($line2) {
+            if (!$line3) {
                 $line_1_position_y = 470;
             }
-            $img->text($line2, 514, $line_2_position_y, function($font) use ($fontFamily) {
-                $font->file($fontFamily);
+            $img->text($line2, 514, $line_2_position_y, function ($font) use ($font_family) {
+                $font->file($font_family);
                 $font->size(22);
                 $font->color('#000000');
                 $font->align('center');
@@ -301,8 +367,8 @@ class GenerateController extends Controller
 
 
 
-         $img->text($line1, 514, $line_1_position_y, function($font) use ($fontFamily) {
-            $font->file($fontFamily);
+        $img->text($line1, 514, $line_1_position_y, function ($font) use ($font_family) {
+            $font->file($font_family);
             $font->size(22);
             $font->color('#000000');
             $font->align('center');
@@ -311,8 +377,8 @@ class GenerateController extends Controller
 
 
         // speakers
-        $img->text($data['facilitator'] , 513, $speaker_position_y , function($font) use ($fontFamily) {
-            $font->file($fontFamily);
+        $img->text($data['facilitator'], 513, $speaker_position_y, function ($font) use ($font_family) {
+            $font->file($font_family);
             $font->size(16);
             $font->color('#000000');
             $font->align('center');
@@ -321,8 +387,8 @@ class GenerateController extends Controller
 
         // student score
         $footer_text = $data['score'];
-        $img->text($footer_text, 722, 574, function($font) use ($fontFamily) {
-            $font->file($fontFamily);
+        $img->text($footer_text, 722, 574, function ($font) use ($font_family) {
+            $font->file($font_family);
             $font->size(15);
             $font->color('#000000');
             $font->align('center');
@@ -331,23 +397,22 @@ class GenerateController extends Controller
 
         // duration
         $duration = "Duration: Duatinds here";
-        $img->text($duration, 721, 643, function($font) use ($fontFamily) {
-            $font->file($fontFamily);
+        $img->text($duration, 721, 643, function ($font) use ($font_family) {
+            $font->file($font_family);
             $font->size(12);
             $font->color('#000000');
             $font->align('center');
             $font->valign('top');
         });
 
-        if(!file_exists( public_path("images/certificates/update") ) )
-        {
+        if (!file_exists(public_path("images/certificates/update"))) {
             $path = public_path("images/certificates/update");
-            mkdir( $path, 0755);
+            mkdir($path, 0755);
         }
 
 
-        $img->save( public_path("images/certificates/update/".$data['fileName'].".png") );
-        $file = public_path("images/certificates/update/".$data['fileName'].".png");
+        $img->save(public_path("images/certificates/update/" . $data['fileName'] . ".png"));
+        $file = public_path("images/certificates/update/" . $data['fileName'] . ".png");
         if (file_exists($file)) {
             return response()->download($file);
         }

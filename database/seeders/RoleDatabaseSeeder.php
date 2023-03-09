@@ -50,7 +50,7 @@ class RoleDatabaseSeeder extends Seeder
             [
                'first_name'=> 'adviser2',
                'last_name'=> 'account',
-                'email' => 'adviser2sulan@gmail.com',
+                'email' => 'adviser1@gmail.com',
                 'role' => 'guest'
             ],
             [

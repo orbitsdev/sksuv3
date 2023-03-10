@@ -19,6 +19,40 @@ class PublicController extends Controller
 {
 
 
+
+    
+
+  public function uploadTemplateTemporary(Request $request){
+
+
+    if ($request->has('file')) {
+
+        $file = $request->file('file');
+        // dd($request->file);
+
+        $directory = strtotime(now());    
+        $filename = $file->getClientOriginalName();    
+        // dd($filename);
+        $full_path = 'template/' . $directory.'/'.$filename;
+        $extension = $file->getClientOriginalExtension();
+      
+        Storage::disk('public')->put($full_path, file_get_contents($file));
+
+        return redirect()->back();
+
+      // $file_data =     $this->uploadFileOss('requrements/', $request->file);
+      
+      // $organzation_requiremnets =  OrganizationRequirement::find($request->model_id);
+      
+      
+      //  $organzation_requiremnets->file()->create($file_data);
+ 
+     
+
+      }
+
+  }
+
     public function generateCertificate(Request $request)
     {
 

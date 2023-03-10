@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 use Exception;
 use App\Models\File;
+use App\Models\Requirement;
+use App\Models\Organization;
 use Illuminate\Http\Request;
 use App\Models\TemporaryStorage;
 use App\Http\Resources\UploadResource;
-use App\Models\Organization;
 use App\Models\OrganizationRequirement;
 use Illuminate\Support\Facades\Storage;
 
@@ -14,6 +15,54 @@ class FileController extends Controller
 {
 
 
+  public function deleteTemplate(Request $request){
+
+    if($request->file_id)
+    {
+        $file = File::find($request->file_id);
+
+        if($file)
+        {
+          $status = $this->deleteImageOss($file->url);
+        }
+        $file->delete();
+        // $this->deleteFile();
+     
+    }
+    return redirect()->back();
+}
+
+
+  public function uploadTemplate(Request $request){
+
+
+ 
+    
+    if ($request->has('file')) {
+
+          // dd($request->model_id);   
+
+        $requirement = Requirement::find($request->model_id);
+        
+        $file_data =     $this->uploadFileOss('template/', $request->file);
+        $requirement->files()->create($file_data);
+        
+
+
+      
+     
+      
+      
+      // $organzation_requiremnets =  OrganizationRequirement::find($request->model_id);
+      
+      
+      //  $organzation_requiremnets->file()->create($file_data);
+ 
+     
+
+      }
+
+  }
 
     public function deleteImageOss($path)
     {

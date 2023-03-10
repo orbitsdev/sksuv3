@@ -47,6 +47,8 @@ use App\Http\Controllers\PrintController;
 Route::post('file/upload', [FileController::class, 'uploadToTemporaryStorage'])->name('uploadtolocal');
 Route::delete('file/delete', [FileController::class, 'deleteFromLocalStorage'])->name('deletefromlocal');
 
+Route::post('upload-template', [FileController::class, 'uploadTemplate'])->name('uploadTemplate');
+Route::post('template/delete', [FileController::class, 'deleteTemplate'])->name('deleteTemplate');
 
 
 Route::get('/event', function () {
@@ -237,6 +239,8 @@ Route::get('/', function () {
         Route::post('create', [RequirementController::class, 'create'])->name('create');
         Route::post('update', [RequirementController::class, 'update'])->name('update');
         Route::post('delete-selected', [RequirementController::class, 'deleteSelected'])->name('deleteselected');
+
+        
     });
 
 

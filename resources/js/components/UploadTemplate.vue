@@ -21,7 +21,7 @@ const form = useForm({
 function hanldeFile(e) {
   form.file = e.target.files[0];
 
-  form.post(route("uploadtolocal"), {
+  form.post(route("uploadTemplate"), {
     preserveState: true,
     onStart: ()=>{
       emit('uploadStart');
@@ -39,10 +39,10 @@ function hanldeFile(e) {
 </script>
 
 <template>
- 
+  
   <input
     @change="hanldeFile"
-    class="block mt-2 p-2 w-full mb-5 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none dark:placeholder-gray-400"
+    class="block p-2 w-full mb-5 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none dark:placeholder-gray-400"
     type="file"
   />
 
@@ -52,7 +52,10 @@ function hanldeFile(e) {
 </template>
 
 <script>
-export default {};
+export default {
+
+
+};
 </script>
 
 <style lang="scss" scoped></style>

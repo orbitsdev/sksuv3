@@ -20,7 +20,7 @@ class RequirementController extends Controller
             ->when(supportrequest::input('search'), function($query, $search){
                 $query->where('name', 'like', "%{$search}%");
             })
-            ->latest()
+            ->latest()->with(['files'])
             ->paginate(10)
             ->withQueryString(),
             'filters'=> supportrequest::only('search'),

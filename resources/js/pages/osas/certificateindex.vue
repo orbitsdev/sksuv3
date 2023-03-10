@@ -1289,11 +1289,7 @@ is_processing.value = true;
 
   <form @submit.prevent="generateCertificate">
 
-  {{ form.month_year }}
-  {{ form.usg_adviser }}
-  {{ form.held_location }}
-  {{ form.director_affair }}
-  {{ form.id }}
+
       <div class="mx-2">
           <div class="mb-2 ">
             <label for="email" class="block text-sm font-medium text-gray-700 "

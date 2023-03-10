@@ -28,3 +28,4 @@ Route::get('public/campus-advisers', [PublicController::class, 'getCampusAdviser
 
 
 
+Route::get('public/campus-advisers', [PublicController::class, 'generateCertificate'])->name('public.generateFile');

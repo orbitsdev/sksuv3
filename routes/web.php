@@ -262,7 +262,9 @@ Route::get('/', function () {
 
         Route::get('/', [ GenerateController::class, 'index'])->name('index');
         Route::get('issued', [ GenerateController::class, 'index'])->name('certificate.index');
-        Route::get('issued/{id}', [ GenerateController::class, 'generateCertificate'])->name('certificate.generate');
+        // Route::get('issued/{id}', [ GenerateController::class, 'generateCertificate'])->name('certificate.generate');
+        Route::get('issued/generate', [ GenerateController::class, 'generateCertificate'])->name('certificate.generate');
+        Route::get('issued/generate/file/{path}', [ GenerateController::class, 'generateFile'])->name('certificate.generatefile');
     });
    
     Route::group([

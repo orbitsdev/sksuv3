@@ -47,8 +47,21 @@ class GenerateController extends Controller
 
 
 
+    public function generateFile($path)
+    {
+        dd($path);
+    }
+
     public function generateCertificate(Request $request)
     {
+
+        // dd($request->all());
+        $validated = $request->validate([
+            'usg_adviser' => 'required',
+            'director_affair' => 'required',
+            'held_location' => 'required',
+            
+        ]);
 
 
         $organization = Organization::find($request->id);
@@ -58,18 +71,20 @@ class GenerateController extends Controller
         $img = Image::make(public_path("assets/images/certificates/template2.png"));
         $font_family =  public_path("assets/fonts/helvetica/Helvetica-Bold.ttf");
 
-        $orgnaization_name = 'PHILIPPINES SOCIETY OF INFORMATION TECHNOLOGY STUDENTS (PSIT)';
+        $orgnaization_name =  strtoupper($organization->name);
         $held_location = 'Sultan Kudarat State University Isulan Campus';
         // $orgnaization_name = 'ROBOTICS TECHXPLORERS (RTEX)';
         $usg_adviser = 'FLORLYNE MAE C. RENEGIO , MIT';
         // $usg_adviser = 'Maria Clara Juan Delacruz, MIT';
         $director_student_affaire_service = 'HASSANAL P. ABUSAMA, MIT';
-        $date_year = Carbon::now()->format('F d, Y');
+        $date_year =  Carbon::parse($request->month)->format('F, Y');
+
+       
 
 
 
         $paragraph = explode(' ',  $orgnaization_name);
-        
+
         $line1 = null;
         $line2 = null;
         $line3 = null;
@@ -114,8 +129,8 @@ class GenerateController extends Controller
             if (!$line3) {
 
 
-                  $line_1_position_y = 252;
-            $line_2_position_y = 276;
+                $line_1_position_y = 252;
+                $line_2_position_y = 276;
             }
             $img->text($line2, 284, $line_2_position_y, function ($font) use ($font_family) {
                 $font->file($font_family);
@@ -126,7 +141,7 @@ class GenerateController extends Controller
             });
         }
 
-    
+
 
         $img->text($line1, 286, $line_1_position_y, function ($font) use ($font_family) {
             $font->file($font_family);
@@ -155,7 +170,7 @@ class GenerateController extends Controller
             $font->valign('top');
         });
 
-            // school_year        
+        // school_year        
         $img->text($date_year, 575, 376, function ($font) use ($font_family) {
             $font->file($font_family);
             $font->size(14);
@@ -184,13 +199,20 @@ class GenerateController extends Controller
         $filename = "accreditation-certificate";
         $path = 'assets/images/certificates/';
 
-        // if(!file_exists(public_path($path))) {
-        //     mkdir(public_path($path), 0755, true);
-        // }
+
+
+        
+        Storage::disk('public')->put($path . $filename . '.png', $img->stream());
+
+        // $url = route('osas.generatecerticate.certificate.generatefile', ['path' => $filename]);
 
         $img->save(public_path($path . $filename . '.png'));
 
         $file = public_path($path . $filename . '.png');
+
+
+
+
         if (file_exists($file)) {
 
             return response()->download($file);
@@ -413,6 +435,7 @@ class GenerateController extends Controller
 
         $img->save(public_path("images/certificates/update/" . $data['fileName'] . ".png"));
         $file = public_path("images/certificates/update/" . $data['fileName'] . ".png");
+        dd($file);
         if (file_exists($file)) {
             return response()->download($file);
         }

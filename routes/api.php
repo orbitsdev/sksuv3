@@ -27,6 +27,6 @@ Route::get('public/school-year-with-campus', [PublicController::class, 'getCampu
 Route::get('public/guest-users', [PublicController::class, 'getGuestUsers'])->name('public.guestusers');
 Route::get('public/campus-advisers', [PublicController::class, 'getCampusAdviser'])->name('public.campusadvisers');
 
-Route::get('public/campus-advisers', [PublicController::class, 'generateCertificate'])->name('public.generateFile');
+Route::get('public/generatefile', [PublicController::class, 'generateCertificate'])->name('public.generateFile');
 
 Route::post('file/upload-template/temporary', [PublicController::class, 'uploadTemplateTemporary'])->name('apiuploadtemplatetemporary');

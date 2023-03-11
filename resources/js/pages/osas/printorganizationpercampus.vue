@@ -270,7 +270,7 @@ watch(
             </p>
 
 
-                <aside v-if="item.Organizations.length > 0">
+                <aside v-if="item.organizations.length > 0">
             <div
               v-for="(o, indexo) in item.organizations"
               :key="o"

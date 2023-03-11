@@ -251,6 +251,11 @@ class PublicController extends Controller
     }
 
 
+    public function getSchoolYearForPrint()
+    {
+
+        return response()->json(['data' => SchoolYear::whereHas('campus_advisers.organizations')->latest()->get()]);
+    }
     public function getSchoolYear()
     {
 

@@ -31,9 +31,9 @@
               <DashboardLink :href="route('osas.organization.index')" :active="$page.component=== 'osas/organizationindex' "> Review Documents  </DashboardLink>
               <DashboardLink   :href="route('osas.organization.endorsedindex')" :active="$page.component=== 'osas/endorseindex' "> Endorsed List  </DashboardLink>
               <!-- <DashboardLink :href="route('osas.generatecerticate.index')" :active="$page.component=== 'osas/generatecertificateindex' "> Generate Certificate  </DashboardLink> -->
-              <DashboardLink   :href="route('osas.accreditation.index')" :active="$page.component=== 'osas/accreditationindex' "> Accreditation  </DashboardLink>
             
               <DashboardLink   :href="route('osas.reports.index')" :active="$page.component=== 'osas/reportindex' "> Certificate & Printing  </DashboardLink>
+              <DashboardLink   :href="route('osas.accreditation.index')" :active="$page.component=== 'osas/accreditationindex' "> Previous Accreditation  </DashboardLink>
               </div>
               <div v-if="$page.props.can.isSboAdviser">
               <!-- <DashboardLink :href="route('officers.index')" :active="$page.component=== 'sboadviser/officerindex'"> Officers </DashboardLink> -->

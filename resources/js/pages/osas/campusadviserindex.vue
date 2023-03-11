@@ -39,6 +39,7 @@ function getDefaultValueOfYear(item) {
     form.school_year_id = item;
   }
 }
+
 function getValueOfCampus(item) {
   form.campus_id = item;
 

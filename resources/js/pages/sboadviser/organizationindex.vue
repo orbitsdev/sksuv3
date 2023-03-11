@@ -59,11 +59,7 @@ function  formattedDate(date) {
 
 function printEndorsement() {
   print();
-  // const printContents = document.getElementById("endosement-letter").innerHTML;
-  //     const originalContents = document.body.innerHTML;
-  //     document.body.innerHTML = printContents;
-  //     window.print();
-  //     document.body.innerHTML = originalContents;
+
 }
 
 watch(
@@ -919,7 +915,7 @@ function handleManageForm() {
     <div class="print:hidden sticky top-0 bg-white">
       <div class="bg-white shdaow py-4 flex items-center justify-end">
         <button
-          class="flex justify-center rounded-md items-center hover:bg-gray-100 border mr-2 py-2 px-4 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:green-500 focus:ring-offset-2"
+          class="flex justify-center rounded-md items-center hover:bg-gray-100 border mr-2 py-2 px-4 text-sm font-medium shadow-sm focus:outline-none "
           @click="show_endorsement_letter = false"
         >
           <svg
@@ -938,7 +934,7 @@ function handleManageForm() {
         </button>
         <button
           @click="printEndorsement"
-          class="flex justify-center rounded-md items-center hover:bg-gray-100 border py-2 px-4 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:green-500 focus:ring-offset-2"
+          class="flex justify-center rounded-md items-center hover:bg-gray-100 border py-2 px-4 text-sm font-medium shadow-sm focus:outline-none "
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -958,9 +954,14 @@ function handleManageForm() {
       </div>
     </div>
     <div class="print:hidden mb-6 w-3/6 mx-auto">
-      <div class="rounded">
-        <h3 class="text-base font-semibold leading-6 text-gray-900">
-          Customize Information Before Print
+      <div class="rounded mb-2">
+  
+
+        <h3 class="text-md  mb-2 leading-6 text-gray-900 flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 mr-1">
+  <path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32l8.4-8.4z" />
+  <path d="M5.25 5.25a3 3 0 00-3 3v10.5a3 3 0 003 3h10.5a3 3 0 003-3V13.5a.75.75 0 00-1.5 0v5.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5V8.25a1.5 1.5 0 011.5-1.5h5.25a.75.75 0 000-1.5H5.25z" />
+</svg> Edit Deitals
         </h3>
 
         <div class="grid gap-x-6 gap-y-2 grid-cols-6 bg-gray-200 py-2 px-4 rounded">
@@ -1078,7 +1079,7 @@ function handleManageForm() {
             </p>
           </aside>
 
-          <aside class="mt-4">
+          <aside class="mt-4  item-min-h">
             <div
               v-for="(item, index) in enodrsed_list"
               :key="item"
@@ -1129,7 +1130,12 @@ export default {
 };
 </script>
 
-<style coped>
+<style scoped>
+
+  .item-min-h{
+    min-height:  40vh;
+  }
+
 @media print {
   #endorment-letter {
   }

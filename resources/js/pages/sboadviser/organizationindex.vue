@@ -4,6 +4,8 @@ import { router } from "@inertiajs/core";
 import { throttle } from "lodash";
 import { useForm } from "@inertiajs/vue3";
 
+import moment from "moment";
+
 const props = defineProps({
   organizations: Object,
   filters: Object,
@@ -22,12 +24,47 @@ const selected_items = ref([]);
 const selected_item = ref(null);
 const has_warning = ref(null);
 
+const enodrsed_list = ref([]);
+
+
+
+const show_endorsement_letter = ref(false);
+
+function makeEndorsementLeter() {
+  show_endorsement_letter.value = true;
+}
+
+const print_form = useForm({
+  print_date: moment().format("YYYY-MM-DD"),
+  director_student_affair: "Maria Kate Dijuan",
+  campus: "Sultan Kudarate State University (Isulan Campus)",
+  sbo_governor: "Jushua Allan Magdangal",
+  sbo_adviser: "Jessa Marites Oha",
+});
 const form = useForm({
   comment: "",
   approver_type: "campus_adviser",
   item_id: null,
   id: null,
 });
+
+
+function  formattedDate(date) {
+      // Create a Moment.js object from the date string
+      const momentDate = moment(date);
+
+      // Format the date to display as December 1, 2022
+      return momentDate.format('MMMM D, YYYY');
+    }
+
+function printEndorsement() {
+  print();
+  // const printContents = document.getElementById("endosement-letter").innerHTML;
+  //     const originalContents = document.body.innerHTML;
+  //     document.body.innerHTML = printContents;
+  //     window.print();
+  //     document.body.innerHTML = originalContents;
+}
 
 watch(
   search,
@@ -43,12 +80,10 @@ watch(
   }, 500)
 );
 
-function showEndorsedConfirmation(item){
-      form.id = item.id;
-      confirm_endorse.value = true;
+function showEndorsedConfirmation(item) {
+  form.id = item.id;
+  confirm_endorse.value = true;
 }
-
-
 
 function showForm() {
   //   form.school_year_id = null;
@@ -96,7 +131,7 @@ function endorse() {
 
     onFinish: () => {
       show_manage_form.value = false;
-            confirm_endorse.value = false;
+      confirm_endorse.value = false;
 
       form.reset();
     },
@@ -239,7 +274,7 @@ function handleManageForm() {
           </div>
           <input
             v-model.number="search"
-            class="block w-full rounded-md border border-transparent bg-white bg-opacity-20 py-2 pl-10 pr-3 leading-5 text-white placeholder-white focus:border-transparent focus:bg-opacity-100 focus:text-gray-900 focus:placeholder-gray-500 focus:outline-none focus:ring-0 sm:text-sm"
+            class="block w-full px-2 rounded-md border border-transparent bg-white bg-opacity-20 py-2 pl-10 pr-3 leading-5 text-white placeholder-white focus:border-transparent focus:bg-opacity-100 focus:text-gray-900 focus:placeholder-gray-500 focus:outline-none focus:ring-0 sm:text-sm"
             placeholder="Name "
             type="search"
             name="search"
@@ -252,28 +287,32 @@ function handleManageForm() {
       class="bg-white rounded-xl shadow-xl mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8"
     >
       <div class="pt-4 flex items-center justify-between">
-        <p class="text-xl text-green-800 font-bold font-rubik uppercase">Organizations</p>
-        <div class="flex items-center">
-          <sk-button2
-            v-if="selected_items.length > 0"
-            @click="confirm_delete = true"
-            :c="'bg-white border'"
-            class="w-40 flex items-center justify-center mr-2 h-10"
+        <TableTitle> Organizations </TableTitle>
+        <div class="">
+          <sk-button
+            :disabled="enodrsed_list.length <=0"
+            @click="makeEndorsementLeter"
+            :c="enodrsed_list.length > 0 ?'sk-bg-green text-white' : 'bg-gray-100 text-gray-400 '"
+            class="flex items-center justify-center mr-2 h-10"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               fill="currentColor"
-              class="w-5 h-5 mr-2 text-rose-700"
+              class="w-5 h-5 mr-2 "
             >
               <path
                 fill-rule="evenodd"
-                d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z"
+                d="M5.625 1.5H9a3.75 3.75 0 013.75 3.75v1.875c0 1.036.84 1.875 1.875 1.875H16.5a3.75 3.75 0 013.75 3.75v7.875c0 1.035-.84 1.875-1.875 1.875H5.625a1.875 1.875 0 01-1.875-1.875V3.375c0-1.036.84-1.875 1.875-1.875zM9.75 14.25a.75.75 0 000 1.5H15a.75.75 0 000-1.5H9.75z"
                 clip-rule="evenodd"
               />
+              <path
+                d="M14.25 5.25a5.23 5.23 0 00-1.279-3.434 9.768 9.768 0 016.963 6.963A5.23 5.23 0 0016.5 7.5h-1.875a.375.375 0 01-.375-.375V5.25z"
+              />
             </svg>
-            Delete Selected
-          </sk-button2>
+
+            Make Endorsement Letter
+          </sk-button>
         </div>
       </div>
       <SkTable
@@ -296,12 +335,12 @@ function handleManageForm() {
           <Tcell
             :c="'whitespace-nowrap align-center text-center text-sm items-center  font-medium text-gray-900 align-top pt-2'"
           >
-            <!-- <input
-              v-model="selected_items"
-              :value="item.id"
+            <input
+              v-model="enodrsed_list"
+              :value="item"
               type="checkbox"
               class="h-4 w-4 accent-green-600 text-white rounded border-gray-200"
-            /> -->
+            />
           </Tcell>
 
           <Tcell class="uppercase align-top pt-2"> {{ item.name }} </Tcell>
@@ -397,8 +436,7 @@ function handleManageForm() {
                       item.organization_process.campus_adviser_approved_status ===
                       'waiting for review'
                     "
-                                     :c="'cursor-pointer bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white'"
-
+                    :c="'cursor-pointer bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <timeSvg />
@@ -435,8 +473,7 @@ function handleManageForm() {
                     Denied
                   </status-card>
                 </div>
-     <div class="mb-0.5">
-
+                <div class="mb-0.5">
                   <status-card
                     :c="[
                       item.organization_process.campus_adviser_endorsed_status === 'true'
@@ -466,8 +503,7 @@ function handleManageForm() {
                       item.organization_process.campus_director_approved_status ===
                       'waiting for review'
                     "
-                                     :c="'cursor-pointer bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white'"
-
+                    :c="'cursor-pointer bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <timeSvg />
@@ -534,8 +570,7 @@ function handleManageForm() {
                       item.organization_process.osas_approved_status ===
                       'waiting for review'
                     "
-                                     :c="'cursor-pointer bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white'"
-
+                    :c="'cursor-pointer bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <timeSvg />
@@ -597,8 +632,7 @@ function handleManageForm() {
                       item.organization_process.vpa_approved_status ===
                       'waiting for review'
                     "
-                                     :c="'cursor-pointer bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white'"
-
+                    :c="'cursor-pointer bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <timeSvg />
@@ -673,7 +707,12 @@ function handleManageForm() {
                 <span class=""> Decide </span>
               </SkButtonGray>
             </div>
-            <div  v-if="item.organization_process.campus_adviser_approved_status == 'approved'" class="mt-2">
+            <div
+              v-if="
+                item.organization_process.campus_adviser_approved_status == 'approved'
+              "
+              class="mt-2"
+            >
               <SkButtonGray
                 :disabled="selected_items.length > 0"
                 class="max-w-40 mr-2"
@@ -695,7 +734,6 @@ function handleManageForm() {
                 <span class=""> Endorse </span>
               </SkButtonGray>
             </div>
-            
           </Tcell>
         </tr>
       </SkTable>
@@ -840,27 +878,239 @@ function handleManageForm() {
     </div>
   </SkDialog>
   <SkDialog :persistent="true" :isOpen="confirm_endorse" :width="'540'">
-        <div>
-          <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
-            <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-            </svg>
-          </div>
-          <div class="mt-3 text-center sm:mt-5">
-            <h3 class="text-base font-semibold leading-6 text-gray-900" id="modal-title">Endorsed </h3>
+    <div>
+      <div
+        class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100"
+      >
+        <svg
+          class="h-6 w-6 text-green-600"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          aria-hidden="true"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M4.5 12.75l6 6 9-13.5"
+          />
+        </svg>
+      </div>
+      <div class="mt-3 text-center sm:mt-5">
+        <h3 class="text-base font-semibold leading-6 text-gray-900" id="modal-title">
+          Endorsed
+        </h3>
+        <div class="mt-2">
+          <p class="text-sm text-gray-500">
+            Are you sure do you want to endorse this application
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
+      <SkButtonGray @click="confirm_endorse = false"> No </SkButtonGray>
+
+      <SkButton @click="endorse" :processing="form.processing"> Yes</SkButton>
+    </div>
+  </SkDialog>
+
+  <SkDialog :persistent="true" :isOpen="show_endorsement_letter" :fullScreen="true">
+    <div class="print:hidden sticky top-0 bg-white">
+      <div class="bg-white shdaow py-4 flex items-center justify-end">
+        <button
+          class="flex justify-center rounded-md items-center hover:bg-gray-100 border mr-2 py-2 px-4 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:green-500 focus:ring-offset-2"
+          @click="show_endorsement_letter = false"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          Close
+        </button>
+        <button
+          @click="printEndorsement"
+          class="flex justify-center rounded-md items-center hover:bg-gray-100 border py-2 px-4 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:green-500 focus:ring-offset-2"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            class="w-6 h-6 mr-2"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M7.875 1.5C6.839 1.5 6 2.34 6 3.375v2.99c-.426.053-.851.11-1.274.174-1.454.218-2.476 1.483-2.476 2.917v6.294a3 3 0 003 3h.27l-.155 1.705A1.875 1.875 0 007.232 22.5h9.536a1.875 1.875 0 001.867-2.045l-.155-1.705h.27a3 3 0 003-3V9.456c0-1.434-1.022-2.7-2.476-2.917A48.716 48.716 0 0018 6.366V3.375c0-1.036-.84-1.875-1.875-1.875h-8.25zM16.5 6.205v-2.83A.375.375 0 0016.125 3h-8.25a.375.375 0 00-.375.375v2.83a49.353 49.353 0 019 0zm-.217 8.265c.178.018.317.16.333.337l.526 5.784a.375.375 0 01-.374.409H7.232a.375.375 0 01-.374-.409l.526-5.784a.373.373 0 01.333-.337 41.741 41.741 0 018.566 0zm.967-3.97a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75H18a.75.75 0 01-.75-.75V10.5zM15 9.75a.75.75 0 00-.75.75v.008c0 .414.336.75.75.75h.008a.75.75 0 00.75-.75V10.5a.75.75 0 00-.75-.75H15z"
+              clip-rule="evenodd"
+            />
+          </svg>
+
+          Print
+        </button>
+      </div>
+    </div>
+    <div class="print:hidden mb-6 w-3/6 mx-auto">
+      <div class="rounded">
+        <h3 class="text-base font-semibold leading-6 text-gray-900">
+          Customize Information Before Print
+        </h3>
+
+        <div class="grid gap-x-6 gap-y-2 grid-cols-6 bg-gray-200 py-2 px-4 rounded">
+          <div class="col-span-2">
+            <label
+              for="first-name"
+              class="block text-sm font-medium leading-6 text-gray-900"
+              >Director of Student Affair</label
+            >
             <div class="mt-2">
-              <p class="text-sm text-gray-500">Are you sure do you want to endorse this application</p>
+              <input
+                v-model="print_form.director_student_affair"
+                type="text"
+                autocomplete="given-name"
+                class="block w-full px-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+              />
+            </div>
+          </div>
+          <div class="col-span-2">
+            <label class="block text-sm font-medium leading-6 text-gray-900"
+              >Campus</label
+            >
+            <div class="mt-2">
+              <input
+                v-model="print_form.campus"
+                type="text"
+                autocomplete="given-name"
+                class="block w-full px-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+              />
+            </div>
+          </div>
+          <div class="col-span-2">
+            <label
+              for="first-name"
+              class="block text-sm font-medium leading-6 text-gray-900"
+              >SBO GOVERNOR</label
+            >
+            <div class="mt-2">
+              <input
+                v-model="print_form.sbo_governor"
+                type="text"
+                autocomplete="given-name"
+                class="block w-full px-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+              />
+            </div>
+          </div>
+
+          <div class="col-span-2">
+            <label class="block text-sm font-medium leading-6 text-gray-900"
+              >SBO Adviser</label
+            >
+            <div class="mt-2">
+              <input
+                type="text"
+                v-model="print_form.sbo_adviser"
+                autocomplete="family-name"
+                class="block w-full px-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+              />
+            </div>
+          </div>
+          <div class="col-span-2">
+            <label class="block text-sm font-medium leading-6 text-gray-900">Date</label>
+            <div class="mt-2">
+              <input
+                type="date"
+                v-model="print_form.print_date"
+                class="pr-8 block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm"
+              />
             </div>
           </div>
         </div>
-  <div class="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
-          <SkButtonGray @click="confirm_endorse = false"> No </SkButtonGray>
-              
-          <SkButton  @click="endorse" :processing="form.processing">
-            Yes</SkButton
-          >
-        </div>
+      </div>
+    </div>
 
+    <div
+      id="endorsement-parent"
+      class="mx-auto print:w-full w-3/6 border border-gray-400 p-6"
+    >
+      <div id="endosement-letter">
+        <section class="flex items-center justify-center">
+          <div class="w-36 flex items-center justify-center">
+            <img src="/assets/sksu1.png" alt="" class="h-12 w-12" />
+          </div>
+
+          <aside>
+            <p class="leading-4 text-sm text-center">Republic of the Philippines</p>
+            <p class="leading-5 text-sm text-center uppercase font-bold">
+              Sultan Kudarat State University
+            </p>
+            <p class="leading-4 text-sm text-center">Province of Sultan Kudarat</p>
+          </aside>
+
+          <div class="w-36 flex items-center justify-center">
+            <img src="/assets/sbo.png" alt="" class="h-12 w-12" />
+          </div>
+        </section>
+
+        <section class="mx-auto w-full">
+          <p class="mt-6 text-sm">{{ formattedDate(print_form.print_date) }}</p>
+
+          <aside class="mt-4">
+            <p class="text-sm leading-5 font-bold">
+              {{ print_form.director_student_affair }}
+            </p>
+            <p class="text-sm leading-5">Director of Student Affair and Services</p>
+            <p class="text-sm leading-5">Office of Student Affair and Services</p>
+          </aside>
+
+          <aside class="mt-4">
+            <p class="text-sm">Sir</p>
+            <p class="text-sm mt-4">Greeting of Peace!</p>
+            <p class="text-sm mt-6 leading-5">
+              This is to respecfully submit the documents of the following clubs and
+              organizations of {{ print_form.campus }}
+            </p>
+          </aside>
+
+          <aside class="mt-4">
+            <div
+              v-for="(item, index) in enodrsed_list"
+              :key="item"
+              class="flex items-center px-6 text-sm"
+            >
+              <span class="text-black w-8 inline-block"> {{ index + 1 }}. </span>
+              <p class="uppercase">
+                {{ item.name }}
+              </p>
+            </div>
+          </aside>
+
+          <aside class="mt-4">
+            <p class="text-sm">Thank you and God Bless!</p>
+          </aside>
+          <aside class="mt-4 text-sm">
+            <p class="text-sm">Respectfully Yours,</p>
+          </aside>
+          <aside class="mt-5">
+            <p class="text-sm uppercase">{{ print_form.sbo_governor }}</p>
+            <p class="text-sm">SBO GOVERNOR</p>
+          </aside>
+          <aside class="mt-6">
+            <p class="text-sm">NOTED BY</p>
+          </aside>
+          <aside class="mt-6">
+            <p class="text-sm uppercase">{{ print_form.sbo_adviser }}</p>
+            <p class="text-sm">SBO ADVISER</p>
+          </aside>
+        </section>
+      </div>
+    </div>
   </SkDialog>
 </template>
 
@@ -878,3 +1128,10 @@ export default {
   },
 };
 </script>
+
+<style coped>
+@media print {
+  #endorment-letter {
+  }
+}
+</style>

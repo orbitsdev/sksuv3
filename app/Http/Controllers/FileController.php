@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Exception;
 use App\Models\File;
+use Inertia\Inertia;
 use App\Models\Requirement;
 use App\Models\Organization;
 use Illuminate\Http\Request;
@@ -11,9 +12,26 @@ use App\Http\Resources\UploadResource;
 use App\Models\OrganizationRequirement;
 use Illuminate\Support\Facades\Storage;
 
+use Illuminate\Support\Facades\Request as supportrequest;
+
 class FileController extends Controller
 {
 
+
+  public function index(){
+
+    return Inertia::render('student/templateindex',[
+   
+      'requirements' => Requirement::query()
+      ->when(supportrequest::input('search'), function($query, $search){
+          $query->where('name', 'like', "%{$search}%");
+      })
+      ->latest()->with(['files'])
+      ->paginate(10)
+      ->withQueryString(),
+      'filters'=> supportrequest::only('search'),
+    ]);
+  }
 
   public function deleteTemplate(Request $request){
 

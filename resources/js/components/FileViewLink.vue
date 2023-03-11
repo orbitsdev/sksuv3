@@ -25,7 +25,7 @@
              <a
                   target="_blank"
 
-                  class="cursor-pointer  bg-gray-300 hover:bg-blue-600 hover:text-white text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center"
+                  class="cursor-pointer  bg-gray-200 hover:bg-blue-600   hover:text-white text-gray-800  py-2 px-4 rounded inline-flex items-center"
                 >
                   <svg
                     class="fill-current w-4 h-4 mr-2"

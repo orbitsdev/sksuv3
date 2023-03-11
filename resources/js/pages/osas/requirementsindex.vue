@@ -1,3 +1,6 @@
+
+
+
 <script setup>
 import { ref, watch, defineProps, defineComponent } from "vue";
 import { router } from "@inertiajs/core";
@@ -30,6 +33,7 @@ const form = useForm({
 defineComponent({
   UploadTemplate,
 });
+
 watch(
   search,
   throttle((value) => {
@@ -247,13 +251,13 @@ function handleManageForm() {
             />
           </Tcell>
           <Tcell class="uppercase"> {{ item.name }}</Tcell>
-          <Tcell class="uppercase whitespace-normal">
+          <Tcell class=" whitespace-normal">
             <div v-if="item.files.length > 0">
               <div class="mb-1" v-for="file in item.files" :key="file" :file="file">
                 <a
                   target="_blank"
                   :href="file.file_url"
-                  class=" cursor-pointer bg-gray-300 hover:bg-blue-600 hover:text-white text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center"
+                  class=" cursor-pointer bg-gray-300 hover:bg-blue-600 hover:text-white text-gray-800 py-2 px-4 rounded inline-flex items-center"
                 >
                   <svg
                     class="fill-current w-4 h-4 mr-2"
@@ -266,7 +270,7 @@ function handleManageForm() {
                 </a>
               </div>
             </div>
-            <div v-else>None</div>
+            <div v-else class="uppercase">None</div>
           </Tcell>
 
           <Tcell class="flex items-center justify-center">

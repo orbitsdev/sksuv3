@@ -1,4 +1,4 @@
-<script setup>
+moment<script setup>
 import { ref, defineProps, watch } from "vue";
 import { useForm } from "@inertiajs/vue3";
 import { throttle } from "lodash";

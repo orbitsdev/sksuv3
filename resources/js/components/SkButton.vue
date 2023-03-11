@@ -1,7 +1,7 @@
 
 
 <template>
-    <button :disabled="processing" :class="['flex justify-center rounded-md border border-transparent  py-2 px-4 text-sm font-medium text-white shadow-sm  focus:outline-none focus:ring-2 focus:green-500 focus:ring-offset-2', c , processing? 'sk-bg-green-disbaled ' :'sk-bg-green']">  <Loader1 v-if="processing"/> <slot></slot></button>
+    <button :disabled="processing" :class="['flex justify-center rounded-md border border-transparent  py-2 px-4 text-sm font-medium  shadow-sm  focus:outline-none focus:ring-2 focus:green-500 focus:ring-offset-2', c , processing? 'sk-bg-green-disbaled ' :'']">  <Loader1 v-if="processing"/> <slot></slot></button>
 
 </template>
 
@@ -14,7 +14,7 @@
             },
             c: {
                 type: [String, Array],
-                default:'w-full'
+                default:'w-full sk-bg-green text-white'
             },
         },
     }

@@ -50,6 +50,7 @@
               <!-- <DashboardLink :href="route('officers.index')" :active="$page.component=== 'sboadviser/officerindex'"> Officers </DashboardLink> -->
           
               <DashboardLink :href="route('application.index')" :active="$page.component=== 'student/applicationindex'"> Organizations </DashboardLink>
+              <DashboardLink :href="route('template.index')" :active="$page.component=== 'student/templateindex'"> Apllication Templates </DashboardLink>
   
           
               </div>

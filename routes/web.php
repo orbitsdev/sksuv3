@@ -47,8 +47,7 @@ use App\Http\Controllers\PrintController;
 Route::post('file/upload', [FileController::class, 'uploadToTemporaryStorage'])->name('uploadtolocal');
 Route::delete('file/delete', [FileController::class, 'deleteFromLocalStorage'])->name('deletefromlocal');
 
-Route::post('upload-template', [FileController::class, 'uploadTemplate'])->name('uploadTemplate');
-Route::post('template/delete', [FileController::class, 'deleteTemplate'])->name('deleteTemplate');
+
 
 
 Route::get('/event', function () {
@@ -82,6 +81,11 @@ Route::middleware('guest')->group(function () {
 
 Route::group(['middleware' => ['auth',]], function () {
 
+
+
+    Route::post('upload-template', [FileController::class, 'uploadTemplate'])->name('uploadTemplate');
+Route::post('template/delete', [FileController::class, 'deleteTemplate'])->name('deleteTemplate');
+Route::get('template', [FileController::class, 'index'])->name('template.index');
     
 Route::get('/', function () {
     return redirect()->route('dashboard');
@@ -96,7 +100,7 @@ Route::get('/', function () {
         if (Auth::user()->hasRole('sbo-adviser')) {
             return redirect()->route('campusadviser.organization.index');
         }
-        if (Auth::user()->hasRole('sbo-student')) {
+        if (Auth::user()->hasRole('sbo-student') || Auth::user()->hasRole('guest')) {
             return redirect()->route('application.index');
         }
         if (Auth::user()->hasRole('campus-director')) {
@@ -378,8 +382,8 @@ Route::get('/', function () {
         Route::post('create', [ApplyApplicationController::class, 'create'])->name('create');
         Route::post('update', [ApplyApplicationController::class, 'update'])->name('update');
         Route::post('delete-selected', [ApplyApplicationController::class, 'deleteSelected'])->name('deleteselected');
-        Route::post('delete-file', [ApplyApplicationController::class, 'deleteFile'])->name('deletefile');
-    
+        
+     
     });
 
     Route::group([

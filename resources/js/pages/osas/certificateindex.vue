@@ -4,6 +4,11 @@ import { router } from "@inertiajs/core";
 import { throttle } from "lodash";
 import { useForm } from "@inertiajs/vue3";
 
+import axios from 'axios';
+
+import moment from 'moment';
+
+
 const props = defineProps({
   organizations: Object,
   filters: Object,
@@ -20,8 +25,16 @@ const is_updating = ref(false);
 const selected_items = ref([]);
 const selected_item = ref(null);
 const has_warning = ref(null);
+const show_cerficate_form = ref(false);
+
+
 
 const form = useForm({
+  
+  usg_adviser: '',
+  director_affair: '',
+  held_location: '',
+  month_year:  moment().format('YYYY-MM'),
   comment: "",
   approver_type: "osas",
   item_id: null,
@@ -30,20 +43,18 @@ const form = useForm({
   id: null,
 });
 
-
 const confirm_endorse = ref(false);
 
-
-function showEndorsedConfirmation(item){
-      form.id = item.id;
-      confirm_endorse.value = true;
+function showEndorsedConfirmation(item) {
+  form.id = item.id;
+  confirm_endorse.value = true;
 }
 
 watch(
   search,
   throttle((value) => {
     router.get(
-      route("osas.organization.endorsedindex"),
+      route("osas.accreditation.index"),
       { search: value },
       {
         preserveState: true,
@@ -97,30 +108,27 @@ function closeRemarkForm(item) {
   form.comment_only = false;
 }
 
-function  deleteRemark(organization,remark){
-    form.id = organization; 
-    form.remark_id = remark; 
+function deleteRemark(organization, remark) {
+  form.id = organization;
+  form.remark_id = remark;
 
-     form.post(route("organization.application.deletecomment"), {
+  form.post(route("organization.application.deletecomment"), {
     preserveState: true,
     preserveScroll: true,
 
     onSuccess: () => {
       closeRemark();
-    form.reset();
-
+      form.reset();
     },
     onError: (error) => {
       has_warning.value = error;
     },
 
     onFinish: () => {
-      
       closeRemark();
       form.reset();
     },
   });
-
 }
 
 function showForm() {
@@ -171,7 +179,7 @@ function endorse() {
 
     onFinish: () => {
       show_manage_form.value = false;
-            confirm_endorse.value = false;
+      confirm_endorse.value = false;
 
       form.reset();
     },
@@ -180,7 +188,7 @@ function endorse() {
 
 function deny() {
   form.post(route("organization.application.deny"), {
-   preserveState: true,
+    preserveState: true,
     preserveScroll: true,
     onStart: () => {
       show_remark_form.value = false;
@@ -217,7 +225,7 @@ function handleSubmit(type) {
 
 function update() {
   form.post(route("application.update"), {
-   preserveState: true,
+    preserveState: true,
     preserveScroll: true,
     onSuccess: () => {
       form.id = null;
@@ -297,6 +305,201 @@ function handleManageForm() {
   is_updating.value = false;
   show_manage_form.value = false;
 }
+
+function showCertificateForm(item){
+
+    form.id= item.id;
+   show_cerficate_form.value = true;
+
+}
+
+
+
+const is_processing = ref(false);
+
+async function generateCertificate() {
+
+is_processing.value = true;
+  axios
+    .get(route("public.generateFile",{
+       
+      usg_adviser: form.usg_adviser,
+      director_affair: form.director_affair,
+      held_location: form.held_location,
+      id: parseInt(form.id)
+    
+    }), {
+     
+      responseType: 'arraybuffer'
+    })
+    .then(response => {
+
+
+      // console.log(response.data);
+
+      let blob = new Blob([response.data], { type: 'image/png' }),
+      url = window.URL.createObjectURL(blob),
+      a = document.createElement('a')
+    
+    a.href = url
+    a.download = 'accreditation-certificate.png'
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+   
+    }).finally(()=>{
+      is_processing.value=false;
+      show_cerficate_form.value = false;
+    }
+    
+    )
+
+  //  try {
+  //   const { data } = await form.get(route("public.generateFile"), {
+  //     onSuccess: () => {
+  //       // Handle any success logic
+  //     },
+  //     onError: (error) => {
+  //       console.error(error);
+  //     },
+  //     onFinish: () => {
+  //       // Handle any finish logic
+  //     }
+  //   });
+
+  //   // Navigate to the file download URL
+  //   window.location.href = data.downloadUrl;
+  // } catch (error) {
+  //   console.error(error);
+  // }
+  // const { data } = await form.get(route("public.generateFile", {responseType: 'arraybuffer'}), {
+  //   onSuccess: () => {
+  //     // Handle any success logic
+  //   },
+  //   onError: (error) => {
+  //     console.error(error);
+  //   },
+  //   onFinish: () => {
+  //     // Handle any finish logic
+  //   }
+  // });
+
+  // // Create a blob URL for the file response
+  // const url = URL.createObjectURL(
+  //   new Blob([atob(data.file)], { type: "image/png" })
+  // );
+
+  // // Create a link and click it to download the file
+  // const link = document.createElement("a");
+  // link.href = url;
+  // link.setAttribute("download", data.filename);
+  // link.click();
+
+  // // Release the blob URL
+  // URL.revokeObjectURL(url);
+}
+
+//   function generateCertificate() {
+
+    
+    
+//     form.get(route('public.generateFile'), {
+//       preserveState:true,
+//       preserveScroll:true,
+//       onSuccess: (response) => {
+
+// console.log(response.data);
+// console.log('success');
+
+// const url = URL.createObjectURL(new Blob([response.data]));
+
+//       Create a link and click it to download the file
+//       const link = document.createElement("a");
+//       link.href = url;
+//       link.setAttribute("download", "certificate.png");
+//       link.click();
+
+//       Release the blob URL
+//       URL.revokeObjectURL(url);    
+//         const url = route('osas.generatecerticate.certificate.generate');
+//   const xhr = new XMLHttpRequest();
+//   xhr.open('GET', url, true);
+//   xhr.responseType = 'blob';
+
+//   xhr.onreadystatechange = function() {
+//     if (xhr.readyState === XMLHttpRequest.DONE) {
+//       if (xhr.status === 200) {
+//         const blob = xhr.response;
+//         const link = document.createElement('a');
+//         link.href = window.URL.createObjectURL(blob);
+//         link.download = 'certificate.pdf'; // Replace with the desired filename and extension
+//         document.body.appendChild(link);
+//         link.click();
+//         document.body.removeChild(link);
+//         window.URL.revokeObjectURL(link.href);
+//         post(route('osas.generatecerticate.certificate.download-success', item.id));
+//       } else {
+//         console.error(xhr.statusText);
+//       }
+//     }
+//   };
+
+//   xhr.send(null);
+
+//           working
+
+//           const url = window.URL.createObjectURL(new Blob([response.data]));
+//           const link = document.createElement('a');
+//           link.href = url;
+//           const fiile = "C:\\Users\\mj\\Documents\\2023\\sksuv3\\public\\assets/images/certificates/accreditation-certificate.png"
+//           link.setAttribute('download', fiile);
+//           document.body.appendChild(link);
+//           link.click();
+
+//          window.location.href = response.url;
+//        window.open(response.request.responseURL, '_blank');//   console.log(response.data);
+//         //  const url = window.URL.createObjectURL(new Blob([response.data]));
+//         const link = document.createElement('a');
+//         link.href = url;
+//         document.body.appendChild(link);
+//         link.click();
+
+//         },
+//         onError: (error) => {
+//           console.error(error);
+//         },
+
+//         onFinish: () => {},
+    
+//     });
+
+
+//   }
+
+// function generateCertificate(item) {
+//   router.get(
+//     route("osas.generatecerticate.certificate.generate",{ id: item.id },),
+
+//     {
+//       responseType: "blob",
+//       onSuccess: (response) => {
+//         const url = window.URL.createObjectURL(new Blob([response.data]));
+//         const link = document.createElement("a");
+//         link.style.display = "none";
+//         link.href = url;
+//         link.setAttribute("download", "certificate.png");
+//         document.body.appendChild(link);
+//         link.click();
+//         window.URL.revokeObjectURL(url);
+//         document.body.removeChild(link);
+//       },
+//       onError: (error) => {
+//         has_warning.value = error;
+//       },
+//       onFinish: () => {},
+//     }
+//   );
+// }
 </script>
 <template>
   <adminlayout>
@@ -335,7 +538,7 @@ function handleManageForm() {
       class="bg-white rounded-xl shadow-xl mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8"
     >
       <div class="pt-4 flex items-center justify-between">
-        <p class="text-xl text-green-800 font-bold font-rubik uppercase">ENDORSED LIST </p>
+        <p class="text-xl text-green-800 font-bold font-rubik uppercase">Organizations</p>
         <div class="flex items-center">
           <sk-button2
             v-if="selected_items.length > 0"
@@ -433,7 +636,7 @@ function handleManageForm() {
                 </aside>
               </div>
 
-              <div class="mt-2">
+              <div class="mt-1">
                 <div
                   class="truncate text-sm font-medium text-gray-900 uppercase flex items-center"
                 >
@@ -454,7 +657,7 @@ function handleManageForm() {
                 </div>
                 <div>
                   <aside class="" v-for="og in item.organization_requirements" :key="og">
-                    <div class="mt-2" v-if="og.file.length > 0">
+                    <div class="mt-1" v-if="og.file.length > 0">
                       <div class="">
                         <p class="mb-1 px-2"></p>
                         <FileViewLink
@@ -471,7 +674,7 @@ function handleManageForm() {
                     </div>
                   </aside>
                 </div>
-<!-- 
+                <!-- 
                 <div
                   @click="viewRemarks(item)"
                   class="cursor-pointer bg-gradient-to-r hover:scale-95 transition-all ease-in-out from-rose-500 via-red-500 to-pink-500 text-white rounded py-2 text px-1 mr-2 mt-4"
@@ -507,7 +710,7 @@ function handleManageForm() {
                       item.organization_process.campus_adviser_approved_status ===
                       'waiting for review'
                     "
-                                     :c="'cursor-pointer bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white'"
+                    :c="'cursor-pointer bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <timeSvg />
@@ -521,7 +724,7 @@ function handleManageForm() {
                       item.organization_process.campus_adviser_approved_status ===
                       'approved'
                     "
-                   :c="'cursor-pointer bg-gradient-to-r from-green-700 via-green-600 to-green-500 text-white'"
+                    :c="'cursor-pointer bg-gradient-to-r from-green-700 via-green-600 to-green-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <approveSvg />
@@ -536,7 +739,7 @@ function handleManageForm() {
                       item.organization_process.campus_adviser_approved_status ===
                       'denied'
                     "
-                     :c="'cursor-pointer bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white'"
+                    :c="'cursor-pointer bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <deniedSvg />
@@ -576,7 +779,7 @@ function handleManageForm() {
                       item.organization_process.campus_director_approved_status ===
                       'waiting for review'
                     "
-                                     :c="'cursor-pointer bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white'"
+                    :c="'cursor-pointer bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <timeSvg />
@@ -605,7 +808,7 @@ function handleManageForm() {
                       item.organization_process.campus_director_approved_status ===
                       'denied'
                     "
-                     :c="'cursor-pointer bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white'"
+                    :c="'cursor-pointer bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <deniedSvg />
@@ -644,7 +847,7 @@ function handleManageForm() {
                       item.organization_process.osas_approved_status ===
                       'waiting for review'
                     "
-                                     :c="'cursor-pointer bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white'"
+                    :c="'cursor-pointer bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <timeSvg />
@@ -667,7 +870,7 @@ function handleManageForm() {
                 <div class="mb-0.5">
                   <status-card
                     v-if="item.organization_process.osas_approved_status === 'denied'"
-                     :c="'cursor-pointer bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white'"
+                    :c="'cursor-pointer bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <deniedSvg />
@@ -676,8 +879,7 @@ function handleManageForm() {
                   </status-card>
                 </div>
 
-              <div class="mb-0.5">
-
+                <div class="mb-0.5">
                   <status-card
                     :c="[
                       item.organization_process.osas_endorsed_status === 'true'
@@ -707,7 +909,7 @@ function handleManageForm() {
                       item.organization_process.vpa_approved_status ===
                       'waiting for review'
                     "
-                                     :c="'cursor-pointer bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white'"
+                    :c="'cursor-pointer bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <timeSvg />
@@ -730,7 +932,7 @@ function handleManageForm() {
                 <div class="mb-0.5">
                   <status-card
                     v-if="item.organization_process.vpa_approved_status === 'denied'"
-                     :c="'cursor-pointer bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white'"
+                    :c="'cursor-pointer bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white'"
                     class="inline-flex items-center"
                   >
                     <deniedSvg />
@@ -758,8 +960,77 @@ function handleManageForm() {
             </div>
          </Tcell> -->
 
+          <!-- osas.generatecerticate.certificate.generate -->
+
           <Tcell class="align-top pt-2">
-            <div>
+            <div class="mt2">
+
+              <SkButtonGray
+                :disabled="selected_items.length > 0"
+                class="max-w-40 mr-2"
+                @click="showCertificateForm(item)"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  class="w-5 h-5 mr-2"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M5.166 2.621v.858c-1.035.148-2.059.33-3.071.543a.75.75 0 00-.584.859 6.753 6.753 0 006.138 5.6 6.73 6.73 0 002.743 1.346A6.707 6.707 0 019.279 15H8.54c-1.036 0-1.875.84-1.875 1.875V19.5h-.75a2.25 2.25 0 00-2.25 2.25c0 .414.336.75.75.75h15a.75.75 0 00.75-.75 2.25 2.25 0 00-2.25-2.25h-.75v-2.625c0-1.036-.84-1.875-1.875-1.875h-.739a6.706 6.706 0 01-1.112-3.173 6.73 6.73 0 002.743-1.347 6.753 6.753 0 006.139-5.6.75.75 0 00-.585-.858 47.077 47.077 0 00-3.07-.543V2.62a.75.75 0 00-.658-.744 49.22 49.22 0 00-6.093-.377c-2.063 0-4.096.128-6.093.377a.75.75 0 00-.657.744zm0 2.629c0 1.196.312 2.32.857 3.294A5.266 5.266 0 013.16 5.337a45.6 45.6 0 012.006-.343v.256zm13.5 0v-.256c.674.1 1.343.214 2.006.343a5.265 5.265 0 01-2.863 3.207 6.72 6.72 0 00.857-3.294z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+
+                
+              
+                <span class=""> Generate Certificate </span>
+              </SkButtonGray>
+              <!-- 
+                <a
+                :href="
+                  route('osas.generatecerticate.certificate.generate', { id: item.id })
+                "
+                class="inline-flex justify-center rounded-md px-4 py-2 font-medium shadow-sm text-sm text-gray-700 hover:bg-gray-50 border border-gray-300 bg-white "
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  class="w-5 h-5 mr-2"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M5.166 2.621v.858c-1.035.148-2.059.33-3.071.543a.75.75 0 00-.584.859 6.753 6.753 0 006.138 5.6 6.73 6.73 0 002.743 1.346A6.707 6.707 0 019.279 15H8.54c-1.036 0-1.875.84-1.875 1.875V19.5h-.75a2.25 2.25 0 00-2.25 2.25c0 .414.336.75.75.75h15a.75.75 0 00.75-.75 2.25 2.25 0 00-2.25-2.25h-.75v-2.625c0-1.036-.84-1.875-1.875-1.875h-.739a6.706 6.706 0 01-1.112-3.173 6.73 6.73 0 002.743-1.347 6.753 6.753 0 006.139-5.6.75.75 0 00-.585-.858 47.077 47.077 0 00-3.07-.543V2.62a.75.75 0 00-.658-.744 49.22 49.22 0 00-6.093-.377c-2.063 0-4.096.128-6.093.377a.75.75 0 00-.657.744zm0 2.629c0 1.196.312 2.32.857 3.294A5.266 5.266 0 013.16 5.337a45.6 45.6 0 012.006-.343v.256zm13.5 0v-.256c.674.1 1.343.214 2.006.343a5.265 5.265 0 01-2.863 3.207 6.72 6.72 0 00.857-3.294z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+
+                <span class=""> Generate Certificate </span>
+              </a> -->
+              <!-- :href="route('osas.generatecerticate.certificate.generate', { id: 1 })" -->
+              <!-- <div
+                class="max-w-40 mr-2 border cursor-pointer" 
+                @click="generateCertificate(item)"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  class="w-5 h-5 mr-2"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M5.166 2.621v.858c-1.035.148-2.059.33-3.071.543a.75.75 0 00-.584.859 6.753 6.753 0 006.138 5.6 6.73 6.73 0 002.743 1.346A6.707 6.707 0 019.279 15H8.54c-1.036 0-1.875.84-1.875 1.875V19.5h-.75a2.25 2.25 0 00-2.25 2.25c0 .414.336.75.75.75h15a.75.75 0 00.75-.75 2.25 2.25 0 00-2.25-2.25h-.75v-2.625c0-1.036-.84-1.875-1.875-1.875h-.739a6.706 6.706 0 01-1.112-3.173 6.73 6.73 0 002.743-1.347 6.753 6.753 0 006.139-5.6.75.75 0 00-.585-.858 47.077 47.077 0 00-3.07-.543V2.62a.75.75 0 00-.658-.744 49.22 49.22 0 00-6.093-.377c-2.063 0-4.096.128-6.093.377a.75.75 0 00-.657.744zm0 2.629c0 1.196.312 2.32.857 3.294A5.266 5.266 0 013.16 5.337a45.6 45.6 0 012.006-.343v.256zm13.5 0v-.256c.674.1 1.343.214 2.006.343a5.265 5.265 0 01-2.863 3.207 6.72 6.72 0 00.857-3.294z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+
+                <span class=""> Generate Certificate </span>
+              </div> -->
+            </div>
+            <!-- <div>
               <SkButtonGray
                 :disabled="selected_items.length > 0"
                 class="max-w-40 mr-2"
@@ -782,7 +1053,7 @@ function handleManageForm() {
                 <span class=""> Decide </span>
               </SkButtonGray>
             </div>
-            <!-- <div class="mt2">
+            <div class="mt2">
               <SkButtonGray
                 :disabled="selected_items.length > 0"
                 class="max-w-40 mr-2"
@@ -858,7 +1129,7 @@ function handleManageForm() {
             <h3 class="text-lg font-medium leading-6 text-gray-900" id="modal-title">
               Delete requirements
             </h3>
-            <div class="mt-2">
+            <div class="mt-1">
               <p class="text-sm text-gray-500">
                 Are you sure you want to delete campus/es ? All of your data will be
                 permanently removed from our servers forever. This action cannot be
@@ -972,8 +1243,6 @@ function handleManageForm() {
     </div>
   </SkDialog>
   <SkDialog :persistent="true" :isOpen="show_remarks" :width="'540'">
-
-
     <main class="form-max-h" v-if="selected_item.remarks.length > 0">
       <div
         class="flex items-center space-x-4 border-b mb-1 py-2"
@@ -986,13 +1255,12 @@ function handleManageForm() {
           </p>
 
           <p>
-                {{ remark.body }}
+            {{ remark.body }}
           </p>
-          
         </div>
         <div>
           <button
-          @click="deleteRemark(selected_item.id, remark.id)"
+            @click="deleteRemark(selected_item.id, remark.id)"
             class="inline-flex items-center rounded-full border border-gray-300 bg-white px-2.5 py-0.5 text-sm font-medium leading-5 text-gray-700 shadow-sm hover:bg-gray-50"
           >
             <svg
@@ -1011,35 +1279,77 @@ function handleManageForm() {
         </div>
       </div>
       <div class="mt-5">
-        <SkButtonGray class="w-40 mr-4" @click="closeRemark">
-          Close
-        </SkButtonGray>
+        <SkButtonGray class="w-40 mr-4" @click="closeRemark"> Close </SkButtonGray>
       </div>
     </main>
   </SkDialog>
 
-  <SkDialog :persistent="true" :isOpen="confirm_endorse" :width="'540'">
-        <div>
-          <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
-            <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-            </svg>
-          </div>
-          <div class="mt-3 text-center sm:mt-5">
-            <h3 class="text-base font-semibold leading-6 text-gray-900" id="modal-title">Endorsed </h3>
-            <div class="mt-2">
-              <p class="text-sm text-gray-500">Are you sure do you want to endorse this application</p>
-            </div>
-          </div>
-        </div>
-  <div class="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
-          <SkButtonGray @click="confirm_endorse = false"> No </SkButtonGray>
-              
-          <SkButton  @click="endorse" :processing="form.processing">
-            Yes</SkButton
-          >
-        </div>
+  <SkDialog :persistent="true" :isOpen="show_cerficate_form" :width="'460'">
 
+
+  <form @submit.prevent="generateCertificate">
+
+
+      <div class="mx-2">
+          <div class="mb-2 ">
+            <label for="email" class="block text-sm font-medium text-gray-700 "
+              >Month Year</label
+            > 
+
+            <div class="mt-1">
+
+             <input type="month" v-model="form.month_year"  class="pr-8 block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm"/>
+            </div>
+           
+          </div>
+          <div class="mb-2 ">
+            <label for="email" class="block text-sm font-medium text-gray-700"
+              >Held Location </label
+            > 
+
+            <div class="mt-1">
+              <Authfield1 type="text"  v-model="form.held_location" required />
+              <!-- <input id="email" v-model="form.email" name="email" type="email"  class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"> -->
+            </div>
+            <p class="text-red-700 text-sm" v-if="$page.props.errors.held_location">
+              {{ $page.props.errors.held_location }}
+            </p>
+          </div>
+          <div class="mb-2 ">
+            <label for="email" class="block text-sm font-medium text-gray-700"
+              >Usg Adviser</label
+            > 
+
+            <div class="mt-1">
+              <Authfield1 type="text" v-model="form.usg_adviser" required />
+              <!-- <input id="email" v-model="form.email" name="email" type="email"  class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"> -->
+            </div>
+            <p class="text-red-700 text-sm" v-if="$page.props.errors.usg_adviser" >
+              {{ $page.props.errors.usg_adviser }}
+            </p>
+          </div>
+          <div class="mb-2 ">
+            <label for="email" class="block text-sm font-medium text-gray-700"
+              >Director Student Affair and Services</label
+            >  
+
+            <div class="mt-1">
+              <Authfield1 type="tex"  v-model="form.director_affair" required />
+              <!-- <input id="email" v-model="form.email" name="email" type="email" autocomplete="email"  class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"> -->
+            </div>
+            <p class="text-red-700 text-sm" v-if="$page.props.errors.director_affair">
+              {{ $page.props.errors.director_affair }}
+            </p>
+          </div>
+     </div>
+    <div class="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
+      <SkButtonGray @click="show_cerficate_form = false"> No </SkButtonGray>
+
+      <SkButton type="submit"  :processing="is_processing"> Generate</SkButton>
+    </div>
+    
+  </form>
+ 
   </SkDialog>
 </template>
 

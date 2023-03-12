@@ -34,6 +34,10 @@ return [
     'google' => [
         'client_id' => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+<<<<<<< HEAD
+=======
+        // 'redirect' => 'http://127.0.0.1:8000/authorize/google/callback',
+>>>>>>> a07462aeabdc527d57815a6c608c21be6d44a3c4
         'redirect' => 'https://wrms-accreditation.projectorb.shop/authorize/google/callback',
     ],
 

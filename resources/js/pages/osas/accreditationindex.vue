@@ -335,7 +335,7 @@ function handleManageForm() {
       class="bg-white rounded-xl shadow-xl mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8"
     >
       <div class="pt-4 flex items-center justify-between">
-        <p class="text-xl text-green-800 font-bold font-rubik uppercase">Organizations</p>
+        <p class="text-xl text-green-800 font-bold font-rubik uppercase">Acccrediations</p>
         <div class="flex items-center">
           <sk-button2
             v-if="selected_items.length > 0"
@@ -358,6 +358,10 @@ function handleManageForm() {
             Delete Selected
           </sk-button2>
         </div>
+
+      <!-- <div>
+      <input type="checkbox"> <input type="number" placeholder="Year"  min="1900" max="2099" class="w-40 block  rounded-md border bg-gray-100 bg-opacity-20 py-2 px-4 pr-3 leading-5 focus:border-transparent focus:bg-opacity-100 focus:text-gray-900 focus:placeholder-gray-500 focus:outline-none focus:ring-0 sm:text-sm" />
+      </div> -->
       </div>
       <SkTable
         v-if="props.organizations.data.length > 0"

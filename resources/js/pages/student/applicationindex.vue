@@ -144,6 +144,10 @@ function handleManageForm() {
   is_updating.value = false;
   show_manage_form.value = false;
 }
+
+function openUrl(url){
+  window.open(url);
+}
 </script>
 <template>
   <adminlayout>
@@ -276,10 +280,9 @@ function handleManageForm() {
                 >
                   <div v-if="og.file.length > 0">
                     <div class="my=2">
-                      {{ og.requirement.name }}
                       <FileViewLink
                         :href="file.file_url"
-                        _target="_blank"
+                     
                         class="mb-1"
                         v-for="file in og.file"
                         :key="file"
@@ -287,6 +290,17 @@ function handleManageForm() {
                       >
                         {{ file.file_name }}
                       </FileViewLink>
+
+                      <!-- <button
+                        v-for="file in og.file"
+                        :key="file"
+                        :file="file"
+
+                        @click="openUrl(file.file_url)"
+                       class="p-1 border" >
+
+                        {{ file.file_name }}
+                      </button> -->
                     </div>
                   </div>
                 </aside>
@@ -673,17 +687,16 @@ function handleManageForm() {
     <sk-dialog
       :transition="'slide-down'"
       :persistent="true"
-      :width="'640'"
+      :width="'560'"
       :isOpen="show_manage_form"
     >
-      <main class="p-2 form-max-h">
-        <div class="form-max-h overflow-y-auto">
+      <main class="p-2 form-max-h overflow-y-auto">
           <div class="">
             <label for="email" class="block te font-medium text-gray-700"
               >Organization Name</label
             >
 
-            <div class="mt-1">
+            <div class="mt-">
               <Authfield1 type="email" autocomplete="email" v-model="form.name" />
               <!-- <input id="email" v-model="form.email" name="email" type="email" autocomplete="email"  class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"> -->
             </div>
@@ -696,18 +709,18 @@ function handleManageForm() {
           <div v-if="selected_item.requirements.length > 0">
             <!-- {{ selected_item.organization_requirements }} -->
             <aside
-              class="my-1 mb-2"
+              class="shadow-md my-1 mb-2 border rounded-md p-2 bg-gradient-to-r from-gray-50 to-gray-100 "
               v-for="r in selected_item.organization_requirements"
               :key="r"
             >
-              <p class="text-gray-900 mb-1 capitalize">{{ r.name }}</p>
-              <div class="border rounded p-2 bg-gray-100">
-                <p class="mb-2">
+              <p class="text-gray-900  capitalize">{{ r.name }}</p>
+              <div class=" ">
+                <p class="mb-2 t text-gray-800 capitalize ">
                   {{ r.requirement.name }}
                 </p>
                 <div
                   v-if="r.file.length > 0"
-                  class="bg-gradient-to-r from-green-200 to-green-300 py-2 px-2 rounded-lg"
+                  class="bg-gradient-to-r from-green-600 to-green-600 py-1 px-2 rounded-lg"
                 >
                   <!-- {{ r.file  }} -->
                   <div class="my=2">
@@ -721,7 +734,7 @@ function handleManageForm() {
                   <!-- {{ r.organization_requirements }} -->
                 </div>
 
-                <div v-else class="mt-2 bg-gray-100 px-2 rouned-lg inline-block">
+                <div v-else class="mt-2 bg-gray-100 px-2 text-sm text-gray-600 rouned-lg inline-block">
                   No File
                 </div>
 
@@ -734,9 +747,11 @@ function handleManageForm() {
               </div>
             </aside>
           </div>
-        </div>
+        
 
-        <div class="mt-5 flex items-center justify-end">
+        
+      </main>
+      <div class="mt-5 flex items-center justify-end">
           <SkButtonGray class="w-40 mr-4" @click="show_manage_form = false">
             Close
           </SkButtonGray>
@@ -745,7 +760,6 @@ function handleManageForm() {
             Update
           </SkButton>
         </div>
-      </main>
     </sk-dialog>
   </adminlayout>
 

@@ -1,26 +1,47 @@
+
+
+
+
+
+
+
+
+
 <template>
-   <div class="inline-flex items-center py-1 px-3 text-sm rounded-full bg-green-600 text-white">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-1">
-  <path fill-rule="evenodd" d="M18.97 3.659a2.25 2.25 0 00-3.182 0l-10.94 10.94a3.75 3.75 0 105.304 5.303l7.693-7.693a.75.75 0 011.06 1.06l-7.693 7.693a5.25 5.25 0 11-7.424-7.424l10.939-10.94a3.75 3.75 0 115.303 5.304L9.097 18.835l-.008.008-.007.007-.002.002-.003.002A2.25 2.25 0 015.91 15.66l7.81-7.81a.75.75 0 011.061 1.06l-7.81 7.81a.75.75 0 001.054 1.068L18.97 6.84a2.25 2.25 0 000-3.182z" clip-rule="evenodd" />
-</svg>
+
+          <div class="">
+            <div
+           
+              class="hover:scale-105 transition-all cursor-pointer ease-in-out mb-2 center relative inline-block select-none whitespace-nowrap rounded-lg bg-gradient-to-tr from-gray-700 to-gray-800 py-2 px-3.5 align-baseline font-sans text-xs font-bold uppercase leading-none text-white"
+              data-dismissible="chip"
+            >
+              <div class="mr-5 mt-px"><slot> Word.docx</slot></div>
+              <button
+                class="absolute top-1 right-1 mx-px mt-[0.5px] w-max rounded-md bg-rose-800 transition-colors hover:bg-rose-900"
+                data-dismissible-target="chip"
+              >
+                <div role="button" class="h-5 w-5 p-1">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="3"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    ></path>
+                  </svg>
+                </div>
+              </button>
+            </div>
+
+          </div>
 
       
-        <div class="mr-1 "><slot> Word.docx</slot></div>
-        <button class="">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          class="w-6 h-6"
-        >
-          <path
-            fill-rule="evenodd"
-            d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z"
-            clip-rule="evenodd"
-          />
-        </svg>
-        </button>
-      </div>
+       
 </template>
 
 <script>

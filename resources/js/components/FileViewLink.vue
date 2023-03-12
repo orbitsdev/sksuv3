@@ -2,17 +2,40 @@
 
 <template>
   
-   <a class="flex border rounded  items-center justify-between py-3 pl-3 pr-4 text-sm">
+   <!-- <a    target="_blank"
+   
+       class="cursor-pointer bg-gray-300 hover:bg-blue-600 hover:text-white text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center"
+    >
               <div class="flex w-0 flex-1 items-center">
-                <svg class="h-5 w-5 flex-shrink-0 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path fill-rule="evenodd" d="M15.621 4.379a3 3 0 00-4.242 0l-7 7a3 3 0 004.241 4.243h.001l.497-.5a.75.75 0 011.064 1.057l-.498.501-.002.002a4.5 4.5 0 01-6.364-6.364l7-7a4.5 4.5 0 016.368 6.36l-3.455 3.553A2.625 2.625 0 119.52 9.52l3.45-3.451a.75.75 0 111.061 1.06l-3.45 3.451a1.125 1.125 0 001.587 1.595l3.454-3.553a3 3 0 000-4.242z" clip-rule="evenodd" />
-                </svg>
+             
+
+
+
                 <span class="ml-2 w-0 flex-1 truncate"><slot></slot></span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+  <path fill-rule="evenodd" d="M12 2.25a.75.75 0 01.75.75v11.69l3.22-3.22a.75.75 0 111.06 1.06l-4.5 4.5a.75.75 0 01-1.06 0l-4.5-4.5a.75.75 0 111.06-1.06l3.22 3.22V3a.75.75 0 01.75-.75zm-9 13.5a.75.75 0 01.75.75v2.25a1.5 1.5 0 001.5 1.5h13.5a1.5 1.5 0 001.5-1.5V16.5a.75.75 0 011.5 0v2.25a3 3 0 01-3 3H5.25a3 3 0 01-3-3V16.5a.75.75 0 01.75-.75z" clip-rule="evenodd" />
+</svg>
               </div>
               <div class="ml-4 flex-shrink-0">
-                <p  class="font-medium text-indigo-600 hover:text-indigo-500">View</p>
+                <p  class="font-medium "> DOWNLOAD</p>
               </div>
-            </a>
+            </a> -->
+
+
+             <a
+                  target="_blank"
+
+                  class="cursor-pointer  bg-gray-200 hover:bg-blue-600   hover:text-white text-gray-800  py-2 px-4 rounded inline-flex items-center"
+                >
+                  <svg
+                    class="fill-current w-4 h-4 mr-2"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z" />
+                  </svg>
+                  <span class="text-ellipsis"> <slot> File</slot></span>
+                </a>
 </template>
 
 <script>

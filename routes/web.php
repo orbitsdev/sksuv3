@@ -29,6 +29,7 @@ use App\Http\Controllers\ApplyApplicationController;
 use App\Http\Controllers\OsasOrganizationController;
 use App\Http\Controllers\DirectorOrganizationController;
 use App\Http\Controllers\CampusAdviserOrganizationController;
+use App\Http\Controllers\PrintController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,9 +49,10 @@ Route::delete('file/delete', [FileController::class, 'deleteFromLocalStorage'])-
 
 
 
+
 Route::get('/event', function () {
-    $array = ['name' => 'Ekpono Ambrose']; //data we want to pass
-    event(new ApproveNotfication($array));
+    
+    event(new ApproveNotfication());
     
     return 'done';
 });
@@ -79,6 +81,11 @@ Route::middleware('guest')->group(function () {
 
 Route::group(['middleware' => ['auth',]], function () {
 
+
+
+    Route::post('upload-template', [FileController::class, 'uploadTemplate'])->name('uploadTemplate');
+Route::post('template/delete', [FileController::class, 'deleteTemplate'])->name('deleteTemplate');
+Route::get('template', [FileController::class, 'index'])->name('template.index');
     
 Route::get('/', function () {
     return redirect()->route('dashboard');
@@ -93,7 +100,7 @@ Route::get('/', function () {
         if (Auth::user()->hasRole('sbo-adviser')) {
             return redirect()->route('campusadviser.organization.index');
         }
-        if (Auth::user()->hasRole('sbo-student')) {
+        if (Auth::user()->hasRole('sbo-student') || Auth::user()->hasRole('guest')) {
             return redirect()->route('application.index');
         }
         if (Auth::user()->hasRole('campus-director')) {
@@ -236,6 +243,8 @@ Route::get('/', function () {
         Route::post('create', [RequirementController::class, 'create'])->name('create');
         Route::post('update', [RequirementController::class, 'update'])->name('update');
         Route::post('delete-selected', [RequirementController::class, 'deleteSelected'])->name('deleteselected');
+
+        
     });
 
 
@@ -250,6 +259,7 @@ Route::get('/', function () {
         Route::get('/', [OsasOrganizationController::class, 'index'])->name('index');
         Route::get('/endorsedlist', [OsasOrganizationController::class, 'endorsedindex'])->name('endorsedindex');
     });
+   
     Route::group([
         'middleware'=> [
             'can:is-osas'
@@ -257,8 +267,29 @@ Route::get('/', function () {
         'prefix' => 'osas/certifcate',
         'as' => 'osas.generatecerticate.'
     ], function () {
+
         Route::get('/', [ GenerateController::class, 'index'])->name('index');
+        Route::get('issued', [ GenerateController::class, 'index'])->name('certificate.index');
+        // Route::get('issued/{id}', [ GenerateController::class, 'generateCertificate'])->name('certificate.generate');
+        Route::get('issued/generate', [ GenerateController::class, 'generateCertificate'])->name('certificate.generate');
+        Route::get('issued/generate/file/{path}', [ GenerateController::class, 'generateFile'])->name('certificate.generatefile');
     });
+   
+    Route::group([
+        'middleware'=> [
+            'can:is-osas'
+        ],
+        'prefix' => 'osas/print',
+        'as' => 'osas.print.'
+    ], function () {
+
+        Route::get('/list-of-organization-percampus', [ PrintController::class, 'lisoforganizationpercampus'])->name('lisoforganizationpercampus.index');
+
+        Route::get('/list-of-submiited-documents', [ PrintController::class, 'listofsubmitteddocuments'])->name('listofsubmitteddocuments.index');
+
+    });
+
+
     Route::group([
         'middleware'=> [
             'can:is-osas'
@@ -351,8 +382,8 @@ Route::get('/', function () {
         Route::post('create', [ApplyApplicationController::class, 'create'])->name('create');
         Route::post('update', [ApplyApplicationController::class, 'update'])->name('update');
         Route::post('delete-selected', [ApplyApplicationController::class, 'deleteSelected'])->name('deleteselected');
-        Route::post('delete-file', [ApplyApplicationController::class, 'deleteFile'])->name('deletefile');
-    
+        
+     
     });
 
     Route::group([

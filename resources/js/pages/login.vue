@@ -93,8 +93,8 @@ const hasWarning = ref(null);
 const showPassword = ref(false);
 
 let form = useForm({
-  email: "@gmail.com",
-  password: "@password2!!",
+  email: "",
+  password: "",
 });
 
 function submit() {

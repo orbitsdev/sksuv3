@@ -51,8 +51,8 @@ Route::delete('file/delete', [FileController::class, 'deleteFromLocalStorage'])-
 
 
 Route::get('/event', function () {
-    $array = ['name' => 'Ekpono Ambrose']; //data we want to pass
-    event(new ApproveNotfication($array));
+    
+    event(new ApproveNotfication());
     
     return 'done';
 });

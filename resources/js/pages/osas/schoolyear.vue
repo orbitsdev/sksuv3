@@ -183,7 +183,7 @@ export default {
             </div>
             <SkTable
               v-if="props.years.data.length > 0"
-              :headers="['', 'School Year', 'Campuses', 'Response' ]"
+              :headers="['', 'School Year','', '','' ]"
             >
               <tr
                 class="divide-x divide-gray-200"
@@ -201,7 +201,9 @@ export default {
                   />
                 </Tcell>
                 <Tcell> SY.{{ item.from }} - {{ item.to }}</Tcell>
-                <Tcell> <span class="px-2 py-1 bg-green-700 rounded text-white"> {{ item.campus_advisers_count }}</span> </Tcell>
+                <!-- <Tcell> <span class="px-2 py-1 bg-green-700 rounded text-white"> {{ item.campus_advisers_count }}</span> </Tcell> -->
+                <Tcell> </Tcell>
+                <Tcell> </Tcell>
                 <Tcell> </Tcell>
               </tr>
             </SkTable>

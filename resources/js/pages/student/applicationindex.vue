@@ -19,6 +19,18 @@ const selected_items = ref([]);
 const selected_item = ref(null);
 const has_warning = ref(null);
 
+const show_remarks  = ref(false);
+
+
+
+function viewRemarks(item) {
+  selected_item.value = item;
+  show_remarks.value = true;
+}
+
+
+
+
 const form = useForm({
   name: "",
   campus_adviser_id: null,
@@ -244,6 +256,7 @@ function openUrl(url){
           ' School Year',
           ' Requirements &  attachment',
           ' Application Process Status',
+          
 
           '',
         ]"
@@ -264,7 +277,7 @@ function openUrl(url){
             />
           </Tcell>
           <Tcell class="uppercase align-top pt-2"> {{ item.name }} </Tcell>
-          <Tcell class="uppercase align-top pt-2 "> {{ item.campus_adviser.user.first_name }} {{ item.campus_adviser.user.last_name }} </Tcell>
+          <Tcell class="uppercase align-top pt-2 "> {{ item.campus_adviser.user != null ?  item.campus_adviser.user.first_name + ''  + item.campus_adviser.user.last_name  : 'None'}}  </Tcell>
           <Tcell class="uppercase align-top pt-2">     {{  item.campus_adviser.school_year != null ? 'SY.' +  item.campus_adviser.school_year.from + ' - ' + item.campus_adviser.school_year.to  : 'None'}} </Tcell> 
 
           <Tcell class="align-top pt-2 whitespace-normal">
@@ -280,6 +293,7 @@ function openUrl(url){
                 >
                   <div v-if="og.file.length > 0">
                     <div class="my=2">
+
                       <FileViewLink
                         :href="file.file_url"
                      
@@ -308,7 +322,31 @@ function openUrl(url){
   
 
               </div>
+               
+                <div
+                  @click="viewRemarks(item)"
+                  class="cursor-pointer bg-gradient-to-r hover:scale-95 transition-all ease-in-out from-rose-500 via-red-500 to-pink-500 text-white rounded py-2 text px-1 mr-2 mt-4"
+                  v-if="item.remarks.length > 0"
+                >
+                  <div class="truncate text-sm font-medium uppercase flex items-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      class="w-5 h-5 mr-2"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M12 2.25c-2.429 0-4.817.178-7.152.521C2.87 3.061 1.5 4.795 1.5 6.741v6.018c0 1.946 1.37 3.68 3.348 3.97.877.129 1.761.234 2.652.316V21a.75.75 0 001.28.53l4.184-4.183a.39.39 0 01.266-.112c2.006-.05 3.982-.22 5.922-.506 1.978-.29 3.348-2.023 3.348-3.97V6.741c0-1.947-1.37-3.68-3.348-3.97A49.145 49.145 0 0012 2.25zM8.25 8.625a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25zm2.625 1.125a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0zm4.875-1.125a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                    Comments {{ item.remarks.length }}
+                  </div>
+                </div>
+             
             </div>
+
           </Tcell>
           <Tcell class="align-top pt-2">
             <div class="mb-1 border py-2 px-2 mr-4 rounded">
@@ -774,6 +812,82 @@ function openUrl(url){
       <p class="">Updating</p>
     </div>
   </SkDialog>
+
+
+
+<SkDialog :persistent="true" :isOpen="show_remarks" :width="'540'">
+
+
+    
+    <main class="form-max-h"   >
+    <div  v-if="selected_item !=null">
+  
+    <div v-if="selected_item.remarks.length > 0">
+      <div
+        class="border-b divide-y divide-gray-300"
+        v-for="remark in selected_item.remarks"
+        :key="remark"
+      >
+
+      <div class="flex py-4">
+    <div class="ml-3">
+    <div class="">
+    <DateCard :text="remark.created_at" />
+    
+    </div>
+
+      <p class="uppercase text-sm font-medium text-gray-900"> From: {{ remark.user_sender.first_name }} - {{ remark.user_sender.last_name }}</p>
+      <p class="text-sm text-gray-500">  {{ remark.body }}</p>
+    </div>
+  </div>
+        
+
+         
+          
+
+      
+      </div>
+      </div>
+      <div class="mt-5">
+        <SkButtonGray class="w-40 mr-4" @click="show_remarks = false">
+          Close
+        </SkButtonGray>
+      </div>
+      </div>
+    </main>
+  </SkDialog>
+
+<!-- 
+  <SkDialog :persistent="true" :isOpen="show_remarks" :width="'260'">
+   <div class="mt-5 flex items-center justify-end">
+  <div v-if="selected_item.remarks.length > 0">
+
+ <div
+        class="flex items-center space-x-4 border-b mb-1 py-2"
+        v-for="remark in selected_item.remarks"
+        :key="remark"
+      >
+        <div class="min-w-0 flex-1">
+          <p class="truncate text-xs font-medium text-gray-900">
+            <DateCard :text="remark.created_at" />
+          </p>
+
+          <p>
+                {{ remark.body }}
+          </p>
+          
+        </div>
+        
+      </div>
+      <div class="text-center py-2" >  No Remarks</div>
+     </div>
+          <SkButtonGray class="w-40 mr-4" @click="show_remarks = false">
+            Close
+          </SkButtonGray>
+
+   
+        </div>
+  </SkDialog> -->
 </template>
 
 <script>

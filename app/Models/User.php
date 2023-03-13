@@ -127,6 +127,9 @@ class User extends Authenticatable
     }
     
 
+    public function remark_sender(){
+        return $this->hasOne(Remark::class, 'sender_id');
+    }
     public function remark_senders(){
         return $this->hasMany(Remark::class, 'sender_id');
     }

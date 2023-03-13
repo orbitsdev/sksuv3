@@ -52,7 +52,7 @@ class ApplyApplicationController extends Controller
                 $query->where('id', Auth::user()->id);
             })
             ->latest()->
-            with(['campus_adviser.user', 'campus_adviser.school_year', 'requirements.organization_requirements','organization_requirements' => function($org) {
+            with(['remarks.user_sender','campus_adviser.user', 'campus_adviser.school_year', 'requirements.organization_requirements','organization_requirements' => function($org) {
                 $org->with(['requirement', 'file']);
             },'organization_process'])
             ->paginate(10)

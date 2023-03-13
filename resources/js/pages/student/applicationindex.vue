@@ -794,7 +794,7 @@ function openUrl(url){
             Close
           </SkButtonGray>
 
-          <SkButton :c="['w-40']" @click="update" :processing="form.processing">
+          <SkButton :c="'w-40 sk-bg-green text-white'" @click="update" :processing="form.processing">
             Update
           </SkButton>
         </div>

@@ -383,6 +383,8 @@ Route::get('/', function () {
         Route::post('update', [ApplyApplicationController::class, 'update'])->name('update');
         Route::post('delete-selected', [ApplyApplicationController::class, 'deleteSelected'])->name('deleteselected');
         
+        Route::post('delete-file', [ApplyApplicationController::class, 'deleteFile'])->name('deletefile');
+        
      
     });
 

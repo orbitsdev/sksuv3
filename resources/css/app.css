@@ -65,3 +65,7 @@
     max-height: 85vh;
     overflow-y: auto;
   }
+
+  .gold{
+    color: #e15819;
+  }

@@ -4,6 +4,8 @@ import { router } from "@inertiajs/core";
 import { throttle } from "lodash";
 import { useForm } from "@inertiajs/vue3";
 
+
+import axios from 'axios';
 const props = defineProps({
   organizations: Object,
   filters: Object,
@@ -44,6 +46,61 @@ watch(
     );
   }, 500)
 );
+
+
+
+const is_processing = ref(false);
+
+async function generateCertificate(item) {
+  form.id = item.id;
+
+  is_processing.value = true;
+  axios
+    .get(
+      route("public.generateFile", {
+        // usg_adviser: form.usg_adviser,
+        // director_affair: form.director_affair,
+        // held_location: form.held_location,
+        id: parseInt(form.id),
+      }),
+      {
+        responseType: "arraybuffer",
+      }
+    )
+    .then((response) => {
+      // console.log(response.data);
+
+      let blob = new Blob([response.data], { type: "image/png" }),
+        url = window.URL.createObjectURL(blob),
+        a = document.createElement("a");
+
+      a.href = url;
+      a.download = "accreditation-certificate.png";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    })
+    .finally(() => {
+      is_processing.value = false;
+      // show_cerficate_form.value = false;
+    });
+}
+
+
+
+function updateDistribute(item){
+  form.id = item.id
+
+  form.post(route('campusadviser.organization.update.sbo.distribution'),{
+    onSuccess: () => {
+      
+    },
+    onError: (error) => {
+      
+    },
+  });
+  
+}
 
 function showForm() {
   //   form.school_year_id = null;
@@ -262,6 +319,7 @@ function handleManageForm() {
         v-if="props.organizations.data.length > 0"
         :headers="[
           '',
+          'Certificate',
           'Name of Organization',
           'Campus',
           'School Year',
@@ -284,6 +342,44 @@ function handleManageForm() {
               type="checkbox"
               class="h-4 w-4 accent-green-600 text-white rounded border-gray-200"
             /> -->
+          </Tcell>
+             <Tcell
+            :c="'whitespace-nowrap align-center text-center text-sm items-center  font-medium text-gray-900 align-top pt-2'"
+          >
+            <div
+              @click="generateCertificate(item)"
+              class="flex justify-center relative cursor-pointer hover:scale-105 transition-all ease-in-out"
+              v-if="item.certificate != null"
+            >
+              <!-- <div class="absolute top-0 left-5">
+                <i class="fa-solid fa-award text-2xl gold"></i>
+              </div> -->
+              <div
+                class="absolute top-6 flex items-center justify-center rounded-full p-2"
+              >
+                <svg
+                  class="fill-current w-8 h-8 mr-2"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z" />
+                </svg>
+              </div>
+              <div class="w-36 h-36">
+                <img
+                  src="/assets/images/certificates/template2.png "
+                  alt="logo"
+                  class="object-fill"
+                />
+              </div>
+            </div>
+            <div class="flex justify-center relative" v-else>
+              <div class="absolute top-0 right-5"></div>
+              <div class="w-36 h-36 flex items-center justify-center">
+                NONE
+                <!-- <img src="/assets/images/certificates/template2.png "  alt="logo" class="object-fill"> -->
+              </div>
+            </div>
           </Tcell>
 
           <Tcell class="uppercase align-top pt-2"> {{ item.name }} </Tcell>
@@ -631,6 +727,8 @@ function handleManageForm() {
          </Tcell> -->
 
           <Tcell class="flex items-center justify-center align-top pt-2">
+
+          <div>
             <SkButtonGray
               :disabled="selected_items.length > 0"
               class="max-w-40 mr-2"
@@ -652,6 +750,52 @@ function handleManageForm() {
 
               <span class=""> Decide </span>
             </SkButtonGray>
+            <div class="mt-3" v-if="item.certificate != null">
+              <SkButtonGray
+                :disabled="selected_items.length > 0"
+                class="max-w-40 mr-2"
+                @click="updateDistribute(item)"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  class="w-5 h-5 mr-2"
+                  v-if="item.certificate.distributed_by_adviser == 0"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M15.75 4.5a3 3 0 11.825 2.066l-8.421 4.679a3.002 3.002 0 010 1.51l8.421 4.679a3 3 0 11-.729 1.31l-8.421-4.678a3 3 0 110-4.132l8.421-4.679a3 3 0 01-.096-.755z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  class="w-5 h-5 mr-2 text-green-600"
+                  v-if="item.certificate.distributed_by_adviser == 1"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+
+                <span class="" v-if="item.certificate.distributed_by_adviser == 0">
+                  Forward Certificate
+                </span>
+                <span class="" v-if="item.certificate.distributed_by_adviser == 1">
+                  Certificate Forwarded
+                </span>
+                <span class="" v-else> </span>
+              </SkButtonGray>
+            </div>
+          </div>
+
+            
           </Tcell>
         </tr>
       </SkTable>

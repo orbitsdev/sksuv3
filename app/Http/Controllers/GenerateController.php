@@ -40,7 +40,7 @@ class GenerateController extends Controller
                         ->where('osas_approved_status', 'approved')
                         ->where('osas_endorsed_status', 'true')
                         ->where('vpa_approved_status', 'approved');
-                })->latest()->with(['remarks' => function ($query) {
+                })->latest()->with(['certificate', 'remarks' => function ($query) {
                     $query->where('sender_id', Auth::user()->id);
                 }, 'campus_adviser.user', 'campus_adviser.campus', 'campus_adviser.school_year', 'requirements.organization_requirements', 'organization_requirements' => function ($org) {
                     $org->with(['requirement', 'file']);

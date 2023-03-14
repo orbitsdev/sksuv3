@@ -4,6 +4,7 @@ import { router } from "@inertiajs/core";
 import { throttle } from "lodash";
 import { useForm } from "@inertiajs/vue3";
 
+import axios from 'axios';
 const props = defineProps({
   organizations: Object,
   filters: Object,
@@ -50,6 +51,45 @@ watch(
     );
   }, 500)
 );
+
+
+
+const is_processing = ref(false);
+
+async function generateCertificate(item) {
+  form.id = item.id;
+
+  is_processing.value = true;
+  axios
+    .get(
+      route("public.generateFile", {
+        // usg_adviser: form.usg_adviser,
+        // director_affair: form.director_affair,
+        // held_location: form.held_location,
+        id: parseInt(form.id),
+      }),
+      {
+        responseType: "arraybuffer",
+      }
+    )
+    .then((response) => {
+      // console.log(response.data);
+
+      let blob = new Blob([response.data], { type: "image/png" }),
+        url = window.URL.createObjectURL(blob),
+        a = document.createElement("a");
+
+      a.href = url;
+      a.download = "accreditation-certificate.png";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    })
+    .finally(() => {
+      is_processing.value = false;
+      // show_cerficate_form.value = false;
+    });
+}
 
 function showForm() {
   //   form.school_year_id = null;
@@ -252,6 +292,7 @@ function openUrl(url){
         v-if="props.organizations.data.length > 0"
         :headers="[
           '',
+          'Certificate',
           'Organization Name',
           'Campus Adviser ',
           ' School Year',
@@ -277,7 +318,46 @@ function openUrl(url){
               class="h-4 w-4 accent-green-600 text-white rounded border-gray-200"
             />
           </Tcell>
+              <Tcell
+            :c="'whitespace-nowrap align-center text-center text-sm items-center  font-medium text-gray-900 align-top pt-2'"
+          >
+            <div
+              @click="generateCertificate(item)"
+              class="flex justify-center relative cursor-pointer hover:scale-105 transition-all ease-in-out"
+              v-if="item.certificate != null"
+            >
+              <!-- <div class="absolute top-0 left-5">
+                <i class="fa-solid fa-award text-2xl gold"></i>
+              </div> -->
+              <div
+                class="absolute top-6 flex items-center justify-center rounded-full p-2"
+              >
+                <svg
+                  class="fill-current w-8 h-8 mr-2"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z" />
+                </svg>
+              </div>
+              <div class="w-36 h-36">
+                <img
+                  src="/assets/images/certificates/template2.png "
+                  alt="logo"
+                  class="object-fill"
+                />
+              </div>
+            </div>
+            <div class="flex justify-center relative" v-else>
+              <div class="absolute top-0 right-5"></div>
+              <div class="w-36 h-36 flex items-center justify-center">
+                NONE
+                <!-- <img src="/assets/images/certificates/template2.png "  alt="logo" class="object-fill"> -->
+              </div>
+            </div>
+          </Tcell>
           <Tcell class="uppercase align-top pt-2"> {{ item.name }} </Tcell>
+
           <Tcell class="uppercase align-top pt-2 "> {{ item.campus_adviser.user != null ?  item.campus_adviser.user.first_name + ' '  + item.campus_adviser.user.last_name  : 'None'}}  </Tcell>
           <Tcell class="uppercase align-top pt-2">     {{  item.campus_adviser.school_year != null ? 'SY.' +  item.campus_adviser.school_year.from + ' - ' + item.campus_adviser.school_year.to  : 'None'}} </Tcell> 
 

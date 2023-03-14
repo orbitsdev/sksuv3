@@ -57,7 +57,9 @@ class ApplyApplicationController extends Controller
                     ->where('user_id', auth()->id());
                 })
                 ->where('user_id', auth()->id())
-                ->with(['remarks.user_sender', 'campus_adviser.user', 'campus_adviser.school_year', 'requirements.organization_requirements', 'organization_requirements' => function($org) {
+                ->with(['certificate'=> function($query){
+                    $query->where('distributed_by_adviser', 1)->where('distributed_by_osas', 1);
+                },'remarks.user_sender', 'campus_adviser.user', 'campus_adviser.school_year', 'requirements.organization_requirements', 'organization_requirements' => function($org) {
                     $org->with(['requirement', 'file']);
                 }, 'organization_process'])
                 ->latest()

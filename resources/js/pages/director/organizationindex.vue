@@ -555,6 +555,14 @@ function handleManageForm() {
         </tr>
       </SkTable>
       <EmptyCard class="flex items-center justify-center h-64" v-else />
+
+       <div class="mt-6 py-4 bg-white" v-if="$props.organizations.links.length > 0">
+        <Pagination
+          v-if="$props.organizations.data.length > 0"
+          class="block"
+          :links="$props.organizations.links"
+        />
+      </div>
     </div>
 
     

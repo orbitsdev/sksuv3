@@ -29,6 +29,7 @@ use App\Http\Controllers\ApplyApplicationController;
 use App\Http\Controllers\OsasOrganizationController;
 use App\Http\Controllers\DirectorOrganizationController;
 use App\Http\Controllers\CampusAdviserOrganizationController;
+use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\PrintController;
 
 /*
@@ -270,6 +271,11 @@ Route::get('/', function () {
         // Route::get('issued/{id}', [ GenerateController::class, 'generateCertificate'])->name('certificate.generate');
         Route::get('issued/generate', [ GenerateController::class, 'generateCertificate'])->name('certificate.generate');
         Route::get('issued/generate/file/{path}', [ GenerateController::class, 'generateFile'])->name('certificate.generatefile');
+        Route::post('create/certificate/data', [ CertificateController::class, 'create'])->name('create.data');
+        Route::post('update/certificate/osas-distribution', [ CertificateController::class, 'updateOsasDistribution'])->name('update.osas.distribution');
+      
+
+
     });
    
     Route::group([
@@ -335,6 +341,7 @@ Route::get('/', function () {
 
         Route::get('/', [CampusAdviserOrganizationController::class, 'index'])->name('index');
         Route::get('/endorsedlist', [CampusAdviserOrganizationController::class, 'endorsedindex'])->name('endorsedindex');
+        Route::post('update/certificate/adviser-distribution', [ CertificateController::class, 'updateAdviserDistribution'])->name('update.sbo.distribution');
         // Route::post('/approve', [CampusAdviserOrganizationController::class, 'approve'])->name('approve');
         // Route::post('/deny', [CampusAdviserOrganizationController::class, 'deny'])->name('deny');
       

@@ -203,7 +203,9 @@ class CampusAdviserOrganizationController extends Controller
                     $query->where('id', Auth::user()->id);
                 })->whereHas('organization_process', function ($query) {
                     $query->where('campus_adviser_endorsed_status', 'true')->where('campus_adviser_approved_status', 'approved');
-                })->latest()->with(['campus_adviser.user', 'campus_adviser.campus', 'campus_adviser.school_year', 'requirements.organization_requirements', 'organization_requirements' => function ($org) {
+                })->latest()->with(['certificate'=> function($query){
+                    $query->where('distributed_by_osas', 1);
+                },'campus_adviser.user', 'campus_adviser.campus', 'campus_adviser.school_year', 'requirements.organization_requirements', 'organization_requirements' => function ($org) {
                     $org->with(['requirement', 'file']);
                 }, 'organization_process'])
                 ->paginate(10)

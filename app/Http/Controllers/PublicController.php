@@ -54,7 +54,10 @@ class PublicController extends Controller
   }
 
     public function generateCertificate(Request $request)
-    {
+    {   
+
+
+        
 
 
         // return response()->json([$request->all()]);
@@ -83,22 +86,25 @@ class PublicController extends Controller
 
         
         // return response()->json([$organization->name]);
-        $organization = Organization::find($request->id);
-
+        
+        
+         $organization = Organization::find($request->id);
+        $certificate =  $organization->certificate;
+        // return response()->json([$certificate]);
 
 
         $img = Image::make(public_path("assets/images/certificates/template2.png"));
         $font_family =  public_path("assets/fonts/helvetica/Helvetica-Bold.ttf");
 
-        $orgnaization_name =  strtoupper($organization->name);
-        $held_location =$request->held_location  ;
+        $orgnaization_name =  strtoupper($certificate->organization_name);
+        $held_location =$certificate->held_location  ;
         // $orgnaization_name = 'ROBOTICS TECHXPLORERS (RTEX)';
-        $usg_adviser =strtoupper( $request->usg_adviser);
+        $usg_adviser =strtoupper( $certificate->usg_adviser);
         // $usg_adviser = 'Maria Clara Juan Delacruz, MIT';
-        $director_student_affaire_service = strtoupper($request->director_affair) ;
-        $date_year =         Carbon::parse($request->month_year)->format('F, Y');
+        $director_student_affaire_service = strtoupper($certificate->director_student_affaire_service) ;
+        $date_year =   $certificate->date_year;  ;
 
-        $school_year = $organization->campus_adviser->school_year->from . ' - ' . $organization->campus_adviser->school_year->to;
+        $school_year = $certificate->school_year;
 
         $paragraph = explode(' ',  $orgnaization_name);
 

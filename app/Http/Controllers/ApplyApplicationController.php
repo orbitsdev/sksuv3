@@ -44,20 +44,26 @@ class ApplyApplicationController extends Controller
     public function index(){
 
 
-        return Inertia::render('student/applicationindex',[
+        return Inertia::render('student/applicationindex', [
             'organizations' => Organization::query()
-            ->when(supportrequest::input('search'), function($query, $search){
-                $query->where('name', 'like', "%{$search}%");
-            })->whereHas('user', function($query){
-                $query->where('id', Auth::user()->id);
-            })
-            ->latest()->
-            with(['remarks.user_sender','campus_adviser.user', 'campus_adviser.school_year', 'requirements.organization_requirements','organization_requirements' => function($org) {
-                $org->with(['requirement', 'file']);
-            },'organization_process'])
-            ->paginate(10)
-            ->withQueryString(),
-            'filters'=> supportrequest::only('search'),
+                ->when(supportrequest::input('search'), function($query, $search) {
+                    $query->where(function($query) use($search) {
+                        $query->where('name', 'like', "%{$search}%")
+                              ->orWhereHas('campus_adviser.school_year', function($query) use ($search) {
+                                  $query->where('from', 'like', "%{$search}%")
+                                        ->orWhere('to', 'like', "%{$search}%");
+                              });
+                    })
+                    ->where('user_id', auth()->id());
+                })
+                ->where('user_id', auth()->id())
+                ->with(['remarks.user_sender', 'campus_adviser.user', 'campus_adviser.school_year', 'requirements.organization_requirements', 'organization_requirements' => function($org) {
+                    $org->with(['requirement', 'file']);
+                }, 'organization_process'])
+                ->latest()
+                ->paginate(10)
+                ->withQueryString(),
+            'filters' => supportrequest::only('search'),
         ]);
     }
 

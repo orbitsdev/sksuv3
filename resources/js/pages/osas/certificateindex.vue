@@ -54,7 +54,7 @@ watch(
   search,
   throttle((value) => {
     router.get(
-      route("osas.accreditation.index"),
+      route("osas.generatecerticate.index"),
       { search: value },
       {
         preserveState: true,
@@ -526,7 +526,7 @@ is_processing.value = true;
           <input
             v-model.number="search"
             class="block w-full rounded-md border border-transparent bg-white bg-opacity-20 py-2 pl-10 pr-3 leading-5 text-white placeholder-white focus:border-transparent focus:bg-opacity-100 focus:text-gray-900 focus:placeholder-gray-500 focus:outline-none focus:ring-0 sm:text-sm"
-            placeholder="Name "
+            placeholder="Search "
             type="search"
             name="search"
           />
@@ -601,7 +601,7 @@ is_processing.value = true;
           </Tcell>
           <Tcell class="uppercase align-top pt-2">
             SY.{{ item.campus_adviser.school_year.from }}
-            {{ item.campus_adviser.school_year.from }}
+            {{ item.campus_adviser.school_year.to }}
           </Tcell>
 
           <Tcell class="align-top pt-2 whitespace-normal">

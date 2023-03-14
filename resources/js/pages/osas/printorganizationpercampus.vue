@@ -112,11 +112,9 @@ watch(
     </template>
 
     <div class="bg-white rounded-xl shadow-xl mx-auto px-4 max-w-7xl">
-      <div class="bg-white shadow">
+      <div class="bg-white">
         <div class="">
-          <div
-            class="py-6 md:flex md:items-center md:justify-between lg:border-t lg:border-gray-200"
-          >
+          <div class="py-6">
             <div class="min-w-0 flex-1">
               <!-- Profile -->
               <div class="flex items-center justify-between">
@@ -125,12 +123,12 @@ watch(
                     <table-title> Print Organization Percampus </table-title>
                   </div>
                 </div>
-                <div>
+                <!-- <div>
                   <schoolYearSelectForPrint
                     @selectItem="getValueOfYear"
                     @setDefaultValue="getDefaultValueOfYear"
                   />
-                </div>
+                </div> -->
               </div>
             </div>
             <div class="mt-6 flex space-x-3 md:mt-0 md:ml-4"></div>
@@ -146,7 +144,7 @@ watch(
             @click="showPrintForm(item)"
             v-for="item in props.campus.data"
             :key="item"
-            class="col-span-1 flex flex-col divide-y divide-gray-200 rounded-lg bg-white-400 text-center shadow cursor-pointer hover:bg-gray-100 relative"
+            class=" rounded text-center shadow cursor-pointer hover:bg-gray-100 relative"
           >
             <div class="flex flex-1 flex-col p-8">
               <h3 class="mt-6 text-sm font-medium text-gray-900"></h3>
@@ -158,7 +156,11 @@ watch(
                 </dd>
               </dl>
             </div>
-            <div></div>
+
+
+          <!-- <div class="absolute top-4 left-4">
+                 {{ item.campus_adviser.school_year.from }} -                                   {{ item.campus_adviser.school_year.to }}
+            </div> -->
             <div class="absolute top-4 right-4">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -262,28 +264,25 @@ watch(
           </p>
         </aside>
 
-        <aside class="mt-4 item-min-h" v-if="selected_campus.campus_advisers.length > 0" >
+        <aside class="mt-4 item-min-h" v-if="selected_campus.campus_advisers.length > 0">
           <div v-for="(item, index) in selected_campus.campus_advisers" :key="item">
             <span class="text-black w-8 inline-block"> </span>
             <p class="px-6 uppercase mb-2">
               {{ selected_campus.name }}
             </p>
 
-
-                <aside v-if="item.organizations.length > 0">
-            <div
-              v-for="(o, indexo) in item.organizations"
-              :key="o"
-              class="flex items-center px-6 text-sm"
-            >
-              <span class="text-black w-8 inline-block"> {{ indexo + 1 }}. </span>
-              <p class="uppercase">
-                {{ o.name }}
-              </p>
-            </div>
-
-                </aside>
-
+            <aside v-if="item.organizations.length > 0">
+              <div
+                v-for="(o, indexo) in item.organizations"
+                :key="o"
+                class="flex items-center px-6 text-sm"
+              >
+                <span class="text-black w-8 inline-block"> {{ indexo + 1 }}. </span>
+                <p class="uppercase">
+                  {{ o.name }}
+                </p>
+              </div>
+            </aside>
           </div>
         </aside>
       </div>

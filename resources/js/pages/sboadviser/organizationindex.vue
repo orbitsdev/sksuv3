@@ -271,7 +271,7 @@ function handleManageForm() {
           <input
             v-model.number="search"
             class="block w-full px-2 rounded-md border border-transparent bg-white bg-opacity-20 py-2 pl-10 pr-3 leading-5 text-white placeholder-white focus:border-transparent focus:bg-opacity-100 focus:text-gray-900 focus:placeholder-gray-500 focus:outline-none focus:ring-0 sm:text-sm"
-            placeholder="Name "
+            placeholder="Search "
             type="search"
             name="search"
           />
@@ -345,7 +345,7 @@ function handleManageForm() {
           </Tcell>
           <Tcell class="uppercase align-top pt-2">
             SY.{{ item.campus_adviser.school_year.from }}
-            {{ item.campus_adviser.school_year.from }}
+            {{ item.campus_adviser.school_year.to }}
           </Tcell>
 
           <Tcell class="align-top pt-2 whitespace-normal">
@@ -734,6 +734,14 @@ function handleManageForm() {
         </tr>
       </SkTable>
       <EmptyCard class="flex items-center justify-center h-64" v-else />
+
+       <div class="mt-6 py-4 bg-white" v-if="$props.organizations.links.length > 0">
+        <Pagination
+          v-if="$props.organizations.data.length > 0"
+          class="block"
+          :links="$props.organizations.links"
+        />
+      </div>
     </div>
 
     <sk-dialog :transition="'slide-down'" :persistent="true" :isOpen="confirm_delete">

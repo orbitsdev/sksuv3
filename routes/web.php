@@ -80,10 +80,7 @@ Route::middleware('guest')->group(function () {
 
 
 Route::group(['middleware' => ['auth',]], function () {
-
-
-
-    Route::post('upload-template', [FileController::class, 'uploadTemplate'])->name('uploadTemplate');
+Route::post('upload-template', [FileController::class, 'uploadTemplate'])->name('uploadTemplate');
 Route::post('template/delete', [FileController::class, 'deleteTemplate'])->name('deleteTemplate');
 Route::get('template', [FileController::class, 'index'])->name('template.index');
     
@@ -318,6 +315,8 @@ Route::get('/', function () {
         'as' => 'officers.'
     ], function () {
 
+    
+
         Route::get('/', [OfficerController::class, 'index'])->name('index');
         Route::get('/{campus}/manage', [OfficerController::class, 'manageIndex'])->name('manageindex');
         Route::post('create', [OfficerController::class, 'create'])->name('create');
@@ -332,6 +331,7 @@ Route::get('/', function () {
         'prefix' => 'adviser/organizations',
         'as' => 'campusadviser.organization.'
     ], function () {
+        
 
         Route::get('/', [CampusAdviserOrganizationController::class, 'index'])->name('index');
         Route::get('/endorsedlist', [CampusAdviserOrganizationController::class, 'endorsedindex'])->name('endorsedindex');

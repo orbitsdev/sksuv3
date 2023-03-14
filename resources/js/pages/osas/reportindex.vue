@@ -8,36 +8,7 @@ const search = ref("");
 </script>
 <template>
   <adminlayout>
-    <template #search>
-      <div class="mx-auto w-full max-w-xs lg:max-w-md">
-        <label for="search" class="sr-only">Search</label>
-        <div class="relative text-white focus-within:text-gray-600">
-          <div
-            class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
-          >
-            <svg
-              class="h-5 w-5"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                fill-rule="eveanodd"
-                d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
-                clip-rule="evenodd"
-              />
-            </svg>
-          </div>
-          <input
-            v-model.number="search"
-            class="block w-full rounded-md border border-transparent bg-white bg-opacity-20 py-2 pl-10 pr-3 leading-5 text-white placeholder-white focus:border-transparent focus:bg-opacity-100 focus:text-gray-900 focus:placeholder-gray-500 focus:outline-none focus:ring-0 sm:text-sm"
-            placeholder="Name "
-            type="search"
-            name="search"
-          />
-        </div>
-      </div>
-    </template>
+   
 
     <div class="bg-white rounded-xl shadow-xl mx-auto max-w-7xl l">
       <div class="grid grid-cols-3">

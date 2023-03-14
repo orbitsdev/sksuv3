@@ -186,7 +186,7 @@ function openUrl(url){
           <input
             v-model.number="search"
             class="block w-full rounded-md border border-transparent bg-white bg-opacity-20 py-2 pl-10 pr-3 leading-5 text-white placeholder-white focus:border-transparent focus:bg-opacity-100 focus:text-gray-900 focus:placeholder-gray-500 focus:outline-none focus:ring-0 sm:text-sm"
-            placeholder="Name "
+            placeholder="Search"
             type="search"
             name="search"
           />
@@ -247,6 +247,7 @@ function openUrl(url){
           </sk-button2>
         </div>
       </div>
+      <div class="rounded pb-6">
       <SkTable
         v-if="props.organizations.data.length > 0"
         :headers="[
@@ -277,76 +278,82 @@ function openUrl(url){
             />
           </Tcell>
           <Tcell class="uppercase align-top pt-2"> {{ item.name }} </Tcell>
-          <Tcell class="uppercase align-top pt-2 "> {{ item.campus_adviser.user != null ?  item.campus_adviser.user.first_name + ''  + item.campus_adviser.user.last_name  : 'None'}}  </Tcell>
+          <Tcell class="uppercase align-top pt-2 "> {{ item.campus_adviser.user != null ?  item.campus_adviser.user.first_name + ' '  + item.campus_adviser.user.last_name  : 'None'}}  </Tcell>
           <Tcell class="uppercase align-top pt-2">     {{  item.campus_adviser.school_year != null ? 'SY.' +  item.campus_adviser.school_year.from + ' - ' + item.campus_adviser.school_year.to  : 'None'}} </Tcell> 
 
+          
           <Tcell class="align-top pt-2 whitespace-normal">
             <div>
-              <p class="truncate text-sm font-medium text-gray-900">Requirements</p>
-
-              <div class="mt-1" v-if="item.organization_requirements.length > 0">
-         
-                <aside
-                  class="my-1 mb-2"
-                  v-for="og in item.organization_requirements"
-                  :key="og"
+              <div
+                class="truncate text-sm font-medium text-gray-900 uppercase flex items-center"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  class="w-5 h-5 mr-2"
                 >
-                  <div v-if="og.file.length > 0">
-                    <div class="my=2">
+                  <path
+                    fill-rule="evenodd"
+                    d="M5.625 1.5H9a3.75 3.75 0 013.75 3.75v1.875c0 1.036.84 1.875 1.875 1.875H16.5a3.75 3.75 0 013.75 3.75v7.875c0 1.035-.84 1.875-1.875 1.875H5.625a1.875 1.875 0 01-1.875-1.875V3.375c0-1.036.84-1.875 1.875-1.875zM9.75 14.25a.75.75 0 000 1.5H15a.75.75 0 000-1.5H9.75z"
+                    clip-rule="evenodd"
+                  />
+                  <path
+                    d="M14.25 5.25a5.23 5.23 0 00-1.279-3.434 9.768 9.768 0 016.963 6.963A5.23 5.23 0 0016.5 7.5h-1.875a.375.375 0 01-.375-.375V5.25z"
+                  />
+                </svg>
 
-                      <FileViewLink
-                        :href="file.file_url"
-                     
-                        class="mb-1"
-                        v-for="file in og.file"
-                        :key="file"
-                        :file="file"
-                      >
-                        {{ file.file_name }}
-                      </FileViewLink>
-
-                      <!-- <button
-                        v-for="file in og.file"
-                        :key="file"
-                        :file="file"
-
-                        @click="openUrl(file.file_url)"
-                       class="p-1 border" >
-
-                        {{ file.file_name }}
-                      </button> -->
-                    </div>
-                  </div>
-                </aside>
-
-  
-
+                Requirements
               </div>
-               
-                <div
-                  @click="viewRemarks(item)"
-                  class="cursor-pointer bg-gradient-to-r hover:scale-95 transition-all ease-in-out from-rose-500 via-red-500 to-pink-500 text-white rounded py-2 text px-1 mr-2 mt-4"
-                  v-if="item.remarks.length > 0"
-                >
-                  <div class="truncate text-sm font-medium uppercase flex items-center">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      class="w-5 h-5 mr-2"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M12 2.25c-2.429 0-4.817.178-7.152.521C2.87 3.061 1.5 4.795 1.5 6.741v6.018c0 1.946 1.37 3.68 3.348 3.97.877.129 1.761.234 2.652.316V21a.75.75 0 001.28.53l4.184-4.183a.39.39 0 01.266-.112c2.006-.05 3.982-.22 5.922-.506 1.978-.29 3.348-2.023 3.348-3.97V6.741c0-1.947-1.37-3.68-3.348-3.97A49.145 49.145 0 0012 2.25zM8.25 8.625a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25zm2.625 1.125a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0zm4.875-1.125a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                    Comments {{ item.remarks.length }}
-                  </div>
-                </div>
-             
-            </div>
 
+              <div class="mt-1 py-1" v-if="item.organization_requirements.length > 0">
+                <aside class="" v-for="og in item.organization_requirements" :key="og">
+                  <li class="text-xs">
+                    {{ og.requirement.name }}
+                  </li>
+                </aside>
+              </div>
+
+              <div class="mt-2">
+                <div
+                  class="truncate text-sm font-medium text-gray-900 uppercase flex items-center"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    class="w-5 h-5 mr-2"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M10.5 3.75a6 6 0 00-5.98 6.496A5.25 5.25 0 006.75 20.25H18a4.5 4.5 0 002.206-8.423 3.75 3.75 0 00-4.133-4.303A6.001 6.001 0 0010.5 3.75zm2.25 6a.75.75 0 00-1.5 0v4.94l-1.72-1.72a.75.75 0 00-1.06 1.06l3 3a.75.75 0 001.06 0l3-3a.75.75 0 10-1.06-1.06l-1.72 1.72V9.75z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+
+                  Uploaded
+                </div>
+                <div>
+                  <aside class="" v-for="og in item.organization_requirements" :key="og">
+                    <div class="mt-2" v-if="og.file.length > 0">
+                      <div class="">
+                        <p class="mb-1 px-2"></p>
+                        <FileViewLink
+                          :href="file.file_url"
+                          target="_blank"
+                          class="mb-1"
+                          v-for="file in og.file"
+                          :key="file"
+                          :file="file"
+                        >
+                          {{ file.file_name }}
+                        </FileViewLink>
+                      </div>
+                    </div>
+                  </aside>
+                </div>
+              </div>
+            </div>
           </Tcell>
           <Tcell class="align-top pt-2">
             <div class="mb-1 border py-2 px-2 mr-4 rounded">
@@ -636,7 +643,17 @@ function openUrl(url){
         </tr>
       </SkTable>
       <EmptyCard class="flex items-center justify-center h-64" v-else />
-    </div>
+      
+       <div class="mt-6 bg-white" v-if="$props.organizations.links.length > 0">
+          <Pagination
+            v-if="$props.organizations.data.length > 0"
+            class="block"
+            :links="$props.organizations.links"
+          />
+        </div>
+      </div>
+  
+      </div>
 
     <sk-dialog :transition="'slide-down'" :persistent="true" :isOpen="show_form">
       <main class="p-2">

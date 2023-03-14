@@ -26,6 +26,7 @@ Route::get('public/school-year/print', [PublicController::class, 'getSchoolYearF
 Route::get('public/school-year-with-campus', [PublicController::class, 'getCampus'])->name('public.campus');
 Route::get('public/guest-users', [PublicController::class, 'getGuestUsers'])->name('public.guestusers');
 Route::get('public/campus-advisers', [PublicController::class, 'getCampusAdviser'])->name('public.campusadvisers');
+Route::get('public/organization-for-submit-requirements', [PublicController::class, 'getOrganizationForSubmitDocuments'])->name('public.organizationforsubmitdocuments');
 
 Route::get('public/generatefile', [PublicController::class, 'generateCertificate'])->name('public.generateFile');
 

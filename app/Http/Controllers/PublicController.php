@@ -251,6 +251,10 @@ class PublicController extends Controller
     }
 
 
+    public function getOrganizationForSubmitDocuments(){
+        return response()->json(['data' => Organization::where('user_id', '==', null)->whereHas('campus_adviser')->latest()->with(['campus_adviser.user','campus_adviser.school_year'])->get()]);
+    }
+
     public function getSchoolYearForPrint()
     {
 

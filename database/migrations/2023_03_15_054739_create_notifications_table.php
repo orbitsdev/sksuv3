@@ -14,12 +14,11 @@ return new class extends Migration
     public function up()
     {
         Schema::create('notifications', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('sender_id')->nullable();
-            $table->foreignId('reciever_id')->nullable();
-            $table->string('approved_status')->nullable();
-            $table->string('body')->nullable();
-            $table->string('status')->nullable();
+            $table->uuid('id')->primary();
+            $table->string('type');
+            $table->morphs('notifiable');
+            $table->text('data');
+            $table->timestamp('read_at')->nullable();
             $table->timestamps();
         });
     }

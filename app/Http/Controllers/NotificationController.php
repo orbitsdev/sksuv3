@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -11,11 +10,13 @@ class NotificationController extends Controller
     
 
     public function index(){
-       
+        
+
+        auth()->user()->unreadNotifications->markAsRead();
 
         
         return response()->json([
-            'data' =>  Notification::where('reciever_id', Auth::user()->id)->latest()->take(5)->with('user_sender')->get(),
+            'data' => auth()->user()->notifications()->latest()->take(5)->get(),
         ]);
 
 

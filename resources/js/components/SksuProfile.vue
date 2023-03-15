@@ -1,4 +1,19 @@
+
 <script setup>
+// import Echo from 'laravel-echo';
+import pusher from '@/plugins/pusher.js';
+// const pusher  = require('pusher-js');
+// require ('pusher-js/dist/web/pusher');
+
+// window.Echo = new Echo({
+//     broadcaster: 'pusher',
+//     key: process.env.VITE_PUSHER_APP_KEY,
+//     cluster: process.env.VITE_PUSHER_APP_CLUSTER,
+//     forceTLS: false,
+//     wsHost: window.location.hostname,
+//     wsPort: 6001,
+// });
+
 import { ref, onMounted, onBeforeUnmount } from "vue";
 
 import { router } from "@inertiajs/core";
@@ -19,6 +34,15 @@ const closeOnClickOutside = (event) => {
 };
 onMounted(() => {
   document.addEventListener("click", closeOnClickOutside);
+
+  // require
+
+  // window.Echo.private("App.User." + $page.props.auth.user.id)
+  //   .notification((notification) => {
+
+  //     console.log("whashdhasdw ahdasd d");
+  //     // isNotif.value = true;req
+  //   });
 });
 onBeforeUnmount(() => {
   document.removeEventListener("click", closeOnClickOutside);
@@ -57,13 +81,53 @@ function logout() {
       {{ $page.props.sbocurrentschool }}
     </div>
     <div class="relative ">
+
+  <!-- <div class="'cursor-pointer flex-shrink-0 rounded-full p-1 text-cyan-200 hover:bg-white hover:bg-opacity-10 hover:text-white focus:outline-none relative ">
+    <svg
+        class="h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        aria-hidden="true"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"
+        />
+      </svg>
+
+           <div class="bg-red-500 flex items-center p-0.5 absolute -top-2 px-1.5 -right-0.5 z-100 justify-center text-white rounded-full text-xs"> {{$page.props.unreadNotification }} </div>
+<div>
+ <li  class="cursor-pointer flex py-4 z-0 hover:bg-gray-50">
+       
+         <div class="ml-3 ">
+            <div class="border-b mb-1  flex items-center justify-between  ">
+            <p class="text-sm font-medium inline-block  text-gray-900 capitalize mr-2"> </p>
+              <p class="text-xs inline-block ">
+                    <time datetime="2020-01-07  "></time>
+            </p>
+            </div>
+         
+             <p :class="['text-sm font-medium   inline-block px-2 roundedd text-white rounded capitalizebg-green-400' ]" > </p>
+            <p class="text-sm text-gray-500 whitespace-normal mt-1">
+
+            Aprova
+            </p>
+          </div>
+        </li>
+</div>
+  </div> -->
+      
     
-    <button
+      
+      <button
       @click="isNotif = !isNotif"
       
       :class=" ['cursor-pointer flex-shrink-0 rounded-full p-1 text-cyan-200 hover:bg-white hover:bg-opacity-10 hover:text-white focus:outline-none relative ', isNotif ? 'focus:ring-2 focus:ring-white' :'' ]"
     >
-     <div class="bg-red-500 flex items-center p-0.5 absolute -top-2  -right-0.5 z-100 justify-center text-white rounded-full text-sm"> 20</div>
+     <div v-if="$page.props.unreadNotification > 0 " class="bg-red-500 flex items-center w-6 h-6 absolute -top-2  -right-1.5 z-100 justify-center text-white rounded-full text-sm"> {{ $page.props.unreadNotification }}</div>
       <svg
         class="h-6 w-6"
         fill="none"

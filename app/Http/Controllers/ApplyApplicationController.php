@@ -172,13 +172,24 @@ class ApplyApplicationController extends Controller
               
              if($data->requirements)
              {
-                 //  $data->requirements()->detach();
+                  $data->requirements()->detach();
+             }
+
+             if($data->certificate){
+                $data->certificate()->delete();
+             }
+             if($data->remarks){
+                $data->remarks()->delete();
+             }
+             if($data->organization_process){
+                $data->organization_process()->delete();
              }
 
          }
-
-         OrganizationProcess::whereIn('id', $request->input('ids'))->delete();
+         
+        OrganizationProcess::whereIn('id', $request->input('ids'))->delete();
         Organization::whereIn('id', $request->input('ids'))->delete();
+
         
         return redirect()->back()->with('notification', 'Campus Delete'); 
     }

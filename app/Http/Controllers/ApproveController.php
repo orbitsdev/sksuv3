@@ -8,6 +8,7 @@ use App\Models\Organization;
 use Illuminate\Http\Request;
 use App\Models\OrganizationProcess;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\ApplicationStatusNotification;
 
 class ApproveController extends Controller
 {
@@ -20,6 +21,11 @@ class ApproveController extends Controller
         $organization = Organization::where('id', $request->id)->first();
         $organization_process  = $organization->organization_process()->where('organization_id', $request->id)->first();
 
+        $student = $organization->user;
+        $current_user = Auth::user();
+        $campus_adviser = $organization->campus_adviser->user;
+        
+
 
         if($request->approver_type == 'campus_adviser'){
 
@@ -29,6 +35,8 @@ class ApproveController extends Controller
                 'campus_adviser_endorsed_status'=> 'true', 
             ]);
 
+
+            $student->notify(new ApplicationStatusNotification($current_user->first_name .' '. $current_user->last_name, $organization->name, '', strtoupper($organization->name) .' Application has been endorsed to campus director ' ));
 
             // $newnotfi = Notification::create([
             //     'sender_id'=> Auth::user()->id, 
@@ -50,6 +58,12 @@ class ApproveController extends Controller
                 'osas_endorsed_status'=> 'true', 
             ]);
 
+
+            $campus_adviser->notify(new ApplicationStatusNotification($current_user->first_name .' '. $current_user->last_name, $organization->name,'', strtoupper($organization->name) .' Application has been endorsed to VPA' ));
+
+            $student->notify(new ApplicationStatusNotification($current_user->first_name .' '. $current_user->last_name, $organization->name,'', strtoupper($organization->name) .' Application has been endorsed to VPA' ));
+            
+         
             
             // $newnotfi = Notification::create([
             //     'sender_id'=> Auth::user()->id, 
@@ -80,23 +94,28 @@ class ApproveController extends Controller
                 'vpa_endorsed_status'=> 'true', 
             ]);
 
+
+          
+
+
             
-            $newnotfi = Notification::create([
-                'sender_id'=> Auth::user()->id, 
-                'reciever_id'=> $organization->user_id, 
-                'approved_status'=> 'approved', 
-                'status'=> 'unread', 
-                'body'=> 'Application has been approved', 
-            ]);
+            
+            // $newnotfi = Notification::create([
+            //     'sender_id'=> Auth::user()->id, 
+            //     'reciever_id'=> $organization->user_id, 
+            //     'approved_status'=> 'approved', 
+            //     'status'=> 'unread', 
+            //     'body'=> 'Application has been approved', 
+            // ]);
            
             
-            $newnotfi = Notification::create([
-                'sender_id'=> Auth::user()->id, 
-                'reciever_id'=> $organization->campus_adviser->user->id, 
-                'approved_status'=> 'approved', 
-                'status'=> 'unread', 
-                'body'=> 'Application has been approved', 
-            ]);
+            // $newnotfi = Notification::create([
+            //     'sender_id'=> Auth::user()->id, 
+            //     'reciever_id'=> $organization->campus_adviser->user->id, 
+            //     'approved_status'=> 'approved', 
+            //     'status'=> 'unread', 
+            //     'body'=> 'Application has been approved', 
+            // ]);
            
             
         }
@@ -114,7 +133,13 @@ class ApproveController extends Controller
 
         $organization = Organization::where('id', $request->id)->first();
         $organization_process  = $organization->organization_process()->where('organization_id', $request->id)->first();
+        
+        $student = $organization->user;
+        $current_user = Auth::user();
+        $campus_adviser = $organization->campus_adviser->user;
+        
 
+        // dd($campus_adviser);
 
         if($request->approver_type == 'campus_adviser'){
 
@@ -123,15 +148,12 @@ class ApproveController extends Controller
                 'campus_adviser_approved_status'=> 'approved', 
                 // 'campus_adviser_endorsed_status'=> 'true', 
             ]);
+            
+            $student->notify(new ApplicationStatusNotification($current_user->first_name .' '. $current_user->last_name, $organization->name,'approved', strtoupper($organization->name) .' Application has been approved ' ));
 
+            // $sender, $organization_name, $status, $body
 
-            $newnotfi = Notification::create([
-                'sender_id'=> Auth::user()->id, 
-                'reciever_id'=> $organization->user_id, 
-                'approved_status'=> 'approved', 
-                'status'=> 'unread', 
-                'body'=> 'Application has been approved', 
-            ]);
+          
             
         }
 
@@ -145,24 +167,11 @@ class ApproveController extends Controller
                 'campus_director_endorsed_status'=> 'true', 
             ]);
 
+            $campus_adviser->notify(new ApplicationStatusNotification($current_user->first_name .' '. $current_user->last_name, $organization->name,'approved', strtoupper($organization->name) .' application that you endorsse to campus director has been approved ' ));
+
+            $student->notify(new ApplicationStatusNotification($current_user->first_name .' '. $current_user->last_name, $organization->name,'approved', strtoupper($organization->name) .' application. that endorsed by campus adviser to campus director has been approved ' ));
             
-            $newnotfi = Notification::create([
-                'sender_id'=> Auth::user()->id, 
-                'reciever_id'=> $organization->user_id, 
-                'approved_status'=> 'approved', 
-                'status'=> 'unread', 
-                'body'=> 'Application has been approved', 
-            ]);
-           
-            
-            $newnotfi = Notification::create([
-                'sender_id'=> Auth::user()->id, 
-                'reciever_id'=> $organization->campus_adviser->user->id, 
-                'approved_status'=> 'approved', 
-                'status'=> 'unread', 
-                'body'=> 'Application has been approved', 
-            ]);
-           
+         
             
         }
         if($request->approver_type == 'osas'){
@@ -175,23 +184,11 @@ class ApproveController extends Controller
                 // 'osas_endorsed_status'=> 'true', 
             ]);
 
-            
-            $newnotfi = Notification::create([
-                'sender_id'=> Auth::user()->id, 
-                'reciever_id'=> $organization->user_id, 
-                'approved_status'=> 'approved', 
-                'status'=> 'unread', 
-                'body'=> 'Application has been approved', 
-            ]);
-           
-            
-            $newnotfi = Notification::create([
-                'sender_id'=> Auth::user()->id, 
-                'reciever_id'=> $organization->campus_adviser->user->id, 
-                'approved_status'=> 'approved', 
-                'status'=> 'unread', 
-                'body'=> 'Application has been approved', 
-            ]);
+            $campus_adviser->notify(new ApplicationStatusNotification($current_user->first_name .' '. $current_user->last_name, $organization->name,'approved', strtoupper($organization->name) .' application has been approved by osas ' ));
+
+            $student->notify(new ApplicationStatusNotification($current_user->first_name .' '. $current_user->last_name, $organization->name,'approved', strtoupper($organization->name) .' application  has been approved by osas ' ));
+
+        
            
             
         }
@@ -205,23 +202,13 @@ class ApproveController extends Controller
                 'vpa_endorsed_status'=> 'true', 
             ]);
 
+
+            $campus_adviser->notify(new ApplicationStatusNotification($current_user->first_name .' '. $current_user->last_name, $organization->name,'approved', strtoupper($organization->name) .' Application has been approved  by VPA' ));
+
+            $student->notify(new ApplicationStatusNotification($current_user->first_name .' '. $current_user->last_name, $organization->name,'approved', strtoupper($organization->name) .' Application has been approved by VPA ' ));
+
             
-            $newnotfi = Notification::create([
-                'sender_id'=> Auth::user()->id, 
-                'reciever_id'=> $organization->user_id, 
-                'approved_status'=> 'approved', 
-                'status'=> 'unread', 
-                'body'=> 'Application has been approved', 
-            ]);
            
-            
-            $newnotfi = Notification::create([
-                'sender_id'=> Auth::user()->id, 
-                'reciever_id'=> $organization->campus_adviser->user->id, 
-                'approved_status'=> 'approved', 
-                'status'=> 'unread', 
-                'body'=> 'Application has been approved', 
-            ]);
            
             
         }
@@ -247,6 +234,10 @@ class ApproveController extends Controller
         
         $organization = Organization::where('id', $request->id)->first();
         $organization_process  = $organization->organization_process()->where('organization_id', $request->id)->first();
+
+        $student = $organization->user;
+        $current_user = Auth::user();
+        $campus_adviser = $organization->campus_adviser->user;
         
         
         
@@ -259,20 +250,16 @@ class ApproveController extends Controller
             ]);
 
 
-            $create_remark = Remark::create([
-                'organization_id'=> $organization->id,        
-                'sender_id'=> Auth::user()->id, 
-                'reciever_id'=> $organization->user_id, 
-                'body'=> $request->comment, 
-            ]);
+            // $create_remark = Remark::create([
+            //     'organization_id'=> $organization->id,        
+            //     'sender_id'=> Auth::user()->id, 
+            //     'reciever_id'=> $organization->user_id, 
+            //     'body'=> $request->comment, 
+            // ]);
     
-            $newnotfi = Notification::create([
-                'sender_id'=> Auth::user()->id, 
-                'reciever_id'=> $organization->user_id, 
-                'approved_status'=> 'denied', 
-                'status'=> 'unread', 
-                'body'=> $request->comment, 
-            ]);
+       
+
+            $student->notify(new ApplicationStatusNotification($current_user->first_name .' '. $current_user->last_name, $organization->name,'denied', strtoupper($organization->name) .' Application has been denied. '.$request->comment ));
 
             
     
@@ -287,27 +274,17 @@ class ApproveController extends Controller
             ]);
 
 
-            $create_remark = Remark::create([
-                'organization_id'=> $organization->id,        
-                'sender_id'=> Auth::user()->id, 
-                'reciever_id'=> $organization->user_id, 
-                'body'=> $request->comment, 
-            ]);
+            // $create_remark = Remark::create([
+            //     'organization_id'=> $organization->id,        
+            //     'sender_id'=> Auth::user()->id, 
+            //     'reciever_id'=> $organization->user_id, 
+            //     'body'=> $request->comment, 
+            // ]);
     
-            $newnotfi = Notification::create([
-                'sender_id'=> Auth::user()->id, 
-                'reciever_id'=> $organization->campus_adviser->user->id, 
-                'approved_status'=> 'denied', 
-                'status'=> 'unread', 
-                'body'=> $request->comment, 
-            ]);
-            $newnotfi = Notification::create([
-                'sender_id'=> Auth::user()->id, 
-                'reciever_id'=> $organization->user->id, 
-                'approved_status'=> 'denied', 
-                'status'=> 'unread', 
-                'body'=> $request->comment, 
-            ]);
+           
+            $campus_adviser->notify(new ApplicationStatusNotification($current_user->first_name .' '. $current_user->last_name, $organization->name,'denied', strtoupper($organization->name) .' application that you endorse to campus director has been - '.$request->comment  ));
+
+            $student->notify(new ApplicationStatusNotification($current_user->first_name .' '. $current_user->last_name, $organization->name,'denied', strtoupper($organization->name) .' application. that endorsed by campus adviser to campus director has been - '.$request->comment  ));
     
 
     
@@ -327,22 +304,14 @@ class ApproveController extends Controller
                 'reciever_id'=> $organization->user_id, 
                 'body'=> $request->comment, 
             ]);
-    
-            $newnotfi = Notification::create([
-                'sender_id'=> Auth::user()->id, 
-                'reciever_id'=> $organization->campus_adviser->user->id, 
-                'approved_status'=> 'denied', 
-                'status'=> 'unread', 
-                'body'=> $request->comment, 
-            ]);
 
-            $newnotfi = Notification::create([
-                'sender_id'=> Auth::user()->id, 
-                'reciever_id'=> $organization->user->id, 
-                'approved_status'=> 'denied', 
-                'status'=> 'unread', 
-                'body'=> $request->comment, 
-            ]);
+
+            $campus_adviser->notify(new ApplicationStatusNotification($current_user->first_name .' '. $current_user->last_name, $organization->name,'denied', strtoupper($organization->name) .' application has been denied by osas. '.$request->comment ));
+
+            $student->notify(new ApplicationStatusNotification($current_user->first_name .' '. $current_user->last_name, $organization->name,'denied', strtoupper($organization->name) .' application  has been denied by osas. '.$request->comment ));
+
+        
+    
     
     
         }
@@ -355,29 +324,13 @@ class ApproveController extends Controller
             ]);
 
 
-            $create_remark = Remark::create([
-                'organization_id'=> $organization->id,        
-                'sender_id'=> Auth::user()->id, 
-                'reciever_id'=> $organization->user_id, 
-                'body'=> $request->comment, 
-            ]);
-    
-            $newnotfi = Notification::create([
-                'sender_id'=> Auth::user()->id, 
-                'reciever_id'=> $organization->campus_adviser->user->id, 
-                'approved_status'=> 'denied', 
-                'status'=> 'unread', 
-                'body'=> $request->comment, 
-            ]);
 
-            $newnotfi = Notification::create([
-                'sender_id'=> Auth::user()->id, 
-                'reciever_id'=> $organization->user->id, 
-                'approved_status'=> 'denied', 
-                'status'=> 'unread', 
-                'body'=> $request->comment, 
-            ]);
-    
+
+            $campus_adviser->notify(new ApplicationStatusNotification($current_user->first_name .' '. $current_user->last_name, $organization->name,'approved', strtoupper($organization->name) .' Application has been denied   by VPA '.$request->comment  ));
+
+            $student->notify(new ApplicationStatusNotification($current_user->first_name .' '. $current_user->last_name, $organization->name,'approved', strtoupper($organization->name) .' Application has been denied  by VPA '.$request->comment  ));
+
+        
     
         }
        
@@ -400,6 +353,10 @@ class ApproveController extends Controller
 
 
         $organization = Organization::where('id', $request->id)->first();
+
+        $student = $organization->user;
+        $current_user = Auth::user();
+        $campus_adviser = $organization->campus_adviser->user;
         
         $create_remark = Remark::create([
             'organization_id'=> $organization->id,        
@@ -407,6 +364,18 @@ class ApproveController extends Controller
             'reciever_id'=> $organization->user_id, 
             'body'=> $request->comment, 
         ]);
+
+        if(Auth::user()->hasRole('osas')){
+           
+          
+
+            
+            $campus_adviser->notify(new ApplicationStatusNotification($current_user->first_name .' '. $current_user->last_name, $organization->name,'', 'Osas commented to '. strtoupper($organization->name). ' '. $request->comment  ));
+
+            $student->notify(new ApplicationStatusNotification($current_user->first_name .' '. $current_user->last_name, $organization->name,'',  $request->comment  ));
+
+        
+        }
 
         return redirect()->back();
 

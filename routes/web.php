@@ -3,6 +3,7 @@
 use App\Models\User;
 use Inertia\Inertia;
 use App\Events\ApproveNotfication;
+use App\Events\RealTimeNotification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VpaController;
@@ -31,6 +32,8 @@ use App\Http\Controllers\DirectorOrganizationController;
 use App\Http\Controllers\CampusAdviserOrganizationController;
 use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\PrintController;
+use App\Http\Controllers\RealTimeNotificationController;
+use App\Notifications\ApplicationStatusNotification;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,7 +52,20 @@ Route::post('file/upload', [FileController::class, 'uploadToTemporaryStorage'])-
 Route::delete('file/delete', [FileController::class, 'deleteFromLocalStorage'])->name('deletefromlocal');
 
 
+Route::get('/testnotification', function(){
+    // return RealTimeNotificationController::dispatch();
+    event(new RealTimeNotification('Hello World'));
+});
 
+Route::get('/test1',  function(){
+        Auth::user()->notify(new ApplicationStatusNotification('first', 'approved','adasd','dasd'));
+
+});
+
+Route::get('/refresh', function(){
+
+    return redirect()->back();
+})->name('refresh');
 
 Route::get('/event', function () {
     

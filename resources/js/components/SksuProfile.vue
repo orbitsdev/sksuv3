@@ -1,25 +1,18 @@
-
 <script setup>
-// import Echo from 'laravel-echo';
-import pusher from '@/plugins/pusher.js';
-// const pusher  = require('pusher-js');
-// require ('pusher-js/dist/web/pusher');
-
-// window.Echo = new Echo({
-//     broadcaster: 'pusher',
-//     key: process.env.VITE_PUSHER_APP_KEY,
-//     cluster: process.env.VITE_PUSHER_APP_CLUSTER,
-//     forceTLS: false,
-//     wsHost: window.location.hostname,
-//     wsPort: 6001,
-// });
-
 import { ref, onMounted, onBeforeUnmount } from "vue";
+import { usePage } from '@inertiajs/vue3'
+
 
 import { router } from "@inertiajs/core";
 const isOpen = ref(false);
 const isNotif = ref(false);
 const is_singning_out = ref(false);
+
+
+const user = usePage().props.user.id;
+  console.log(user);
+
+
 
 
 const closeOnClickOutside = (event) => {
@@ -35,14 +28,7 @@ const closeOnClickOutside = (event) => {
 onMounted(() => {
   document.addEventListener("click", closeOnClickOutside);
 
-  // require
 
-  // window.Echo.private("App.User." + $page.props.auth.user.id)
-  //   .notification((notification) => {
-
-  //     console.log("whashdhasdw ahdasd d");
-  //     // isNotif.value = true;req
-  //   });
 });
 onBeforeUnmount(() => {
   document.removeEventListener("click", closeOnClickOutside);
@@ -127,7 +113,7 @@ function logout() {
       
       :class=" ['cursor-pointer flex-shrink-0 rounded-full p-1 text-cyan-200 hover:bg-white hover:bg-opacity-10 hover:text-white focus:outline-none relative ', isNotif ? 'focus:ring-2 focus:ring-white' :'' ]"
     >
-     <div v-if="$page.props.unreadNotification > 0 " class="bg-red-500 flex items-center w-6 h-6 absolute -top-2  -right-1.5 z-100 justify-center text-white rounded-full text-sm"> {{ $page.props.unreadNotification }}</div>
+     <div v-if="$page.props.unreadNotification > 0 " class="bg-red-500 flex items-center w-7 h-7 absolute -top-2  -right-0.5 z-100 justify-center text-white rounded-full text-sm"> 2{{ $page.props.unreadNotification }}</div>
       <svg
         class="h-6 w-6"
         fill="none"

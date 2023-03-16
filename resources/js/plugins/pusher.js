@@ -3,13 +3,13 @@
 
 
 
-const pusher  = require('pusher-js');
+// const pusher  = require('pusher-js');
 
-class Pusher {
+// class Pusher {
 
-}
+// }
 
-export default new Pusher();
+// export default new Pusher();
 
 // window.Pusher = require('pusher-js');
 

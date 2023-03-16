@@ -1,12 +1,13 @@
 
-
-
-
-
-const pusher  = require('pusher-js');
+const pusher = require('pusher-js');
 
 class Pusher {
+  
+  initialize() {
 
+    const newPush = new pusher();
+
+  }
 }
 
 export default new Pusher();

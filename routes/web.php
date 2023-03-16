@@ -58,8 +58,7 @@ Route::get('/testnotification', function(){
 });
 
 Route::get('/test1',  function(){
-        Auth::user()->notify(new ApplicationStatusNotification('first', 'approved','adasd','dasd'));
-
+  Auth::user()->notify(new ApplicationStatusNotification('first', 'approved','adasd','dasd'));
 });
 
 Route::get('/refresh', function(){

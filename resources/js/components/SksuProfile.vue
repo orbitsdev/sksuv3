@@ -1,7 +1,11 @@
 
 <script setup>
 // import Echo from 'laravel-echo';
-import pusher from '@/plugins/pusher.js';
+import pusher from 'pusher-js';
+import Echo from 'laravel-echo';
+// import { computed } from 'vue'
+import { usePage } from '@inertiajs/inertia-vue3'
+
 // const pusher  = require('pusher-js');
 // require ('pusher-js/dist/web/pusher');
 
@@ -29,20 +33,21 @@ const closeOnClickOutside = (event) => {
   } else {
     if (isOpen.value == true) {
       isOpen.value = false;
-    }
+    } 
   }
 };
 onMounted(() => {
   document.addEventListener("click", closeOnClickOutside);
-
-  // require
-
-  // window.Echo.private("App.User." + $page.props.auth.user.id)
-  //   .notification((notification) => {
-
-  //     console.log("whashdhasdw ahdasd d");
-  //     // isNotif.value = true;req
-  //   });
+    window.Echo = new Echo({
+        broadcaster: 'pusher',
+        key: import.meta.env.VITE_PUSHER_APP_KEY,
+        cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
+        forceTLS: true,
+    });
+    console.log(this.user)
+  // window.Echo.private(`App.Models.User.${this.$page.props.auth.user.id}`).notification((notification) => {
+  //     console.log(notification)
+  //   })
 });
 onBeforeUnmount(() => {
   document.removeEventListener("click", closeOnClickOutside);

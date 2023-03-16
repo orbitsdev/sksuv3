@@ -44,20 +44,28 @@ class ApplyApplicationController extends Controller
     public function index(){
 
 
-        return Inertia::render('student/applicationindex',[
+        return Inertia::render('student/applicationindex', [
             'organizations' => Organization::query()
-            ->when(supportrequest::input('search'), function($query, $search){
-                $query->where('name', 'like', "%{$search}%");
-            })->whereHas('user', function($query){
-                $query->where('id', Auth::user()->id);
-            })
-            ->latest()->
-            with(['remarks.user_sender','campus_adviser.user', 'campus_adviser.school_year', 'requirements.organization_requirements','organization_requirements' => function($org) {
-                $org->with(['requirement', 'file']);
-            },'organization_process'])
-            ->paginate(10)
-            ->withQueryString(),
-            'filters'=> supportrequest::only('search'),
+                ->when(supportrequest::input('search'), function($query, $search) {
+                    $query->where(function($query) use($search) {
+                        $query->where('name', 'like', "%{$search}%")
+                              ->orWhereHas('campus_adviser.school_year', function($query) use ($search) {
+                                  $query->where('from', 'like', "%{$search}%")
+                                        ->orWhere('to', 'like', "%{$search}%");
+                              });
+                    })
+                    ->where('user_id', auth()->id());
+                })
+                ->where('user_id', auth()->id())
+                ->with(['certificate'=> function($query){
+                    $query->where('distributed_by_adviser', 1)->where('distributed_by_osas', 1);
+                },'remarks.user_sender', 'campus_adviser.user', 'campus_adviser.school_year', 'requirements.organization_requirements', 'organization_requirements' => function($org) {
+                    $org->with(['requirement', 'file']);
+                }, 'organization_process'])
+                ->latest()
+                ->paginate(10)
+                ->withQueryString(),
+            'filters' => supportrequest::only('search'),
         ]);
     }
 
@@ -164,13 +172,24 @@ class ApplyApplicationController extends Controller
               
              if($data->requirements)
              {
-                 //  $data->requirements()->detach();
+                  $data->requirements()->detach();
+             }
+
+             if($data->certificate){
+                $data->certificate()->delete();
+             }
+             if($data->remarks){
+                $data->remarks()->delete();
+             }
+             if($data->organization_process){
+                $data->organization_process()->delete();
              }
 
          }
-
-         OrganizationProcess::whereIn('id', $request->input('ids'))->delete();
+         
+        OrganizationProcess::whereIn('id', $request->input('ids'))->delete();
         Organization::whereIn('id', $request->input('ids'))->delete();
+
         
         return redirect()->back()->with('notification', 'Campus Delete'); 
     }

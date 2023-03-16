@@ -28,12 +28,12 @@ class PrintController extends Controller
             'campus' =>Campus::query()
             ->when(supportrequest::input('search'), function($query, $search){
                 $query->where('name', 'like', "%{$search}%");
-            })->
-            when(supportrequest::input('school_year'), function($query , $school_year){
-                $query->whereHas('campus_advisers.school_year', function($query) use($school_year){
-                    $query->where('id', $school_year);
-                });
             })
+            // ->when(supportrequest::input('school_year'), function($query , $school_year){
+            //     $query->whereHas('campus_advisers.school_year', function($query) use($school_year){
+            //         $query->where('id', $school_year);
+            //     });
+            // })
             ->latest()->whereHas('campus_advisers.school_year')->with(['campus_advisers.organizations', 'campus_advisers.school_year'])->paginate(10)
             ->withQueryString(),
             'filters'=> supportrequest::only('search'),
@@ -50,12 +50,13 @@ class PrintController extends Controller
             'campus' =>Campus::query()
             ->when(supportrequest::input('search'), function($query, $search){
                 $query->where('name', 'like', "%{$search}%");
-            })->
-            when(supportrequest::input('school_year'), function($query , $school_year){
-                $query->whereHas('campus_advisers.school_year', function($query) use($school_year){
-                    $query->where('id', $school_year);
-                });
             })
+            // ->
+            // when(supportrequest::input('school_year'), function($query , $school_year){
+            //     $query->whereHas('campus_advisers.school_year', function($query) use($school_year){
+            //         $query->where('id', $school_year);
+            //     });
+            // })
             ->latest()->whereHas('campus_advisers.school_year')->with(['campus_advisers.organizations', 'campus_advisers.organizations.organization_requirements.file', 'campus_advisers.school_year'])->paginate(10)
             ->withQueryString(),
             'filters'=> supportrequest::only('search'),

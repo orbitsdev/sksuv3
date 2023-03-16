@@ -398,7 +398,7 @@ function handleManageForm() {
           </Tcell>
           <Tcell class="uppercase align-top pt-2">
             SY.{{ item.campus_adviser.school_year.from }}
-            {{ item.campus_adviser.school_year.from }}
+            {{ item.campus_adviser.school_year.to }}
           </Tcell>
 
           <Tcell class="align-top pt-2 whitespace-normal">

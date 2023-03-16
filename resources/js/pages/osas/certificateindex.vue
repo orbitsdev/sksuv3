@@ -4,10 +4,9 @@ import { router } from "@inertiajs/core";
 import { throttle } from "lodash";
 import { useForm } from "@inertiajs/vue3";
 
-import axios from 'axios';
+import axios from "axios";
 
-import moment from 'moment';
-
+import moment from "moment";
 
 const props = defineProps({
   organizations: Object,
@@ -27,14 +26,11 @@ const selected_item = ref(null);
 const has_warning = ref(null);
 const show_cerficate_form = ref(false);
 
-
-
 const form = useForm({
-  
-  usg_adviser: '',
-  director_affair: '',
-  held_location: '',
-  month_year:  moment().format('YYYY-MM'),
+  usg_adviser: "",
+  director_affair: "",
+  held_location: "",
+  month_year: moment().format("YYYY-MM"),
   comment: "",
   approver_type: "osas",
   item_id: null,
@@ -54,7 +50,7 @@ watch(
   search,
   throttle((value) => {
     router.get(
-      route("osas.accreditation.index"),
+      route("osas.generatecerticate.index"),
       { search: value },
       {
         preserveState: true,
@@ -144,6 +140,14 @@ function showUpdateForm(item) {
 
   form.id = item.id;
   show_form.value = true;
+}
+function updateDistribute(item) {
+  form.id = item.id;
+
+  form.post(route("osas.generatecerticate.update.osas.distribution"), {
+    onSuccess: () => {},
+    onError: (error) => {},
+  });
 }
 
 function approve() {
@@ -306,103 +310,62 @@ function handleManageForm() {
   show_manage_form.value = false;
 }
 
-function showCertificateForm(item){
-
-    form.id= item.id;
-   show_cerficate_form.value = true;
-
+function showCertificateForm(item) {
+  form.id = item.id;
+  show_cerficate_form.value = true;
 }
-
-
 
 const is_processing = ref(false);
 
-async function generateCertificate() {
+async function generateCertificate(item) {
+  form.id = item.id;
 
-is_processing.value = true;
+  is_processing.value = true;
   axios
-    .get(route("public.generateFile",{
-       
-      usg_adviser: form.usg_adviser,
-      director_affair: form.director_affair,
-      held_location: form.held_location,
-      id: parseInt(form.id)
-    
-    }), {
-     
-      responseType: 'arraybuffer'
-    })
-    .then(response => {
-
-
+    .get(
+      route("public.generateFile", {
+        // usg_adviser: form.usg_adviser,
+        // director_affair: form.director_affair,
+        // held_location: form.held_location,
+        id: parseInt(form.id),
+      }),
+      {
+        responseType: "arraybuffer",
+      }
+    )
+    .then((response) => {
       // console.log(response.data);
 
-      let blob = new Blob([response.data], { type: 'image/png' }),
-      url = window.URL.createObjectURL(blob),
-      a = document.createElement('a')
-    
-    a.href = url
-    a.download = 'accreditation-certificate.png'
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-   
-    }).finally(()=>{
-      is_processing.value=false;
+      let blob = new Blob([response.data], { type: "image/png" }),
+        url = window.URL.createObjectURL(blob),
+        a = document.createElement("a");
+
+      a.href = url;
+      a.download = "accreditation-certificate.png";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    })
+    .finally(() => {
+      is_processing.value = false;
       show_cerficate_form.value = false;
-    }
-    
-    )
+    });
+}
 
-  //  try {
-  //   const { data } = await form.get(route("public.generateFile"), {
-  //     onSuccess: () => {
-  //       // Handle any success logic
-  //     },
-  //     onError: (error) => {
-  //       console.error(error);
-  //     },
-  //     onFinish: () => {
-  //       // Handle any finish logic
-  //     }
-  //   });
-
-  //   // Navigate to the file download URL
-  //   window.location.href = data.downloadUrl;
-  // } catch (error) {
-  //   console.error(error);
-  // }
-  // const { data } = await form.get(route("public.generateFile", {responseType: 'arraybuffer'}), {
-  //   onSuccess: () => {
-  //     // Handle any success logic
-  //   },
-  //   onError: (error) => {
-  //     console.error(error);
-  //   },
-  //   onFinish: () => {
-  //     // Handle any finish logic
-  //   }
-  // });
-
-  // // Create a blob URL for the file response
-  // const url = URL.createObjectURL(
-  //   new Blob([atob(data.file)], { type: "image/png" })
-  // );
-
-  // // Create a link and click it to download the file
-  // const link = document.createElement("a");
-  // link.href = url;
-  // link.setAttribute("download", data.filename);
-  // link.click();
-
-  // // Release the blob URL
-  // URL.revokeObjectURL(url);
+async function createCertificate() {
+  form.post(route("osas.generatecerticate.create.data"), {
+    onSuccess: () => {
+      // is_processing.value = false;
+      show_cerficate_form.value = false;
+    },
+    onFinish: () => {
+      show_cerficate_form.value = false;
+    },
+  });
 }
 
 //   function generateCertificate() {
 
-    
-    
 //     form.get(route('public.generateFile'), {
 //       preserveState:true,
 //       preserveScroll:true,
@@ -420,7 +383,7 @@ is_processing.value = true;
 //       link.click();
 
 //       Release the blob URL
-//       URL.revokeObjectURL(url);    
+//       URL.revokeObjectURL(url);
 //         const url = route('osas.generatecerticate.certificate.generate');
 //   const xhr = new XMLHttpRequest();
 //   xhr.open('GET', url, true);
@@ -470,9 +433,8 @@ is_processing.value = true;
 //         },
 
 //         onFinish: () => {},
-    
-//     });
 
+//     });
 
 //   }
 
@@ -526,7 +488,7 @@ is_processing.value = true;
           <input
             v-model.number="search"
             class="block w-full rounded-md border border-transparent bg-white bg-opacity-20 py-2 pl-10 pr-3 leading-5 text-white placeholder-white focus:border-transparent focus:bg-opacity-100 focus:text-gray-900 focus:placeholder-gray-500 focus:outline-none focus:ring-0 sm:text-sm"
-            placeholder="Name "
+            placeholder="Search "
             type="search"
             name="search"
           />
@@ -562,7 +524,7 @@ is_processing.value = true;
           </sk-button2>
         </div>
       </div>
-      <SkTable
+      <!-- <SkTable
         v-if="props.organizations.data.length > 0"
         :headers="[
           '',
@@ -574,6 +536,18 @@ is_processing.value = true;
           'Application Process Status',
           '',
         ]"
+      > -->
+      <SkTable
+        v-if="props.organizations.data.length > 0"
+        :headers="[
+          '',
+          'Certificate',
+          'Name of Organization',
+          'Campus',
+          'Adviser',
+          'School Year',
+          '',
+        ]"
       >
         <tr
           class="divide-x divide-gray-200"
@@ -583,12 +557,44 @@ is_processing.value = true;
           <Tcell
             :c="'whitespace-nowrap align-center text-center text-sm items-center  font-medium text-gray-900 align-top pt-2'"
           >
-            <!-- <input
-              v-model="selected_items"
-              :value="item.id"
-              type="checkbox"
-              class="h-4 w-4 accent-green-600 text-white rounded border-gray-200"
-            /> -->
+          </Tcell>
+          <Tcell
+            :c="'whitespace-nowrap align-center text-center text-sm items-center  font-medium text-gray-900 align-top pt-2'"
+          >
+            <div
+              @click="generateCertificate(item)"
+              class="flex justify-center relative cursor-pointer hover:scale-105 transition-all ease-in-out"
+              v-if="item.certificate != null"
+            >
+              <!-- <div class="absolute top-0 left-5">
+                <i class="fa-solid fa-award text-2xl gold"></i>
+              </div> -->
+              <div
+                class="absolute top-6 flex items-center justify-center rounded-full p-2"
+              >
+                <svg
+                  class="fill-current w-8 h-8 mr-2"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z" />
+                </svg>
+              </div>
+              <div class="w-36 h-36">
+                <img
+                  src="/assets/images/certificates/template2.png "
+                  alt="logo"
+                  class="object-fill"
+                />
+              </div>
+            </div>
+            <div class="flex justify-center relative" v-else>
+              <div class="absolute top-0 right-5"></div>
+              <div class="w-36 h-36 flex items-center justify-center">
+                NONE
+                <!-- <img src="/assets/images/certificates/template2.png "  alt="logo" class="object-fill"> -->
+              </div>
+            </div>
           </Tcell>
 
           <Tcell class="uppercase align-top pt-2"> {{ item.name }} </Tcell>
@@ -601,10 +607,11 @@ is_processing.value = true;
           </Tcell>
           <Tcell class="uppercase align-top pt-2">
             SY.{{ item.campus_adviser.school_year.from }}
-            {{ item.campus_adviser.school_year.from }}
+            {{ item.campus_adviser.school_year.to }}
           </Tcell>
+          <Tcell class="uppercase align-top pt-2"> </Tcell>
 
-          <Tcell class="align-top pt-2 whitespace-normal">
+          <!-- <Tcell class="align-top pt-2 whitespace-normal">
             <div>
               <div
                 class="truncate text-sm font-medium text-gray-900 uppercase flex items-center"
@@ -674,28 +681,7 @@ is_processing.value = true;
                     </div>
                   </aside>
                 </div>
-                <!-- 
-                <div
-                  @click="viewRemarks(item)"
-                  class="cursor-pointer bg-gradient-to-r hover:scale-95 transition-all ease-in-out from-rose-500 via-red-500 to-pink-500 text-white rounded py-2 text px-1 mr-2 mt-4"
-                  v-if="item.remarks.length > 0"
-                >
-                  <div class="truncate text-sm font-medium uppercase flex items-center">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      class="w-5 h-5 mr-2"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M12 2.25c-2.429 0-4.817.178-7.152.521C2.87 3.061 1.5 4.795 1.5 6.741v6.018c0 1.946 1.37 3.68 3.348 3.97.877.129 1.761.234 2.652.316V21a.75.75 0 001.28.53l4.184-4.183a.39.39 0 01.266-.112c2.006-.05 3.982-.22 5.922-.506 1.978-.29 3.348-2.023 3.348-3.97V6.741c0-1.947-1.37-3.68-3.348-3.97A49.145 49.145 0 0012 2.25zM8.25 8.625a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25zm2.625 1.125a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0zm4.875-1.125a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                    Comments {{ item.remarks.length }}
-                  </div>
-                </div> -->
+              
               </div>
             </div>
           </Tcell>
@@ -747,25 +733,7 @@ is_processing.value = true;
                     Denied
                   </status-card>
                 </div>
-                <!-- 
-                <div class="mb-0.5">
-                  <status-card
-                    :c="[
-                      item.organization_process.campus_adviser_endorsed_status === 'true'
-                        ? 'bg-green-100 text-green-600'
-                        : 'bg-gray-50 text-gray-400',
-                    ]"
-                    class="inline-flex items-center"
-                  >
-                    <checkedSvg />
-
-                    {{
-                      item.organization_process.campus_adviser_endorsed_status === "true"
-                        ? "Endorsed"
-                        : "Not endorsed yet"
-                    }}
-                  </status-card>
-                </div> -->
+               
               </div>
             </div>
 
@@ -816,25 +784,7 @@ is_processing.value = true;
                     Denied
                   </status-card>
                 </div>
-                <!-- 
-                <div class="mb-0.5">
-                  <status-card
-                    :c="[
-                      item.organization_process.campus_director_endorsed_status === 'true'
-                        ? 'bg-green-100 text-green-600'
-                        : 'bg-gray-50 text-gray-400',
-                    ]"
-                    class="inline-flex items-center"
-                  >
-                    <checkedSvg />
-
-                    {{
-                      item.organization_process.campus_director_endorsed_status === "true"
-                        ? "Endorsed"
-                        : "Not endorsed yet"
-                    }}
-                  </status-card>
-                </div> -->
+           
               </div>
             </div>
 
@@ -942,29 +892,10 @@ is_processing.value = true;
                 </div>
               </div>
             </div>
-          </Tcell>
-          <!-- <Tcell class="align-top pt-2">
-            <div> 
-
-                    <div class="flex space-x-3">
-                      <div>
-                        <div class="text-sm">
-                          <a href="#" class="font-medium text-gray-900">Leslie Alexander</a>
-                        </div>
-                        <div class="mt-1 text-sm text-gray-700 whitespace-normal w-72">
-                          <p>Ducimus quas delectus ad maxime totam doloribus reiciendis ex. Tempore dolorem maiores. Similique voluptatibus tempore non ut.</p>
-                        </div>
-                     
-                      </div>
-                    </div>
-            </div>
-         </Tcell> -->
-
-          <!-- osas.generatecerticate.certificate.generate -->
+          </Tcell> -->
 
           <Tcell class="align-top pt-2">
             <div class="mt2">
-
               <SkButtonGray
                 :disabled="selected_items.length > 0"
                 class="max-w-40 mr-2"
@@ -983,125 +914,64 @@ is_processing.value = true;
                   />
                 </svg>
 
-                
-              
-                <span class=""> Generate Certificate </span>
+                <span class="" v-if="item.certificate == null"> Create Certificate </span>
+                <span class="" v-else> Update Certificate </span>
               </SkButtonGray>
-              <!-- 
-                <a
-                :href="
-                  route('osas.generatecerticate.certificate.generate', { id: item.id })
-                "
-                class="inline-flex justify-center rounded-md px-4 py-2 font-medium shadow-sm text-sm text-gray-700 hover:bg-gray-50 border border-gray-300 bg-white "
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  class="w-5 h-5 mr-2"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M5.166 2.621v.858c-1.035.148-2.059.33-3.071.543a.75.75 0 00-.584.859 6.753 6.753 0 006.138 5.6 6.73 6.73 0 002.743 1.346A6.707 6.707 0 019.279 15H8.54c-1.036 0-1.875.84-1.875 1.875V19.5h-.75a2.25 2.25 0 00-2.25 2.25c0 .414.336.75.75.75h15a.75.75 0 00.75-.75 2.25 2.25 0 00-2.25-2.25h-.75v-2.625c0-1.036-.84-1.875-1.875-1.875h-.739a6.706 6.706 0 01-1.112-3.173 6.73 6.73 0 002.743-1.347 6.753 6.753 0 006.139-5.6.75.75 0 00-.585-.858 47.077 47.077 0 00-3.07-.543V2.62a.75.75 0 00-.658-.744 49.22 49.22 0 00-6.093-.377c-2.063 0-4.096.128-6.093.377a.75.75 0 00-.657.744zm0 2.629c0 1.196.312 2.32.857 3.294A5.266 5.266 0 013.16 5.337a45.6 45.6 0 012.006-.343v.256zm13.5 0v-.256c.674.1 1.343.214 2.006.343a5.265 5.265 0 01-2.863 3.207 6.72 6.72 0 00.857-3.294z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-
-                <span class=""> Generate Certificate </span>
-              </a> -->
-              <!-- :href="route('osas.generatecerticate.certificate.generate', { id: 1 })" -->
-              <!-- <div
-                class="max-w-40 mr-2 border cursor-pointer" 
-                @click="generateCertificate(item)"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  class="w-5 h-5 mr-2"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M5.166 2.621v.858c-1.035.148-2.059.33-3.071.543a.75.75 0 00-.584.859 6.753 6.753 0 006.138 5.6 6.73 6.73 0 002.743 1.346A6.707 6.707 0 019.279 15H8.54c-1.036 0-1.875.84-1.875 1.875V19.5h-.75a2.25 2.25 0 00-2.25 2.25c0 .414.336.75.75.75h15a.75.75 0 00.75-.75 2.25 2.25 0 00-2.25-2.25h-.75v-2.625c0-1.036-.84-1.875-1.875-1.875h-.739a6.706 6.706 0 01-1.112-3.173 6.73 6.73 0 002.743-1.347 6.753 6.753 0 006.139-5.6.75.75 0 00-.585-.858 47.077 47.077 0 00-3.07-.543V2.62a.75.75 0 00-.658-.744 49.22 49.22 0 00-6.093-.377c-2.063 0-4.096.128-6.093.377a.75.75 0 00-.657.744zm0 2.629c0 1.196.312 2.32.857 3.294A5.266 5.266 0 013.16 5.337a45.6 45.6 0 012.006-.343v.256zm13.5 0v-.256c.674.1 1.343.214 2.006.343a5.265 5.265 0 01-2.863 3.207 6.72 6.72 0 00.857-3.294z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-
-                <span class=""> Generate Certificate </span>
-              </div> -->
             </div>
-            <!-- <div>
+            <div class="mt-3" v-if="item.certificate != null">
               <SkButtonGray
                 :disabled="selected_items.length > 0"
                 class="max-w-40 mr-2"
-                @click="showManageForm(item)"
+                @click="updateDistribute(item)"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   fill="currentColor"
                   class="w-5 h-5 mr-2"
-                >
-                  <path
-                    d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32l8.4-8.4z"
-                  />
-                  <path
-                    d="M5.25 5.25a3 3 0 00-3 3v10.5a3 3 0 003 3h10.5a3 3 0 003-3V13.5a.75.75 0 00-1.5 0v5.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5V8.25a1.5 1.5 0 011.5-1.5h5.25a.75.75 0 000-1.5H5.25z"
-                  />
-                </svg>
-
-                <span class=""> Decide </span>
-              </SkButtonGray>
-            </div>
-            <div class="mt2">
-              <SkButtonGray
-                :disabled="selected_items.length > 0"
-                class="max-w-40 mr-2"
-                @click="showRemarkForm(item)"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  class="w-5 h-5 mr-2"
+                  v-if="item.certificate.distributed_by_osas == 0"
                 >
                   <path
                     fill-rule="evenodd"
-                    d="M4.848 2.771A49.144 49.144 0 0112 2.25c2.43 0 4.817.178 7.152.52 1.978.292 3.348 2.024 3.348 3.97v6.02c0 1.946-1.37 3.678-3.348 3.97a48.901 48.901 0 01-3.476.383.39.39 0 00-.297.17l-2.755 4.133a.75.75 0 01-1.248 0l-2.755-4.133a.39.39 0 00-.297-.17 48.9 48.9 0 01-3.476-.384c-1.978-.29-3.348-2.024-3.348-3.97V6.741c0-1.946 1.37-3.68 3.348-3.97zM6.75 8.25a.75.75 0 01.75-.75h9a.75.75 0 010 1.5h-9a.75.75 0 01-.75-.75zm.75 2.25a.75.75 0 000 1.5H12a.75.75 0 000-1.5H7.5z"
+                    d="M15.75 4.5a3 3 0 11.825 2.066l-8.421 4.679a3.002 3.002 0 010 1.51l8.421 4.679a3 3 0 11-.729 1.31l-8.421-4.678a3 3 0 110-4.132l8.421-4.679a3 3 0 01-.096-.755z"
                     clip-rule="evenodd"
                   />
                 </svg>
 
-                <span class=""> Comment </span>
-              </SkButtonGray>
-            </div>
-
-              <div  v-if="(item.organization_process.osas_endorsed_status == 'false' && item.organization_process.osas_approved_status)" class="mt-2">
-              <SkButtonGray
-                :disabled="selected_items.length > 0"
-                class="max-w-40 mr-2"
-                @click="showEndorsedConfirmation(item)"
-              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   fill="currentColor"
-                  class="w-5 h-5 mr-2"
+                  class="w-5 h-5 mr-2 text-green-600"
+                  v-if="item.certificate.distributed_by_osas == 1"
                 >
                   <path
                     fill-rule="evenodd"
-                    d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm4.28 10.28a.75.75 0 000-1.06l-3-3a.75.75 0 10-1.06 1.06l1.72 1.72H8.25a.75.75 0 000 1.5h5.69l-1.72 1.72a.75.75 0 101.06 1.06l3-3z"
+                    d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z"
                     clip-rule="evenodd"
                   />
                 </svg>
 
-                <span class=""> Endorse </span>
+                <span class="" v-if="item.certificate.distributed_by_osas == 0">
+                  Forward Certificate
+                </span>
+                <span class="" v-if="item.certificate.distributed_by_osas == 1">
+                  Certificate Forwarded
+                </span>
+                <span class="" v-else> </span>
               </SkButtonGray>
-            </div> -->
+            </div>
           </Tcell>
         </tr>
       </SkTable>
       <EmptyCard class="flex items-center justify-center h-64" v-else />
+      <div class="mt-6 py-4 bg-white" v-if="$props.organizations.links.length > 0">
+        <Pagination
+          v-if="$props.organizations.data.length > 0"
+          class="block"
+          :links="$props.organizations.links"
+        />
+      </div>
     </div>
 
     <sk-dialog :transition="'slide-down'" :persistent="true" :isOpen="confirm_delete">
@@ -1231,15 +1101,15 @@ is_processing.value = true;
     </sk-dialog>
   </adminlayout>
 
-  <SkDialog :persistent="true" :isOpen="is_updating" :width="'260'">
+  <SkDialog :persistent="true" :isOpen="is_processing" :width="'260'">
     <div class="flex items-center justify-center">
       <w-progress
         :size="'24'"
-        class="text-green-900 mr-8"
+        class="text-green-900 mr-6"
         color="green"
         circle
       ></w-progress>
-      <p class="">Updating</p>
+      <p class="">Generating Please wait ...</p>
     </div>
   </SkDialog>
   <SkDialog :persistent="true" :isOpen="show_remarks" :width="'540'">
@@ -1285,71 +1155,67 @@ is_processing.value = true;
   </SkDialog>
 
   <SkDialog :persistent="true" :isOpen="show_cerficate_form" :width="'460'">
-
-
-  <form @submit.prevent="generateCertificate">
-
-
+    <form @submit.prevent="createCertificate">
       <div class="mx-2">
-          <div class="mb-2 ">
-            <label for="email" class="block text-sm font-medium text-gray-700 "
-              >Month Year</label
-            > 
+        <div class="mb-2">
+          <label for="email" class="block text-sm font-medium text-gray-700"
+            >Month Year</label
+          >
 
-            <div class="mt-1">
-
-             <input type="month" v-model="form.month_year"  class="pr-8 block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm"/>
-            </div>
-           
+          <div class="mt-1">
+            <input
+              type="month"
+              v-model="form.month_year"
+              class="pr-8 block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm"
+            />
           </div>
-          <div class="mb-2 ">
-            <label for="email" class="block text-sm font-medium text-gray-700"
-              >Held Location </label
-            > 
+        </div>
+        <div class="mb-2">
+          <label for="email" class="block text-sm font-medium text-gray-700"
+            >Held Location
+          </label>
 
-            <div class="mt-1">
-              <Authfield1 type="text"  v-model="form.held_location" required />
-              <!-- <input id="email" v-model="form.email" name="email" type="email"  class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"> -->
-            </div>
-            <p class="text-red-700 text-sm" v-if="$page.props.errors.held_location">
-              {{ $page.props.errors.held_location }}
-            </p>
+          <div class="mt-1">
+            <Authfield1 type="text" v-model="form.held_location" required />
+            <!-- <input id="email" v-model="form.email" name="email" type="email"  class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"> -->
           </div>
-          <div class="mb-2 ">
-            <label for="email" class="block text-sm font-medium text-gray-700"
-              >Usg Adviser</label
-            > 
+          <p class="text-red-700 text-sm" v-if="$page.props.errors.held_location">
+            {{ $page.props.errors.held_location }}
+          </p>
+        </div>
+        <div class="mb-2">
+          <label for="email" class="block text-sm font-medium text-gray-700"
+            >Usg Adviser</label
+          >
 
-            <div class="mt-1">
-              <Authfield1 type="text" v-model="form.usg_adviser" required />
-              <!-- <input id="email" v-model="form.email" name="email" type="email"  class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"> -->
-            </div>
-            <p class="text-red-700 text-sm" v-if="$page.props.errors.usg_adviser" >
-              {{ $page.props.errors.usg_adviser }}
-            </p>
+          <div class="mt-1">
+            <Authfield1 type="text" v-model="form.usg_adviser" required />
+            <!-- <input id="email" v-model="form.email" name="email" type="email"  class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"> -->
           </div>
-          <div class="mb-2 ">
-            <label for="email" class="block text-sm font-medium text-gray-700"
-              >Director Student Affair and Services</label
-            >  
+          <p class="text-red-700 text-sm" v-if="$page.props.errors.usg_adviser">
+            {{ $page.props.errors.usg_adviser }}
+          </p>
+        </div>
+        <div class="mb-2">
+          <label for="email" class="block text-sm font-medium text-gray-700"
+            >Director Student Affair and Services</label
+          >
 
-            <div class="mt-1">
-              <Authfield1 type="tex"  v-model="form.director_affair" required />
-              <!-- <input id="email" v-model="form.email" name="email" type="email" autocomplete="email"  class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"> -->
-            </div>
-            <p class="text-red-700 text-sm" v-if="$page.props.errors.director_affair">
-              {{ $page.props.errors.director_affair }}
-            </p>
+          <div class="mt-1">
+            <Authfield1 type="tex" v-model="form.director_affair" required />
+            <!-- <input id="email" v-model="form.email" name="email" type="email" autocomplete="email"  class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"> -->
           </div>
-     </div>
-    <div class="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
-      <SkButtonGray @click="show_cerficate_form = false"> No </SkButtonGray>
+          <p class="text-red-700 text-sm" v-if="$page.props.errors.director_affair">
+            {{ $page.props.errors.director_affair }}
+          </p>
+        </div>
+      </div>
+      <div class="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
+        <SkButtonGray @click="show_cerficate_form = false"> No </SkButtonGray>
 
-      <SkButton type="submit"  :processing="is_processing"> Generate</SkButton>
-    </div>
-    
-  </form>
- 
+        <SkButton type="submit" :processing="form.processing"> Generate</SkButton>
+      </div>
+    </form>
   </SkDialog>
 </template>
 

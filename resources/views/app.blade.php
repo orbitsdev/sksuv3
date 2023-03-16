@@ -139,5 +139,29 @@
         </div>  --}}
 
       
+
+      <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+    // Enable pusher logging - don't include this in production
+    Pusher.logToConsole = true;
+
+    var pusher = new Pusher('c11e6f9b81416e3f0172', {
+      cluster: 'ap1'
+    });
+
+    var channel = pusher.subscribe('my-channel');
+    channel.bind('my-event', function(data) {
+      app.messages.push(JSON.stringify(data));
+    });
+
+    // Vue application
+    const app = new Vue({
+      el: '#app',
+      data: {
+        messages: [],
+      },
+    });
+  </script>
     </body>
 </html>

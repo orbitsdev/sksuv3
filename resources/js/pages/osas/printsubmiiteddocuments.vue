@@ -125,12 +125,12 @@ watch(
                     <table-title> Print Submitted Documents </table-title>
                   </div>
                 </div>
-                <div>
+                <!-- <div>
                   <schoolYearSelectForPrint
                     @selectItem="getValueOfYear"
                     @setDefaultValue="getDefaultValueOfYear"
                   />
-                </div>
+                </div> -->
               </div>
             </div>
             <div class="mt-6 flex space-x-3 md:mt-0 md:ml-4"></div>
@@ -260,64 +260,51 @@ watch(
           <p class="leading-5 text-sm text-center uppercase">Submited Documents</p>
         </aside>
 
-        <aside class="mt-4 item-min-h" v-if="selected_campus.campus_advisers.length > 0" >
+        <aside class="mt-4 item-min-h" v-if="selected_campus.campus_advisers.length > 0">
           <div v-for="(item, index) in selected_campus.campus_advisers" :key="item">
             <span class="text-black w-8 inline-block"> </span>
             <p class="px-6 uppercase mb-2">
               {{ selected_campus.name }}
             </p>
 
+            <aside v-if="item.organizations.length > 0">
+              <div
+                v-for="(o, indexo) in item.organizations"
+                :key="o"
+                class="px-9 text-sm"
+              >
+                <span class="uppercase ml-1">
+                  {{ o.name }}
+                </span>
+                <!-- <span class="text-black w-8 inline-block"> {{ indexo+1  }}. </span> -->
 
-        <aside v-if="item.organizations.length > 0">
-            <div
-              v-for="(o, indexo) in item.organizations"
-              :key="o"
-              class=" px-9 text-sm"
-            >
-            <span class="uppercase ml-1">
-            {{ o.name }}
-            </span>
-              <!-- <span class="text-black w-8 inline-block"> {{ indexo+1  }}. </span> -->
+                <div v-if="o.organization_requirements.length > 0">
+                  <div v-for="r in o.organization_requirements" :key="r">
+                    <!-- {{ r.file }} -->
 
-            <div v-if=" o.organization_requirements.length > 0">
+                    <div v-if="r.file.length > 0">
+                      <div v-for="(f, findex) in r.file" :key="f">
+                        <p class="ml-4 italic">- {{ f.file_name }}</p>
 
-            <div v-for="r in o.organization_requirements" :key="r" >
-
-        <!-- {{ r.file }} -->
-
-                  <div v-if="r.file.length > 0 ">
-
-                          <div v-for="(f, findex) in r.file" :key="f" >
-                                
-                      
-
-                                 <p class=" ml-4">
-       -   {{ f.file_name }}
-                           
-              </p> 
-
-
-                                
-                                  <!-- <div v-if="f.length > 0" >
+                        <!-- <div v-if="f.length > 0" >
                                       <div  v-for="act in f" :key="act" >
                                       {{ act }}
                                       </div>
                                   </div> -->
-                          </div>
-                  </div>            
-            </div>
-              <!-- <span class="text-black w-8 inline-block"> {{ indexo + 1 }}. </span>
+                      </div>
+                    </div>
+                    <div v-else> <span class="ml-4 ">- None</span> </div>
+                  </div>
+                  <!-- <span class="text-black w-8 inline-block"> {{ indexo + 1 }}. </span>
 
 
               <p class="uppercase">
 
                            
               </p> -->
-            </div>
-            </div>
-         </aside>
-
-
+                </div>
+              </div>
+            </aside>
           </div>
         </aside>
       </div>

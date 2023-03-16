@@ -4,6 +4,7 @@ import { router } from "@inertiajs/core";
 import { throttle } from "lodash";
 import { useForm } from "@inertiajs/vue3";
 
+import axios from 'axios';
 const props = defineProps({
   organizations: Object,
   filters: Object,
@@ -50,6 +51,45 @@ watch(
     );
   }, 500)
 );
+
+
+
+const is_processing = ref(false);
+
+async function generateCertificate(item) {
+  form.id = item.id;
+
+  is_processing.value = true;
+  axios
+    .get(
+      route("public.generateFile", {
+        // usg_adviser: form.usg_adviser,
+        // director_affair: form.director_affair,
+        // held_location: form.held_location,
+        id: parseInt(form.id),
+      }),
+      {
+        responseType: "arraybuffer",
+      }
+    )
+    .then((response) => {
+      // console.log(response.data);
+
+      let blob = new Blob([response.data], { type: "image/png" }),
+        url = window.URL.createObjectURL(blob),
+        a = document.createElement("a");
+
+      a.href = url;
+      a.download = "accreditation-certificate.png";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    })
+    .finally(() => {
+      is_processing.value = false;
+      // show_cerficate_form.value = false;
+    });
+}
 
 function showForm() {
   //   form.school_year_id = null;
@@ -186,7 +226,7 @@ function openUrl(url){
           <input
             v-model.number="search"
             class="block w-full rounded-md border border-transparent bg-white bg-opacity-20 py-2 pl-10 pr-3 leading-5 text-white placeholder-white focus:border-transparent focus:bg-opacity-100 focus:text-gray-900 focus:placeholder-gray-500 focus:outline-none focus:ring-0 sm:text-sm"
-            placeholder="Name "
+            placeholder="Search"
             type="search"
             name="search"
           />
@@ -247,10 +287,12 @@ function openUrl(url){
           </sk-button2>
         </div>
       </div>
+      <div class="rounded pb-6">
       <SkTable
         v-if="props.organizations.data.length > 0"
         :headers="[
           '',
+          'Certificate',
           'Organization Name',
           'Campus Adviser ',
           ' School Year',
@@ -276,53 +318,122 @@ function openUrl(url){
               class="h-4 w-4 accent-green-600 text-white rounded border-gray-200"
             />
           </Tcell>
+              <Tcell
+            :c="'whitespace-nowrap align-center text-center text-sm items-center  font-medium text-gray-900 align-top pt-2'"
+          >
+            <div
+              @click="generateCertificate(item)"
+              class="flex justify-center relative cursor-pointer hover:scale-105 transition-all ease-in-out"
+              v-if="item.certificate != null"
+            >
+              <!-- <div class="absolute top-0 left-5">
+                <i class="fa-solid fa-award text-2xl gold"></i>
+              </div> -->
+              <div
+                class="absolute top-6 flex items-center justify-center rounded-full p-2"
+              >
+                <svg
+                  class="fill-current w-8 h-8 mr-2"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z" />
+                </svg>
+              </div>
+              <div class="w-36 h-36">
+                <img
+                  src="/assets/images/certificates/template2.png "
+                  alt="logo"
+                  class="object-fill"
+                />
+              </div>
+            </div>
+            <div class="flex justify-center relative" v-else>
+              <div class="absolute top-0 right-5"></div>
+              <div class="w-36 h-36 flex items-center justify-center">
+                NONE
+                <!-- <img src="/assets/images/certificates/template2.png "  alt="logo" class="object-fill"> -->
+              </div>
+            </div>
+          </Tcell>
           <Tcell class="uppercase align-top pt-2"> {{ item.name }} </Tcell>
-          <Tcell class="uppercase align-top pt-2 "> {{ item.campus_adviser.user != null ?  item.campus_adviser.user.first_name + ''  + item.campus_adviser.user.last_name  : 'None'}}  </Tcell>
+
+          <Tcell class="uppercase align-top pt-2 "> {{ item.campus_adviser.user != null ?  item.campus_adviser.user.first_name + ' '  + item.campus_adviser.user.last_name  : 'None'}}  </Tcell>
           <Tcell class="uppercase align-top pt-2">     {{  item.campus_adviser.school_year != null ? 'SY.' +  item.campus_adviser.school_year.from + ' - ' + item.campus_adviser.school_year.to  : 'None'}} </Tcell> 
 
+          
           <Tcell class="align-top pt-2 whitespace-normal">
             <div>
-              <p class="truncate text-sm font-medium text-gray-900">Requirements</p>
-
-              <div class="mt-1" v-if="item.organization_requirements.length > 0">
-         
-                <aside
-                  class="my-1 mb-2"
-                  v-for="og in item.organization_requirements"
-                  :key="og"
+              <div
+                class="truncate text-sm font-medium text-gray-900 uppercase flex items-center"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  class="w-5 h-5 mr-2"
                 >
-                  <div v-if="og.file.length > 0">
-                    <div class="my=2">
+                  <path
+                    fill-rule="evenodd"
+                    d="M5.625 1.5H9a3.75 3.75 0 013.75 3.75v1.875c0 1.036.84 1.875 1.875 1.875H16.5a3.75 3.75 0 013.75 3.75v7.875c0 1.035-.84 1.875-1.875 1.875H5.625a1.875 1.875 0 01-1.875-1.875V3.375c0-1.036.84-1.875 1.875-1.875zM9.75 14.25a.75.75 0 000 1.5H15a.75.75 0 000-1.5H9.75z"
+                    clip-rule="evenodd"
+                  />
+                  <path
+                    d="M14.25 5.25a5.23 5.23 0 00-1.279-3.434 9.768 9.768 0 016.963 6.963A5.23 5.23 0 0016.5 7.5h-1.875a.375.375 0 01-.375-.375V5.25z"
+                  />
+                </svg>
 
-                      <FileViewLink
-                        :href="file.file_url"
-                     
-                        class="mb-1"
-                        v-for="file in og.file"
-                        :key="file"
-                        :file="file"
-                      >
-                        {{ file.file_name }}
-                      </FileViewLink>
-
-                      <!-- <button
-                        v-for="file in og.file"
-                        :key="file"
-                        :file="file"
-
-                        @click="openUrl(file.file_url)"
-                       class="p-1 border" >
-
-                        {{ file.file_name }}
-                      </button> -->
-                    </div>
-                  </div>
-                </aside>
-
-  
-
+                Requirements
               </div>
-               
+
+              <div class="mt-1 py-1" v-if="item.organization_requirements.length > 0">
+                <aside class="" v-for="og in item.organization_requirements" :key="og">
+                  <li class="text-xs">
+                    {{ og.requirement.name }}
+                  </li>
+                </aside>
+              </div>
+
+              <div class="mt-2">
+                <div
+                  class="truncate text-sm font-medium text-gray-900 uppercase flex items-center"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    class="w-5 h-5 mr-2"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M10.5 3.75a6 6 0 00-5.98 6.496A5.25 5.25 0 006.75 20.25H18a4.5 4.5 0 002.206-8.423 3.75 3.75 0 00-4.133-4.303A6.001 6.001 0 0010.5 3.75zm2.25 6a.75.75 0 00-1.5 0v4.94l-1.72-1.72a.75.75 0 00-1.06 1.06l3 3a.75.75 0 001.06 0l3-3a.75.75 0 10-1.06-1.06l-1.72 1.72V9.75z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+
+                  Uploaded
+                </div>
+                <div>
+                  <aside class="" v-for="og in item.organization_requirements" :key="og">
+                    <div class="mt-2" v-if="og.file.length > 0">
+                      <div class="">
+                        <p class="mb-1 px-2"></p>
+                        <FileViewLink
+                          :href="file.file_url"
+                          target="_blank"
+                          class="mb-1"
+                          v-for="file in og.file"
+                          :key="file"
+                          :file="file"
+                        >
+                          {{ file.file_name }}
+                        </FileViewLink>
+                      </div>
+                    </div>
+                  </aside>
+                </div>
+              </div>
+
                 <div
                   @click="viewRemarks(item)"
                   class="cursor-pointer bg-gradient-to-r hover:scale-95 transition-all ease-in-out from-rose-500 via-red-500 to-pink-500 text-white rounded py-2 text px-1 mr-2 mt-4"
@@ -344,9 +455,7 @@ function openUrl(url){
                     Comments {{ item.remarks.length }}
                   </div>
                 </div>
-             
             </div>
-
           </Tcell>
           <Tcell class="align-top pt-2">
             <div class="mb-1 border py-2 px-2 mr-4 rounded">
@@ -636,7 +745,17 @@ function openUrl(url){
         </tr>
       </SkTable>
       <EmptyCard class="flex items-center justify-center h-64" v-else />
-    </div>
+      
+       <div class="mt-6 bg-white" v-if="$props.organizations.links.length > 0">
+          <Pagination
+            v-if="$props.organizations.data.length > 0"
+            class="block"
+            :links="$props.organizations.links"
+          />
+        </div>
+      </div>
+  
+      </div>
 
     <sk-dialog :transition="'slide-down'" :persistent="true" :isOpen="show_form">
       <main class="p-2">
@@ -856,8 +975,8 @@ function openUrl(url){
       </div>
     </main>
   </SkDialog>
-
 <!-- 
+
   <SkDialog :persistent="true" :isOpen="show_remarks" :width="'260'">
    <div class="mt-5 flex items-center justify-end">
   <div v-if="selected_item.remarks.length > 0">
@@ -887,7 +1006,9 @@ function openUrl(url){
 
    
         </div>
-  </SkDialog> -->
+  </SkDialog>  -->
+  
+  
 </template>
 
 <script>

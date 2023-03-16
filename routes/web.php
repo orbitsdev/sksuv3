@@ -3,6 +3,7 @@
 use App\Models\User;
 use Inertia\Inertia;
 use App\Events\ApproveNotfication;
+use App\Events\RealTimeNotification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VpaController;
@@ -29,7 +30,10 @@ use App\Http\Controllers\ApplyApplicationController;
 use App\Http\Controllers\OsasOrganizationController;
 use App\Http\Controllers\DirectorOrganizationController;
 use App\Http\Controllers\CampusAdviserOrganizationController;
+use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\PrintController;
+use App\Http\Controllers\RealTimeNotificationController;
+use App\Notifications\ApplicationStatusNotification;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,7 +52,20 @@ Route::post('file/upload', [FileController::class, 'uploadToTemporaryStorage'])-
 Route::delete('file/delete', [FileController::class, 'deleteFromLocalStorage'])->name('deletefromlocal');
 
 
+Route::get('/testnotification', function(){
+    // return RealTimeNotificationController::dispatch();
+    event(new RealTimeNotification('Hello World'));
+});
 
+Route::get('/test1',  function(){
+        Auth::user()->notify(new ApplicationStatusNotification('first', 'approved','adasd','dasd'));
+
+});
+
+Route::get('/refresh', function(){
+
+    return redirect()->back();
+})->name('refresh');
 
 Route::get('/event', function () {
     
@@ -80,10 +97,7 @@ Route::middleware('guest')->group(function () {
 
 
 Route::group(['middleware' => ['auth',]], function () {
-
-
-
-    Route::post('upload-template', [FileController::class, 'uploadTemplate'])->name('uploadTemplate');
+Route::post('upload-template', [FileController::class, 'uploadTemplate'])->name('uploadTemplate');
 Route::post('template/delete', [FileController::class, 'deleteTemplate'])->name('deleteTemplate');
 Route::get('template', [FileController::class, 'index'])->name('template.index');
     
@@ -273,6 +287,11 @@ Route::get('/', function () {
         // Route::get('issued/{id}', [ GenerateController::class, 'generateCertificate'])->name('certificate.generate');
         Route::get('issued/generate', [ GenerateController::class, 'generateCertificate'])->name('certificate.generate');
         Route::get('issued/generate/file/{path}', [ GenerateController::class, 'generateFile'])->name('certificate.generatefile');
+        Route::post('create/certificate/data', [ CertificateController::class, 'create'])->name('create.data');
+        Route::post('update/certificate/osas-distribution', [ CertificateController::class, 'updateOsasDistribution'])->name('update.osas.distribution');
+      
+
+
     });
    
     Route::group([
@@ -318,6 +337,8 @@ Route::get('/', function () {
         'as' => 'officers.'
     ], function () {
 
+    
+
         Route::get('/', [OfficerController::class, 'index'])->name('index');
         Route::get('/{campus}/manage', [OfficerController::class, 'manageIndex'])->name('manageindex');
         Route::post('create', [OfficerController::class, 'create'])->name('create');
@@ -332,9 +353,11 @@ Route::get('/', function () {
         'prefix' => 'adviser/organizations',
         'as' => 'campusadviser.organization.'
     ], function () {
+        
 
         Route::get('/', [CampusAdviserOrganizationController::class, 'index'])->name('index');
         Route::get('/endorsedlist', [CampusAdviserOrganizationController::class, 'endorsedindex'])->name('endorsedindex');
+        Route::post('update/certificate/adviser-distribution', [ CertificateController::class, 'updateAdviserDistribution'])->name('update.sbo.distribution');
         // Route::post('/approve', [CampusAdviserOrganizationController::class, 'approve'])->name('approve');
         // Route::post('/deny', [CampusAdviserOrganizationController::class, 'deny'])->name('deny');
       

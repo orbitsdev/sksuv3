@@ -1,4 +1,4 @@
-<script setup>
+eb<script setup>
 import { ref, watch, defineProps, onMounted } from "vue";
 import { router } from "@inertiajs/core";
 import { throttle } from "lodash";

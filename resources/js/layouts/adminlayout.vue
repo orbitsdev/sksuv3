@@ -124,6 +124,27 @@
     };
   },
 
+
+  created(){
+
+    // console.log("dagsdasdgasdgagsdagagdasd")
+    // console.log(this.$page.props.auth.user.id);
+
+   window.Echo.private(`App.Models.User.${this.$page.props.auth.user.id}`).notification((notification)=>{
+
+
+        console.log(notification);
+
+        switch(notification.type){
+            case 'App\\Notifications\\ApplicationStatusNotification':
+                this.$page.props.unreadNotification++;
+                break;
+        }
+
+        // this.$page.props.unreadNotification++;
+   })
+    
+  },
   methods: {
     logout() {
       this.isLoading = true;

@@ -1,16 +1,28 @@
+
+
+
+
+
+
+
+
+
+
+
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import { usePage } from '@inertiajs/vue3'
 
 
+
+// import pusher from 'pusher-js';
+// import Echo from 'laravel-echo';
+
 import { router } from "@inertiajs/core";
 const isOpen = ref(false);
-const isNotif = ref(false);
+
 const is_singning_out = ref(false);
 
-
-const user = usePage().props.user.id;
-  console.log(user);
 
 
 
@@ -28,8 +40,22 @@ const closeOnClickOutside = (event) => {
 onMounted(() => {
   document.addEventListener("click", closeOnClickOutside);
 
+  // window.Echo = new Echo({
+  //       broadcaster: 'pusher',
+  //       key: import.meta.env.VITE_PUSHER_APP_KEY,
+  //       cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
+  //       forceTLS: true,
+  //   });
 
+
+  // console.log("fetching");
+  // window.Echo.private(`App.Models.User.${this.$page.props.auth.user.id}`).notification((notification) => {
+  //     console.log(notification)
+  //   })
 });
+
+
+
 onBeforeUnmount(() => {
   document.removeEventListener("click", closeOnClickOutside);
 });
@@ -113,7 +139,7 @@ function logout() {
       
       :class=" ['cursor-pointer flex-shrink-0 rounded-full p-1 text-cyan-200 hover:bg-white hover:bg-opacity-10 hover:text-white focus:outline-none relative ', isNotif ? 'focus:ring-2 focus:ring-white' :'' ]"
     >
-     <div v-if="$page.props.unreadNotification > 0 " class="bg-red-500 flex items-center w-7 h-7 absolute -top-2  -right-0.5 z-100 justify-center text-white rounded-full text-sm"> 2{{ $page.props.unreadNotification }}</div>
+     <div v-if="$page.props.unreadNotification > 0 " class="bg-red-500 flex items-center w-7 h-7 absolute -top-2  -right-0.5 z-100 justify-center text-white rounded-full text-sm"> {{ $page.props.unreadNotification }}</div>
       <svg
         class="h-6 w-6"
         fill="none"
@@ -210,10 +236,21 @@ export default {
   data() {
     return {
       isLoading: false,
+      isNotif: false,
     };
   },
 
+  
+
   methods: {
+
+
+  toggleNotficaiton(){
+
+      this.isNotif = !this.isNotif;
+     
+  },
+
     logout() {
       this.isLoading = true;
       this.$inertia.post("/logout").then(() => {

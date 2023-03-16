@@ -6,6 +6,9 @@ use Carbon\Carbon;
 use App\Models\Certificate;
 use App\Models\Organization;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Notifications\ApplicationStatusNotification;
+
 
 class CertificateController extends Controller
 {
@@ -14,15 +17,22 @@ class CertificateController extends Controller
     public function updateOsasDistribution(Request $request){
             
             $certificate = Certificate::where('organization_id', $request->id)->first();
+            $organization  =Organization::find($request->id);
+            $campus_adviser = $organization->campus_adviser->user;
+            $current_user = Auth::user();
 
-          
+      
 
             if($certificate->distributed_by_osas){
                 $certificate->distributed_by_osas = 0;
 
             }else{
+                $campus_adviser->notify(new ApplicationStatusNotification($current_user->first_name .' '. $current_user->last_name, $organization->name,'', 'Osas issued certifcate for ' .strtoupper($organization->name).' Organization'));
                 $certificate->distributed_by_osas = 1;
             }
+
+
+            
 
             $certificate->save();
     
@@ -32,7 +42,10 @@ class CertificateController extends Controller
     public function updateAdviserDistribution(Request $request){
             
             $certificate = Certificate::where('organization_id', $request->id)->first();
-
+            $organization  =Organization::find($request->id);
+            $student = $organization->user;
+            $current_user = Auth::user();
+            
           
 
             if($certificate->distributed_by_adviser){
@@ -40,6 +53,8 @@ class CertificateController extends Controller
 
             }else{
                 $certificate->distributed_by_adviser = 1;
+                $student->notify(new ApplicationStatusNotification($current_user->first_name .' '. $current_user->last_name, $organization->name,'', ' Adviser forwarded the certficate for ' .strtoupper($organization->name).' Organization'));
+
             }
 
             $certificate->save();

@@ -250,12 +250,12 @@ class ApproveController extends Controller
             ]);
 
 
-            // $create_remark = Remark::create([
-            //     'organization_id'=> $organization->id,        
-            //     'sender_id'=> Auth::user()->id, 
-            //     'reciever_id'=> $organization->user_id, 
-            //     'body'=> $request->comment, 
-            // ]);
+            $create_remark = Remark::create([
+                'organization_id'=> $organization->id,        
+                'sender_id'=> Auth::user()->id, 
+                'reciever_id'=> $organization->user_id, 
+                'body'=> $request->comment, 
+            ]);
     
        
 
@@ -274,12 +274,12 @@ class ApproveController extends Controller
             ]);
 
 
-            // $create_remark = Remark::create([
-            //     'organization_id'=> $organization->id,        
-            //     'sender_id'=> Auth::user()->id, 
-            //     'reciever_id'=> $organization->user_id, 
-            //     'body'=> $request->comment, 
-            // ]);
+            $create_remark = Remark::create([
+                'organization_id'=> $organization->id,        
+                'sender_id'=> Auth::user()->id, 
+                'reciever_id'=> $organization->user_id, 
+                'body'=> $request->comment, 
+            ]);
     
            
             $campus_adviser->notify(new ApplicationStatusNotification($current_user->first_name .' '. $current_user->last_name, $organization->name,'denied', strtoupper($organization->name) .' application that you endorse to campus director has been - '.$request->comment  ));
@@ -323,7 +323,13 @@ class ApproveController extends Controller
                 'vpa_endorsed_status'=> 'false', 
             ]);
 
-
+            
+            $create_remark = Remark::create([
+                'organization_id'=> $organization->id,        
+                'sender_id'=> Auth::user()->id, 
+                'reciever_id'=> $organization->user_id, 
+                'body'=> $request->comment, 
+            ]);
 
 
             $campus_adviser->notify(new ApplicationStatusNotification($current_user->first_name .' '. $current_user->last_name, $organization->name,'approved', strtoupper($organization->name) .' Application has been denied   by VPA '.$request->comment  ));

@@ -1,35 +1,40 @@
+
+
+
+
 <script setup>
-import { defineProps } from "vue";
-import { ref, onMounted, defineEmits } from "vue";
-import { router } from "@inertiajs/vue3";
-import axios from "axios";
 
-import moment from "moment";
+// import { defineProps } from "vue";
+// import { ref, onMounted, defineEmits } from "vue";
+// import { router } from "@inertiajs/vue3";
+// import axios from "axios";
 
-const notifications = ref([]);
-const is_loading = ref(false);
+// import moment from "moment";
 
-onMounted(async () => {
-  is_loading.value = true;
-  const { data } = await axios.get(route("nottification.index"));
-  is_loading.value = false;
-  console.log(data.data);
+// const notifications = ref([]);
+// const is_loading = ref(false);
 
-  if (data.data.length > 0) {
-    notifications.value = data.data;
-  }
+// onMounted(async () => {
+//   is_loading.value = true;
+//   const { data } = await axios.get(route("nottification.index"));
+//   is_loading.value = false;
+//   console.log(data.data);
+
+//   if (data.data.length > 0) {
+//     notifications.value = data.data;
+//   }
 
 
-  // router.get(route('refresh'),{
-  // preserveState: true,
-  // preserveScroll: true,
-  // });
+//   // router.get(route('refresh'),{
+//   // preserveState: true,
+//   // preserveScroll: true,
+//   // });
   
-});
+// });
 
-function formatDate(dateString) {
-  return moment(dateString).format("YYYY-MM-DD");
-}
+// function formatDate(dateString) {
+//   return moment(dateString).format("YYYY-MM-DD");
+// }
 </script>
 
 <template>
@@ -70,7 +75,9 @@ function formatDate(dateString) {
         </li> -->
     <!-- {{ notifications  }} -->
     <div v-else>
-    
+
+      <div v-if="(notifications.length >0 &&  !is_loading  )">
+     
     <div class="px-4 cursor-pointer hover:bg-gray-50 border-b" v-for="item in notifications" :key="item" >
   
       <div class="flex center justify-between pt-2">
@@ -86,15 +93,49 @@ function formatDate(dateString) {
         </p>
       </div>
     </div>
+    
     </div>
+    <div v-else class="p-4">
+      <p class=" text-sm text-center "> None</p>
+    
+    </div>
+     </div>
     
   </div>
 </template>
 
+
 <script>
+import axios from "axios";
+import moment from "moment";
 
-
-
+export default {
+  data() {
+    return {
+      notifications: [],
+      is_loading: false
+    }
+  },
+  mounted() {
+    this.is_loading = true;
+    axios.get(route("nottification.index")).then(response => {
+      this.is_loading = false;
+      console.log(response.data.data);
+      if (response.data.data.length > 0) {
+        this.notifications = response.data.data;
+          this.$page.props.unreadNotification = 0;
+      }
+    }).catch(error => {
+      console.log(error);
+      this.is_loading = false;
+    });
+  },
+  methods: {
+    formatDate(dateString) {
+      return moment(dateString).format("YYYY-MM-DD");
+    }
+  }
+}
 </script>
 
 <style  scoped>

@@ -13,13 +13,13 @@ const props = defineProps({
    <div class="mt-8 flow-root">
               <div class="-my-2 -mx-6 overflow-x-auto lg:-mx-8">
                 <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                  <table class="min-w-full divide-y divide-gray-300">
-                    <thead>
-                      <tr class="divide-x divide-gray-200">
+                  <table class="min-w-full divide-y divide-gray-300 ">
+                    <thead class="  rounded">
+                      <tr class="divide-x divide-gray-200 ">
                         <th
                         v-for="item in headers" :key="item"
                           scope="col"
-                          class="py-3.5 pl-4 pr-6 text-left text-sm font-semibold text-gray-900 "
+                          class="py-3.5 pl-4 pr-6 text-center text-l  text-gray-800 "
                         >
                         {{ item }}
                         </th>
@@ -61,4 +61,6 @@ const props = defineProps({
             </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style scoped>
+
+</style>

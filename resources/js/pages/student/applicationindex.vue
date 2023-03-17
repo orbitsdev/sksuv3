@@ -4,7 +4,7 @@ import { router } from "@inertiajs/core";
 import { throttle } from "lodash";
 import { useForm } from "@inertiajs/vue3";
 
-import axios from 'axios';
+import axios from "axios";
 const props = defineProps({
   organizations: Object,
   filters: Object,
@@ -20,17 +20,12 @@ const selected_items = ref([]);
 const selected_item = ref(null);
 const has_warning = ref(null);
 
-const show_remarks  = ref(false);
-
-
+const show_remarks = ref(false);
 
 function viewRemarks(item) {
   selected_item.value = item;
   show_remarks.value = true;
 }
-
-
-
 
 const form = useForm({
   name: "",
@@ -51,8 +46,6 @@ watch(
     );
   }, 500)
 );
-
-
 
 const is_processing = ref(false);
 
@@ -197,7 +190,7 @@ function handleManageForm() {
   show_manage_form.value = false;
 }
 
-function openUrl(url){
+function openUrl(url) {
   window.open(url);
 }
 </script>
@@ -288,22 +281,267 @@ function openUrl(url){
         </div>
       </div>
       <div class="rounded pb-6">
-      <SkTable
-        v-if="props.organizations.data.length > 0"
-        :headers="[
-          '',
-          'Certificate',
-          'Organization Name',
-          'Campus Adviser ',
-          ' School Year',
-          ' Requirements &  attachment',
-          ' Application Process Status',
-          
+        <SkTable
+          v-if="props.organizations.data.length > 0"
+          :headers="['', 'Certificate', 'Organizations', ' Process Status', '']"
+        >
+          <tr class="divide-x divide-gray-200 align-top">
+            <Tcell></Tcell>
+            <Tcell>
+              <aside class="">
+                <!-- <div>
+                    <p
+                      class="text-sm uppercase font-medium text-gray-800  mb-0.5 text-center"
+                    >
+                      Certificate
+                    </p>
+                  </div> -->
+                <div class="flex items-center p-1 justify-center">
+                  <div class="w-36 h-36">
+                    <img
+                      src="/assets/images/certificates/template2.png "
+                      alt="logo"
+                      class="object-fill"
+                    />
+                  </div>
+                </div>
+              </aside>
+            </Tcell>
+            <Tcell>
+              <section class="grid grid-cols-2">
+                <aside class="whitespace-normal">
+                  <div class="flex items-center mb-2">
+                    <div
+                      class="inline-block rounded-full p-2 bg-green-50 text-green-400 mr-2"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        class="w-5 h-5"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M6.32 2.577a49.255 49.255 0 0111.36 0c1.497.174 2.57 1.46 2.57 2.93V21a.75.75 0 01-1.085.67L12 18.089l-7.165 3.583A.75.75 0 013.75 21V5.507c0-1.47 1.073-2.756 2.57-2.93z"
+                          clip-rule="evenodd"
+                        />
+                      </svg>
+                    </div>
+                    <p class="text-sm uppercase font-medium text-gray-800 mb-2">
+                      General Details
+                    </p>
+                  </div>
+                  <div class="px-2 mb-1">
+                    <p class="text-xs min-sk-w-t text-gray-400 leading-4">
+                      Organizaiton name
+                    </p>
+                    <p class="text-gray-800 leading-5 uppercase text-sm">Css</p>
+                  </div>
+                  <div class="px-2 mb-1">
+                    <p class="text-xs min-sk-w-t text-gray-400 leading-4">
+                      Campus adviser
+                    </p>
+                    <p class="text-gray-800 leading-5 uppercase text-sm">
+                      Galiano MAria Teresisa
+                    </p>
+                  </div>
+                  <div class="px-2 mb-1">
+                    <p class="text-xs min-sk-w-t text-gray-400 leading-4">School year</p>
+                    <p class="text-gray-800 leading-5 uppercase text-sm">2021-2323</p>
+                  </div>
+                  <div class="px-2 py-1 mt-3">
+                    <div class="flex items-center mb-2">
+                      <div
+                        class="inline-block rounded-full p-2 bg-rose-50 text-rose-400 mr-2"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                          class="w-5 h-5"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M9 1.5H5.625c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0016.5 9h-1.875a1.875 1.875 0 01-1.875-1.875V5.25A3.75 3.75 0 009 1.5zm6.61 10.936a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 14.47a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z"
+                            clip-rule="evenodd"
+                          />
+                          <path
+                            d="M12.971 1.816A5.23 5.23 0 0114.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 013.434 1.279 9.768 9.768 0 00-6.963-6.963z"
+                          />
+                        </svg>
+                      </div>
+                      <p class="text-sm uppercase font-medium text-gray-800 mb-2">
+                        Requirements
+                      </p>
+                    </div>
+                    <p class="text-sm min-sk-w-t text-gray-600 mb-1 rounded">
+                      <span class="mx-1 normal"> 1.</span>
+                      <span class=""> Application Letter</span>
+                    </p>
+                    <p class="text-sm min-sk-w-t text-gray-600 mb-1 rounded">
+                      <span class="mx-1 normal"> 1.</span>
+                      <span class=""> Application Letter</span>
+                    </p>
+                  </div>
+                </aside>
 
-          '',
-        ]"
-      >
-        <tr
+                <aside>
+                  <div class="flex items-center mb-3">
+                    <div
+                      class="inline-block rounded-full p-2 bg-blue-50 text-blue-400 mr-2"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        class="w-5 h-5"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M10.5 3.75a6 6 0 00-5.98 6.496A5.25 5.25 0 006.75 20.25H18a4.5 4.5 0 002.206-8.423 3.75 3.75 0 00-4.133-4.303A6.001 6.001 0 0010.5 3.75zm2.03 5.47a.75.75 0 00-1.06 0l-3 3a.75.75 0 101.06 1.06l1.72-1.72v4.94a.75.75 0 001.5 0v-4.94l1.72 1.72a.75.75 0 101.06-1.06l-3-3z"
+                          clip-rule="evenodd"
+                        />
+                      </svg>
+                    </div>
+                    <p class="text-sm uppercase font-medium text-gray-800 mb-2">
+                      Uploaded Files
+                    </p>
+                  </div>
+
+                  <div class="border-b mb-1">
+                    <div class="whitespace-normal mb-1">
+                      <FileViewLink> Applicaiton Lterrr </FileViewLink>
+                    </div>
+                    <div class="whitespace-normal mb-1">
+                      <FileViewLink>
+                        Applicaiton Lterrrdasdasd asdasasdasdas
+                      </FileViewLink>
+                    </div>
+                  </div>
+                </aside>
+              </section>
+            </Tcell>
+
+            <!-- <aside class="whitespace-normal p-2 rounded border mb-2">
+                <div>
+                  <p class="text-sm uppercase font-medium text-gray-600 p-1">
+                    Attachments
+                  </p>
+
+                  <div class="grid grid-cols-2">
+                    <FileViewLink class="m-1">
+                      Applicaiton Lterrr 123123123123123312312 .jp</FileViewLink
+                    >
+                    <FileViewLink class="m-1">
+                      Applicaiton Lterrr 123123123123123312312 .jp</FileViewLink
+                    >
+                    <FileViewLink class="m-1">
+                      Applicaiton Lterrr 123123123123123312312 .jp</FileViewLink
+                    >
+                    <FileViewLink class="m-1">
+                      Applicaiton Lterrr 123123123123123312312 .jp</FileViewLink
+                    >
+                    <FileViewLink class="m-1">
+                      Applicaiton Lterrr 123123123123123312312 .jp</FileViewLink
+                    >
+                    <FileViewLink class="m-1">
+                      Applicaiton Lterrr 123123123123123312312 .jp</FileViewLink
+                    >
+                    <FileViewLink class="m-1">
+                      Applicaiton Lterrr 123123123123123312312 .jp</FileViewLink
+                    >
+                    <FileViewLink class="m-1">
+                      Applicaiton Lterrr 123123123123123312312 .jp Applicaiton Lterrr
+                      123123123123123312312 .Applicaiton Lterrr 123123123123123312312
+                      .</FileViewLink
+                    >
+                  </div>
+                </div>
+              </aside> -->
+            <Tcell colspan="1 " class="sk-th-min-w">
+              <aside class="whitespace-normal mb-2">
+                <div class="flex items-center mb-3">
+                  <div
+                    class="inline-block rounded-full p-2 bg-orange-50 text-orange-400 mr-2"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      class="w-5 h-5"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm0 8.625a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25zM15.375 12a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0zM7.5 10.875a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  <p class="text-sm uppercase font-medium text-gray-800 mb-2">Process</p>
+                </div>
+
+                <div class="mb-1 text-center flex items-center justify-center">
+                  <div class="px-4 py-3 rounded shadow " >
+                    <p class="text-gray-700 mb-1">Campus Adviser</p>
+                    <div class="flex items-center justify-center">
+                      <div>
+                        
+                      <ApproveCard :status="'approved'"/> 
+                      
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-1 text-center flex items-center justify-center">
+                  <div class="px-4 py-3 rounded shadow " >
+                    <p class="text-gray-700 mb-1">Campus Director</p>
+                    <div class="flex items-center justify-center">
+                      <div>
+                        
+                      <ApproveCard :status="'denied'"/> 
+                     
+                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-1 text-center flex items-center justify-center">
+                  <div class="px-4 py-3 rounded shadow " >
+                    <p class="text-gray-700 mb-1">Osas</p>
+                    <div class="flex items-center justify-center">
+                      <div>
+                        
+                      <ApproveCard :status="'approved'"/> 
+                      <ApproveCard :status="'denied'"/> 
+                      <ApproveCard :status="'waiting for review'"/> 
+                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+              </aside>
+            </Tcell>
+            <td class="whitespace-nowrap py-2 pl-4 pr-6 text-sm text-gray-500">
+              <SkButtonGray class="max-w-40 mr-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  class="w-4 h-4 mr-2"
+                >
+                  <path
+                    d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32l8.4-8.4z"
+                  />
+                  <path
+                    d="M5.25 5.25a3 3 0 00-3 3v10.5a3 3 0 003 3h10.5a3 3 0 003-3V13.5a.75.75 0 00-1.5 0v5.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5V8.25a1.5 1.5 0 011.5-1.5h5.25a.75.75 0 000-1.5H5.25z"
+                  />
+                </svg>
+                <span class=""> Manage </span>
+              </SkButtonGray>
+            </td>
+          </tr>
+          <!-- <tr
           class="divide-x divide-gray-200"
           v-for="item in props.organizations.data"
           :key="item"
@@ -326,9 +564,7 @@ function openUrl(url){
               class="flex justify-center relative cursor-pointer hover:scale-105 transition-all ease-in-out"
               v-if="item.certificate != null"
             >
-              <!-- <div class="absolute top-0 left-5">
-                <i class="fa-solid fa-award text-2xl gold"></i>
-              </div> -->
+             
               <div
                 class="absolute top-6 flex items-center justify-center rounded-full p-2"
               >
@@ -352,7 +588,6 @@ function openUrl(url){
               <div class="absolute top-0 right-5"></div>
               <div class="w-36 h-36 flex items-center justify-center">
                 NONE
-                <!-- <img src="/assets/images/certificates/template2.png "  alt="logo" class="object-fill"> -->
               </div>
             </div>
           </Tcell>
@@ -439,7 +674,7 @@ function openUrl(url){
                   class="cursor-pointer bg-gradient-to-r hover:scale-95 transition-all ease-in-out from-rose-500 via-red-500 to-pink-500 text-white rounded py-2 text px-1 mr-2 mt-4"
                   v-if="item.remarks.length > 0"
                 >
-                  <div class="truncate text-sm font-medium uppercase flex items-center">
+                  <div class="truncate text-sm   text-gray-800 uppercase text-sm flex items-center">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
@@ -505,24 +740,7 @@ function openUrl(url){
                   </status-card>
                 </div>
 
-                <!-- <div class="mb-0.5">
-                  <status-card
-                    :c="[
-                      item.organization_process.campus_adviser_endorsed_status === 'true'
-                        ? 'bg-green-100 text-green-600'
-                        : 'bg-gray-50 text-gray-400',
-                    ]"
-                    class="inline-flex items-center"
-                  >
-                    <checkedSvg />
-
-                    {{
-                      item.organization_process.campus_adviser_endorsed_status === "true"
-                        ? "Endorsed"
-                        : "Not endorsed yet"
-                    }}
-                  </status-card>
-                </div> -->
+            
               </div>
             </div>
             <div class="mb-1 border py-2 px-2 mr-4 rounded">
@@ -574,24 +792,7 @@ function openUrl(url){
                   </status-card>
                 </div>
 
-                <!-- <div class="mb-0.5">
-                  <status-card
-                    :c="[
-                      item.organization_process.campus_director_endorsed_status === 'true'
-                        ? 'bg-green-100 text-green-600'
-                        : 'bg-gray-50 text-gray-400',
-                    ]"
-                    class="inline-flex items-center"
-                  >
-                    <checkedSvg />
-
-                    {{
-                      item.organization_process.campus_director_endorsed_status === "true"
-                        ? "Endorsed"
-                        : "Not endorsed yet"
-                    }}
-                  </status-card>
-                </div> -->
+            
               </div>
             </div>
             <div class="mb-1 border py-2 px-2 mr-4 rounded">
@@ -637,24 +838,7 @@ function openUrl(url){
                   </status-card>
                 </div>
 
-                <!-- <div class="mb-0.5">
-                  <status-card
-                    :c="[
-                      item.organization_process.osas_endorsed_status === 'true'
-                        ? 'bg-green-100 text-green-600'
-                        : 'bg-gray-50 text-gray-400',
-                    ]"
-                    class="inline-flex items-center"
-                  >
-                    <checkedSvg />
-
-                    {{
-                      item.organization_process.osas_endorsed_status === "true"
-                        ? "Endorsed"
-                        : "Not endorsed yet"
-                    }}
-                  </status-card>
-                </div> -->
+             
               </div>
             </div>
 
@@ -703,22 +887,7 @@ function openUrl(url){
               </div>
             </div>
           </Tcell>
-          <!-- <Tcell class="align-top pt-2">
-            <div> 
-
-                    <div class="flex space-x-3">
-                      <div>
-                        <div class="text-sm">
-                          <a href="#" class="font-medium text-gray-900">Leslie Alexander</a>
-                        </div>
-                        <div class="mt-1 text-sm text-gray-700 whitespace-normal w-72">
-                          <p>Ducimus quas delectus ad maxime totam doloribus reiciendis ex. Tempore dolorem maiores. Similique voluptatibus tempore non ut.</p>
-                        </div>
-                     
-                      </div>
-                    </div>
-            </div>
-         </Tcell> -->
+         
 
           <Tcell class="flex items-center justify-center align-top pt-2">
             <SkButtonGray
@@ -742,11 +911,11 @@ function openUrl(url){
               <span class=""> Manage </span>
             </SkButtonGray>
           </Tcell>
-        </tr>
-      </SkTable>
-      <EmptyCard class="flex items-center justify-center h-64" v-else />
-      
-       <div class="mt-6 bg-white" v-if="$props.organizations.links.length > 0">
+        </tr> -->
+        </SkTable>
+        <EmptyCard class="flex items-center justify-center h-64" v-else />
+
+        <div class="mt-6 bg-white" v-if="$props.organizations.links.length > 0">
           <Pagination
             v-if="$props.organizations.data.length > 0"
             class="block"
@@ -754,8 +923,7 @@ function openUrl(url){
           />
         </div>
       </div>
-  
-      </div>
+    </div>
 
     <sk-dialog :transition="'slide-down'" :persistent="true" :isOpen="show_form">
       <main class="p-2">
@@ -779,7 +947,6 @@ function openUrl(url){
 
           <div class="mt-1">
             <Authfield1 type="email" autocomplete="email" v-model="form.name" />
-            <!-- <input id="email" v-model="form.email" name="email" type="email" autocomplete="email"  class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"> -->
           </div>
           <p class="text-red-700 text-sm" v-if="$page.props.errors.name">
             {{ $page.props.errors.name }}
@@ -838,8 +1005,8 @@ function openUrl(url){
           </SkDeleteButton>
           <SkButtonGray @click="confirm_delete = false" :c="'w-24'"> No </SkButtonGray>
         </div>
-      </main>
-    </sk-dialog>
+      </main> </sk-dialog
+    >a
 
     <sk-dialog
       :transition="'slide-down'"
@@ -848,75 +1015,74 @@ function openUrl(url){
       :isOpen="show_manage_form"
     >
       <main class="p-2 form-max-h overflow-y-auto">
-          <div class="">
-            <label for="email" class="block te font-medium text-gray-700"
-              >Organization Name</label
-            >
+        <div class="">
+          <label for="email" class="block te font-medium text-gray-700"
+            >Organization Name</label
+          >
 
-            <div class="mt-">
-              <Authfield1 type="email" autocomplete="email" v-model="form.name" />
-              <!-- <input id="email" v-model="form.email" name="email" type="email" autocomplete="email"  class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"> -->
-            </div>
-            <p class="text-red-700 text-sm" v-if="$page.props.errors.name">
-              {{ $page.props.errors.name }}
-            </p>
+          <div class="mt-">
+            <Authfield1 type="email" autocomplete="email" v-model="form.name" />
           </div>
+          <p class="text-red-700 text-sm" v-if="$page.props.errors.name">
+            {{ $page.props.errors.name }}
+          </p>
+        </div>
 
-          <p class="mt-2 uppercase leading-8 text-black font-medium">Requirements</p>
-          <div v-if="selected_item.requirements.length > 0">
-            <!-- {{ selected_item.organization_requirements }} -->
-            <aside
-              class="shadow-md my-1 mb-2 border rounded-md p-2 bg-gradient-to-r from-gray-50 to-gray-100 "
-              v-for="r in selected_item.organization_requirements"
-              :key="r"
-            >
-              <p class="text-gray-900  capitalize">{{ r.name }}</p>
-              <div class=" ">
-                <p class="mb-2 t text-gray-800 capitalize ">
-                  {{ r.requirement.name }}
-                </p>
-                <div
-                  v-if="r.file.length > 0"
-                  class="bg-gradient-to-r from-green-600 to-green-600 py-1 px-2 rounded-lg"
-                >
-                  <!-- {{ r.file  }} -->
-                  <div class="my=2">
-                    <span v-for="file in r.file" :key="file">
-                      <!-- <span class="badge badge-primary" > {{ file.file_name }}  </span> -->
-                      <FileCard @click="deleteFile(file)" class="mt-1 mr-1">
-                        {{ file.file_name }}</FileCard
-                      >
-                    </span>
-                  </div>
-                  <!-- {{ r.organization_requirements }} -->
+        <p class="mt-2 uppercase leading-8 text-black font-medium">Requirements</p>
+        <div v-if="selected_item.requirements.length > 0">
+          <aside
+            class="shadow-md my-1 mb-2 border rounded-md p-2 bg-gradient-to-r from-gray-50 to-gray-100"
+            v-for="r in selected_item.organization_requirements"
+            :key="r"
+          >
+            <p class="text-gray-900 capitalize">{{ r.name }}</p>
+            <div class=" ">
+              <p class="mb-2 t text-gray-800 capitalize">
+                {{ r.requirement.name }}
+              </p>
+              <div
+                v-if="r.file.length > 0"
+                class="bg-gradient-to-r from-green-600 to-green-600 py-1 px-2 rounded-lg"
+              >
+                <div class="my=2">
+                  <span v-for="file in r.file" :key="file">
+                    <FileCard @click="deleteFile(file)" class="mt-1 mr-1">
+                      {{ file.file_name }}</FileCard
+                    >
+                  </span>
                 </div>
-
-                <div v-else class="mt-2 bg-gray-100 px-2 text-sm text-gray-600 rouned-lg inline-block">
-                  No File
-                </div>
-
-                <FileUpload
-                  @uploadSuccess="handleManageForm"
-                  @uploadStart="is_updating = true"
-                  @uploadFinish="handleManageForm"
-                  :model_id="r.id"
-                />
               </div>
-            </aside>
-          </div>
-        
 
-        
+              <div
+                v-else
+                class="mt-2 bg-gray-100 px-2 text-sm text-gray-600 rouned-lg inline-block"
+              >
+                No File
+              </div>
+
+              <FileUpload
+                @uploadSuccess="handleManageForm"
+                @uploadStart="is_updating = true"
+                @uploadFinish="handleManageForm"
+                :model_id="r.id"
+              />
+            </div>
+          </aside>
+        </div>
       </main>
       <div class="mt-5 flex items-center justify-end">
-          <SkButtonGray class="w-40 mr-4" @click="show_manage_form = false">
-            Close
-          </SkButtonGray>
+        <SkButtonGray class="w-40 mr-4" @click="show_manage_form = false">
+          Close
+        </SkButtonGray>
 
-          <SkButton :c="'w-40 sk-bg-green text-white'" @click="update" :processing="form.processing">
-            Update
-          </SkButton>
-        </div>
+        <SkButton
+          :c="'w-40 sk-bg-green text-white'"
+          @click="update"
+          :processing="form.processing"
+        >
+          Update
+        </SkButton>
+      </div>
     </sk-dialog>
   </adminlayout>
 
@@ -932,83 +1098,38 @@ function openUrl(url){
     </div>
   </SkDialog>
 
+  <SkDialog :persistent="true" :isOpen="show_remarks" :width="'540'">
+    <main class="form-max-h">
+      <div v-if="selected_item != null">
+        <div v-if="selected_item.remarks.length > 0">
+          <div
+            class="border-b divide-y divide-gray-300"
+            v-for="remark in selected_item.remarks"
+            :key="remark"
+          >
+            <div class="flex py-4">
+              <div class="ml-3">
+                <div class="">
+                  <DateCard :text="remark.created_at" />
+                </div>
 
-
-<SkDialog :persistent="true" :isOpen="show_remarks" :width="'540'">
-
-
-    
-    <main class="form-max-h"   >
-    <div  v-if="selected_item !=null">
-  
-    <div v-if="selected_item.remarks.length > 0">
-      <div
-        class="border-b divide-y divide-gray-300"
-        v-for="remark in selected_item.remarks"
-        :key="remark"
-      >
-
-      <div class="flex py-4">
-    <div class="ml-3">
-    <div class="">
-    <DateCard :text="remark.created_at" />
-    
-    </div>
-
-      <p class="uppercase text-sm font-medium text-gray-900"> From: {{ remark.user_sender.first_name }} - {{ remark.user_sender.last_name }}</p>
-      <p class="text-sm text-gray-500">  {{ remark.body }}</p>
-    </div>
-  </div>
-        
-
-         
-          
-
-      
-      </div>
-      </div>
-      <div class="mt-5">
-        <SkButtonGray class="w-40 mr-4" @click="show_remarks = false">
-          Close
-        </SkButtonGray>
-      </div>
-      </div>
-    </main>
-  </SkDialog>
-<!-- 
-
-  <SkDialog :persistent="true" :isOpen="show_remarks" :width="'260'">
-   <div class="mt-5 flex items-center justify-end">
-  <div v-if="selected_item.remarks.length > 0">
-
- <div
-        class="flex items-center space-x-4 border-b mb-1 py-2"
-        v-for="remark in selected_item.remarks"
-        :key="remark"
-      >
-        <div class="min-w-0 flex-1">
-          <p class="truncate text-xs font-medium text-gray-900">
-            <DateCard :text="remark.created_at" />
-          </p>
-
-          <p>
-                {{ remark.body }}
-          </p>
-          
+                <p class="uppercase text-sm font-medium text-gray-900">
+                  From: {{ remark.user_sender.first_name }} -
+                  {{ remark.user_sender.last_name }}
+                </p>
+                <p class="text-sm text-gray-500">{{ remark.body }}</p>
+              </div>
+            </div>
+          </div>
         </div>
-        
-      </div>
-      <div class="text-center py-2" >  No Remarks</div>
-     </div>
+        <div class="mt-5">
           <SkButtonGray class="w-40 mr-4" @click="show_remarks = false">
             Close
           </SkButtonGray>
-
-   
         </div>
-  </SkDialog>  -->
-  
-  
+      </div>
+    </main>
+  </SkDialog>
 </template>
 
 <script>

@@ -25,10 +25,10 @@
              <a
                   target="_blank"
 
-                  class="cursor-pointer  bg-gray-200 hover:bg-blue-600   hover:text-white text-gray-800  py-2 px-4 rounded inline-flex items-center"
+                  class="cursor-pointer  bg-gray-100 hover:bg-blue-600   hover:text-white text-blue-500  py-2 px-4 rounded inline-flex items-center"
                 >
                   <svg
-                    class="fill-current w-5 h-5 mr-3"
+                    class="fill-current w-5 h-5 mr-3 "
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
                   >

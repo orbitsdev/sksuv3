@@ -6,7 +6,7 @@
                      v-if="status == 'waiting for review' "
                     >
                         <div
-                          class="flex items-center bg-gradient-to-r py-1 px-2 rounded from-blue-500 to-blue-600 text-white uppercase"
+                          class="flex items-center justify-center bg-gradient-to-r py-1 px-2 rounded from-blue-400 to-blue-600 text-white uppercase"
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -27,7 +27,7 @@
 
   <div
     v-if="status == 'approved'"
-    class="flex items-center bg-gradient-to-r py-1 px-2 rounded from-green-500 to-green-600 text-white uppercase"
+    class="flex items-center justify-center bg-gradient-to-r py-1 px-2 rounded from-green-400 to-green-600 text-white uppercase"
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -49,7 +49,7 @@
    <div
 
        v-if="status == 'denied'"
-                          class="flex items-center bg-gradient-to-r py-1 px-2 rounded from-rose-500 to-rose-600 text-white uppercase"
+                          class="flex items-center justify-center bg-gradient-to-r py-1 px-2 rounded from-rose-400 to-rose-600 text-white uppercase"
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"

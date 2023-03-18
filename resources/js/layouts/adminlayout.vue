@@ -38,7 +38,7 @@
               <div v-if="$page.props.can.isSboAdviser">
               <!-- <DashboardLink :href="route('officers.index')" :active="$page.component=== 'sboadviser/officerindex'"> Officers </DashboardLink> -->
               <!-- <DashboardLink :href="route('campusadviser.organization.manageorganizationindex')" :active="$page.component=== 'sboadviser/manageorganizationindex'"> Manage Organization </DashboardLink> -->
-              <DashboardLink :href="route('campusadviser.organization.index')" :active="$page.component=== 'sboadviser/organizationindex'"> Rewiew Submiited Documents </DashboardLink>
+              <DashboardLink :href="route('campusadviser.organization.index')" :active="$page.component=== 'sboadviser/organizationindex'"> Review Submitted Documents </DashboardLink>
               <DashboardLink :href="route('campusadviser.organization.endorsedindex')" :active="$page.component=== 'sboadviser/endorsedindex'"> Endorsed List </DashboardLink>
   
               </div>
@@ -51,7 +51,7 @@
               <!-- <DashboardLink :href="route('officers.index')" :active="$page.component=== 'sboadviser/officerindex'"> Officers </DashboardLink> -->
           
               <DashboardLink :href="route('application.index')" :active="$page.component=== 'student/applicationindex'"> Organizations </DashboardLink>
-              <DashboardLink :href="route('template.index')" :active="$page.component=== 'student/templateindex'"> Apllication Templates </DashboardLink>
+              <DashboardLink :href="route('template.index')" :active="$page.component=== 'student/templateindex'"> Application Templates </DashboardLink>
   
           
               </div>

@@ -283,263 +283,307 @@ function openUrl(url) {
       <div class="rounded pb-6">
         <SkTable
           v-if="props.organizations.data.length > 0"
-          :headers="['', 'Certificate', 'Organizations', ' Process Status', '']"
+          :headers="['', 'Certificate', 'Document Information', ' Status', '']"
         >
-          <tr class="divide-x divide-gray-200 align-top">
-            <Tcell></Tcell>
-            <Tcell>
-              <aside class="">
-                <!-- <div>
-                    <p
-                      class="text-sm uppercase font-medium text-gray-800  mb-0.5 text-center"
+          <tr
+            class="divide-x divide-gray-200"
+            v-for="item in props.organizations.data"
+            :key="item"
+          >
+            <Tcell
+              :c="'whitespace-nowrap align-center text-center text-sm items-center  font-medium text-gray-900 align-top pt-2'"
+            >
+              <input
+                v-model="selected_items"
+                :value="item.id"
+                type="checkbox"
+                class="h-4 w-4 accent-green-600 text-white rounded border-gray-200"
+              />
+            </Tcell>
+            <Tcell
+              :c="'whitespace-nowrap align-center text-center text-sm items-center  font-medium text-gray-900 align-top pt-2'"
+            >
+              <div
+                @click="generateCertificate(item)"
+                class="flex justify-center relative cursor-pointer hover:scale-105 transition-all ease-in-out"
+                v-if="item.certificate != null"
+              >
+                <div
+                  class="absolute top-6 flex items-center justify-center rounded-full p-2"
+                >
+                  <svg
+                    class="fill-current w-8 h-8 mr-2"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z" />
+                  </svg>
+                </div>
+                <div class="w-36 h-36">
+                  <img
+                    src="/assets/images/certificates/template2.png "
+                    alt="logo"
+                    class="object-fill"
+                  />
+                </div>
+              </div>
+              <div class="flex justify-center relative" v-else>
+                <div class="absolute top-0 right-5"></div>
+                <div class="w-36 h-36 flex items-center justify-center border ro">
+                  <img src="/assets/placeholder.png" alt="logo" class="object-fill" />
+                </div>
+              </div>
+            </Tcell>
+            <Tcell class="align-top">
+              <aside class="whitespace-normal">
+                <div class="flex items-center mb-2 justify-end">
+                  <p class="text-sm uppercase font-medium px-3 text-gray-600">Details</p>
+                  <div class="inline-block rounded-full p-2 bg-blue-50 text-blue-400">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      class="w-6 h-6"
                     >
-                      Certificate
+                      <path
+                        fill-rule="evenodd"
+                        d="M6.32 2.577a49.255 49.255 0 0111.36 0c1.497.174 2.57 1.46 2.57 2.93V21a.75.75 0 01-1.085.67L12 18.089l-7.165 3.583A.75.75 0 013.75 21V5.507c0-1.47 1.073-2.756 2.57-2.93z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div class="border-b pb-3">
+                  <div class="px-2 mb-2">
+                    <p class="text-gray-600 leading-5 uppercase text-sm">
+                      {{ item.name }}
                     </p>
-                  </div> -->
-                <div class="flex items-center p-1 justify-center">
-                  <div class="w-36 h-36">
-                    <img
-                      src="/assets/images/certificates/template2.png "
-                      alt="logo"
-                      class="object-fill"
-                    />
+                    <p class="text-xs min-sk-w-t text-gray-500 leading-4">
+                      ( Organizaiton name )
+                    </p>
+                  </div>
+                  <div class="px-2 mb-2">
+                    <p class="text-gray-600 leading-5 uppercase text-sm">
+                      {{
+                        item.campus_adviser.user != null
+                          ? item.campus_adviser.user.first_name +
+                            " " +
+                            item.campus_adviser.user.last_name
+                          : "None"
+                      }}
+                    </p>
+                    <p class="text-xs min-sk-w-t text-gray-500 leading-4">
+                      ( Campus adviser)
+                    </p>
+                  </div>
+                  <div class="px-2 mb-2">
+                    <p class="text-gray-600 leading-5 uppercase text-sm">
+                      {{
+                        item.campus_adviser.school_year != null
+                          ? item.campus_adviser.school_year.from +
+                            " - " +
+                            item.campus_adviser.school_year.to
+                          : "None"
+                      }}
+                    </p>
+                    <p class="text-xs min-sk-w-t text-gray-500 leading-4">
+                      ( School Year )
+                    </p>
+                  </div>
+                </div>
+
+                <div class="mt-3 border-b pb-3">
+                  <div class="flex items-center mb-2 justify-end">
+                    <p class="text-sm uppercase font-medium text-gray-600">
+                      Requirements
+                    </p>
+                    <div
+                      class="inline-block rounded-full p-2 bg-emerald-50 text-emerald-400 ml-2"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        class="w-6 h-6"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M7.502 6h7.128A3.375 3.375 0 0118 9.375v9.375a3 3 0 003-3V6.108c0-1.505-1.125-2.811-2.664-2.94a48.972 48.972 0 00-.673-.05A3 3 0 0015 1.5h-1.5a3 3 0 00-2.663 1.618c-.225.015-.45.032-.673.05C8.662 3.295 7.554 4.542 7.502 6zM13.5 3A1.5 1.5 0 0012 4.5h4.5A1.5 1.5 0 0015 3h-1.5z"
+                          clip-rule="evenodd"
+                        />
+                        <path
+                          fill-rule="evenodd"
+                          d="M3 9.375C3 8.339 3.84 7.5 4.875 7.5h9.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-9.75A1.875 1.875 0 013 20.625V9.375zm9.586 4.594a.75.75 0 00-1.172-.938l-2.476 3.096-.908-.907a.75.75 0 00-1.06 1.06l1.5 1.5a.75.75 0 001.116-.062l3-3.75z"
+                          clip-rule="evenodd"
+                        />git
+                      </svg>
+                    </div>
+                  </div>
+
+                  <div v-if="item.organization_requirements.length > 0">
+                    <p
+                      class="text-sm min-sk-w-t text-gray-600 leading-5 mb-1"
+                      v-for="(og, index) in item.organization_requirements"
+                      :key="og"
+                    >
+                      <span class="mx-1 normal"> {{ index + 1 }}. </span>
+                      <span class=""> {{ og.requirement.name }} </span>
+                    </p>
                   </div>
                 </div>
               </aside>
-            </Tcell>
-            <Tcell>
-              <section class="grid grid-cols-2">
-                <aside class="whitespace-normal">
-                  <div class="flex items-center mb-2">
-                    <div
-                      class="inline-block rounded-full p-2 bg-green-50 text-green-400 mr-2"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        class="w-5 h-5"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M6.32 2.577a49.255 49.255 0 0111.36 0c1.497.174 2.57 1.46 2.57 2.93V21a.75.75 0 01-1.085.67L12 18.089l-7.165 3.583A.75.75 0 013.75 21V5.507c0-1.47 1.073-2.756 2.57-2.93z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
-                    </div>
-                    <p class="text-sm uppercase font-medium text-gray-800 mb-2">
-                      General Details
-                    </p>
-                  </div>
-                  <div class="px-2 mb-1">
-                    <p class="text-xs min-sk-w-t text-gray-400 leading-4">
-                      Organizaiton name
-                    </p>
-                    <p class="text-gray-800 leading-5 uppercase text-sm">Css</p>
-                  </div>
-                  <div class="px-2 mb-1">
-                    <p class="text-xs min-sk-w-t text-gray-400 leading-4">
-                      Campus adviser
-                    </p>
-                    <p class="text-gray-800 leading-5 uppercase text-sm">
-                      Galiano MAria Teresisa
-                    </p>
-                  </div>
-                  <div class="px-2 mb-1">
-                    <p class="text-xs min-sk-w-t text-gray-400 leading-4">School year</p>
-                    <p class="text-gray-800 leading-5 uppercase text-sm">2021-2323</p>
-                  </div>
-                  <div class="px-2 py-1 mt-3">
-                    <div class="flex items-center mb-2">
-                      <div
-                        class="inline-block rounded-full p-2 bg-rose-50 text-rose-400 mr-2"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          fill="currentColor"
-                          class="w-5 h-5"
-                        >
-                          <path
-                            fill-rule="evenodd"
-                            d="M9 1.5H5.625c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0016.5 9h-1.875a1.875 1.875 0 01-1.875-1.875V5.25A3.75 3.75 0 009 1.5zm6.61 10.936a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 14.47a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z"
-                            clip-rule="evenodd"
-                          />
-                          <path
-                            d="M12.971 1.816A5.23 5.23 0 0114.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 013.434 1.279 9.768 9.768 0 00-6.963-6.963z"
-                          />
-                        </svg>
-                      </div>
-                      <p class="text-sm uppercase font-medium text-gray-800 mb-2">
-                        Requirements
-                      </p>
-                    </div>
-                    <p class="text-sm min-sk-w-t text-gray-600 mb-1 rounded">
-                      <span class="mx-1 normal"> 1.</span>
-                      <span class=""> Application Letter</span>
-                    </p>
-                    <p class="text-sm min-sk-w-t text-gray-600 mb-1 rounded">
-                      <span class="mx-1 normal"> 1.</span>
-                      <span class=""> Application Letter</span>
-                    </p>
-                  </div>
-                </aside>
 
-                <aside>
-                  <div class="flex items-center mb-3">
-                    <div
-                      class="inline-block rounded-full p-2 bg-blue-50 text-blue-400 mr-2"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        class="w-5 h-5"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M10.5 3.75a6 6 0 00-5.98 6.496A5.25 5.25 0 006.75 20.25H18a4.5 4.5 0 002.206-8.423 3.75 3.75 0 00-4.133-4.303A6.001 6.001 0 0010.5 3.75zm2.03 5.47a.75.75 0 00-1.06 0l-3 3a.75.75 0 101.06 1.06l1.72-1.72v4.94a.75.75 0 001.5 0v-4.94l1.72 1.72a.75.75 0 101.06-1.06l-3-3z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
-                    </div>
-                    <p class="text-sm uppercase font-medium text-gray-800 mb-2">
-                      Uploaded Files
-                    </p>
-                  </div>
-
-                  <div class="border-b mb-1">
-                    <div class="whitespace-normal mb-1">
-                      <FileViewLink> Applicaiton Lterrr </FileViewLink>
-                    </div>
-                    <div class="whitespace-normal mb-1">
-                      <FileViewLink>
-                        Applicaiton Lterrrdasdasd asdasasdasdas
-                      </FileViewLink>
-                    </div>
-                  </div>
-                </aside>
-              </section>
-            </Tcell>
-
-            <!-- <aside class="whitespace-normal p-2 rounded border mb-2">
-                <div>
-                  <p class="text-sm uppercase font-medium text-gray-600 p-1">
-                    Attachments
-                  </p>
-
-                  <div class="grid grid-cols-2">
-                    <FileViewLink class="m-1">
-                      Applicaiton Lterrr 123123123123123312312 .jp</FileViewLink
-                    >
-                    <FileViewLink class="m-1">
-                      Applicaiton Lterrr 123123123123123312312 .jp</FileViewLink
-                    >
-                    <FileViewLink class="m-1">
-                      Applicaiton Lterrr 123123123123123312312 .jp</FileViewLink
-                    >
-                    <FileViewLink class="m-1">
-                      Applicaiton Lterrr 123123123123123312312 .jp</FileViewLink
-                    >
-                    <FileViewLink class="m-1">
-                      Applicaiton Lterrr 123123123123123312312 .jp</FileViewLink
-                    >
-                    <FileViewLink class="m-1">
-                      Applicaiton Lterrr 123123123123123312312 .jp</FileViewLink
-                    >
-                    <FileViewLink class="m-1">
-                      Applicaiton Lterrr 123123123123123312312 .jp</FileViewLink
-                    >
-                    <FileViewLink class="m-1">
-                      Applicaiton Lterrr 123123123123123312312 .jp Applicaiton Lterrr
-                      123123123123123312312 .Applicaiton Lterrr 123123123123123312312
-                      .</FileViewLink
-                    >
-                  </div>
-                </div>
-              </aside> -->
-            <Tcell colspan="1 " class="sk-th-min-w">
-              <aside class="whitespace-normal mb-2">
-                <div class="flex items-center mb-3">
+              <aside class="mt-2">
+                <div class="flex items-center mb-2 justify-end">
+                  <p class="text-sm uppercase font-medium text-gray-600">Files</p>
                   <div
-                    class="inline-block rounded-full p-2 bg-orange-50 text-orange-400 mr-2"
+                    class="inline-block rounded-full p-2 bg-purple-50 text-purple-400 ml-2"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
                       fill="currentColor"
-                      class="w-5 h-5"
+                      class="w-6 h-6"
+                    >
+                      <path
+                        d="M19.906 9c.382 0 .749.057 1.094.162V9a3 3 0 00-3-3h-3.879a.75.75 0 01-.53-.22L11.47 3.66A2.25 2.25 0 009.879 3H6a3 3 0 00-3 3v3.162A3.756 3.756 0 014.094 9h15.812zM4.094 10.5a2.25 2.25 0 00-2.227 2.568l.857 6A2.25 2.25 0 004.951 21H19.05a2.25 2.25 0 002.227-1.932l.857-6a2.25 2.25 0 00-2.227-2.568H4.094z"
+                      />
+                    </svg>
+                  </div>
+                </div>
+
+                <div class="border-b mb-1">
+                  <div
+                    class="whitespace-normal mb-1"
+                    v-for="og in item.organization_requirements"
+                    :key="og"
+                  >
+                    <div v-if="og.file.length > 0">
+    
+                      <div v-for="file in og.file" :key="file" :file="file">
+                        <FileViewLink :href="file.file_url" target="_blank" class="mb-1">
+                          {{ file.file_name }}
+                        </FileViewLink>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </aside>
+            </Tcell>
+
+            <Tcell colspan="1 " class="sk-th-min-w">
+              <aside
+                @click="viewRemarks(item)"
+                  v-if="item.remarks.length > 0"
+                class="whitespace-normal border-b pb-3 transition-all ease-out hover:scale-105 rounded mx-2 text-red-400 hover:bg-rose-400 hover:text-white cursor-pointer p-2"
+              >
+                <div class="flex items-center mb-2 justify-center">
+                  <div class="inline-block rounded-full">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      class="w-6 h-6"
                     >
                       <path
                         fill-rule="evenodd"
-                        d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm0 8.625a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25zM15.375 12a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0zM7.5 10.875a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25z"
+                        d="M12 2.25c-2.429 0-4.817.178-7.152.521C2.87 3.061 1.5 4.795 1.5 6.741v6.018c0 1.946 1.37 3.68 3.348 3.97.877.129 1.761.234 2.652.316V21a.75.75 0 001.28.53l4.184-4.183a.39.39 0 01.266-.112c2.006-.05 3.982-.22 5.922-.506 1.978-.29 3.348-2.023 3.348-3.97V6.741c0-1.947-1.37-3.68-3.348-3.97A49.145 49.145 0 0012 2.25zM8.25 8.625a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25zm2.625 1.125a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0zm4.875-1.125a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25z"
                         clip-rule="evenodd"
                       />
                     </svg>
                   </div>
-                  <p class="text-sm uppercase font-medium text-gray-800 mb-2">Process</p>
                 </div>
 
-                <div class="mb-1 text-center flex items-center justify-center">
-                  <div class="px-4 py-3 rounded shadow " >
-                    <p class="text-gray-700 mb-1">Campus Adviser</p>
-                    <div class="flex items-center justify-center">
-                      <div>
-                        
-                      <ApproveCard :status="'approved'"/> 
-                      
-                      </div>
+                <p class="text-center uppercase">{{ item.remarks.length > 1 ? 'Comments'  : 'Comment'}} {{ item.remarks.length }}</p>
+              </aside>
+
+              <aside class="whitespace-normal mb-2">
+                <div class="flex items-center mb-2 justify-end">
+                  <p class="text-sm uppercase font-medium px-3 text-orange-00">
+                    Approvals
+                  </p>
+                  <div class="inline-block rounded-full p-2 bg-orange-50 text-orange-300">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      class="w-6 h-6"
+                    >
+                      <path
+                        d="M12.378 1.602a.75.75 0 00-.756 0L3 6.632l9 5.25 9-5.25-8.622-5.03zM21.75 7.93l-9 5.25v9l8.628-5.032a.75.75 0 00.372-.648V7.93zM11.25 22.18v-9l-9-5.25v8.57a.75.75 0 00.372.648l8.628 5.033z"
+                      />
+                    </svg>
+                  </div>
+                </div>
+
+                <div class="mt-2 rounded-lg bg-gray-200 p-2">
+                  <div class="p-4 bg-white rounded">
+                    <p class="text-gray-600 leading-5 uppercase text-sm text-center">
+                      Campus Adviser
+                    </p>
+
+                    <div class="mt-2 text-center">
+                      <ApproveCard :status="item.organization_process.campus_adviser_approved_status" />
                     </div>
                   </div>
                 </div>
-                <div class="mb-1 text-center flex items-center justify-center">
-                  <div class="px-4 py-3 rounded shadow " >
-                    <p class="text-gray-700 mb-1">Campus Director</p>
-                    <div class="flex items-center justify-center">
-                      <div>
-                        
-                      <ApproveCard :status="'denied'"/> 
-                     
-                        
-                      </div>
+                <div class="mt-2 rounded-lg bg-gray-200 p-2">
+                  <div class="p-4 bg-white rounded">
+                    <p class="text-gray-600 leading-5 uppercase text-sm text-center">
+                      Campus Director
+                    </p>
+
+                    <div class="mt-2 text-center">
+                        <ApproveCard :status=" item.organization_process.campus_director_approved_status" />
                     </div>
                   </div>
                 </div>
-                <div class="mb-1 text-center flex items-center justify-center">
-                  <div class="px-4 py-3 rounded shadow " >
-                    <p class="text-gray-700 mb-1">Osas</p>
-                    <div class="flex items-center justify-center">
-                      <div>
-                        
-                      <ApproveCard :status="'approved'"/> 
-                      <ApproveCard :status="'denied'"/> 
-                      <ApproveCard :status="'waiting for review'"/> 
-                        
-                      </div>
+                <div class="mt-2 rounded-lg bg-gray-200 p-2">
+                  <div class="p-4 bg-white rounded">
+                    <p class="text-gray-600 leading-5 uppercase text-sm text-center">
+                     Osas
+                    </p>
+
+                    <div class="mt-2 text-center">
+                      <ApproveCard :status="item.organization_process.osas_approved_status" />
                     </div>
                   </div>
                 </div>
-                
+                <div class="mt-2 rounded-lg bg-gray-200 p-2">
+                  <div class="p-4 bg-white rounded">
+                    <p class="text-gray-600 leading-5 uppercase text-sm text-center">
+                      VPAA
+                    </p>
+
+                    <div class="mt-2 text-center">
+                      <ApproveCard :status="item.organization_process.vpa_approved_status" />
+                    </div>
+                  </div>
+                </div>
               </aside>
             </Tcell>
-            <td class="whitespace-nowrap py-2 pl-4 pr-6 text-sm text-gray-500">
-              <SkButtonGray class="max-w-40 mr-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  class="w-4 h-4 mr-2"
-                >
-                  <path
-                    d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32l8.4-8.4z"
-                  />
-                  <path
-                    d="M5.25 5.25a3 3 0 00-3 3v10.5a3 3 0 003 3h10.5a3 3 0 003-3V13.5a.75.75 0 00-1.5 0v5.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5V8.25a1.5 1.5 0 011.5-1.5h5.25a.75.75 0 000-1.5H5.25z"
-                  />
-                </svg>
-                <span class=""> Manage </span>
-              </SkButtonGray>
-            </td>
+           <Tcell class="flex items-center justify-center ">
+            <SkButtonGray
+              :disabled="selected_items.length > 0"
+              class="max-w-40 mr-2"
+              @click="showManageForm(item)"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                class="w-4 h-4 mr-2"
+              >
+                <path
+                  d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32l8.4-8.4z"
+                />
+                <path
+                  d="M5.25 5.25a3 3 0 00-3 3v10.5a3 3 0 003 3h10.5a3 3 0 003-3V13.5a.75.75 0 00-1.5 0v5.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5V8.25a1.5 1.5 0 011.5-1.5h5.25a.75.75 0 000-1.5H5.25z"
+                />
+              </svg>
+              <span class=""> Manage </span>
+            </SkButtonGray>
+          </Tcell>
           </tr>
           <!-- <tr
           class="divide-x divide-gray-200"

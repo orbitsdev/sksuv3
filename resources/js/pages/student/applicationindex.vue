@@ -231,9 +231,12 @@ function openUrl(url) {
       class="bg-white rounded-xl shadow-xl mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8"
     >
       <div class="pt-4 flex items-center justify-between">
-        <p class="text-xl text-green-800 font-bold font-rubik uppercase">
+
+      <TableTitle>
+      
           Applied Organizations
-        </p>
+      </TableTitle>
+      
         <div class="flex items-center">
           <sk-button2
             v-if="selected_items.length > 0"
@@ -499,7 +502,7 @@ function openUrl(url) {
 
               <aside class="whitespace-normal mb-2">
                 <div class="flex items-center mb-2 justify-end">
-                  <p class="text-sm uppercase font-medium px-3 text-orange-00">
+                  <p class="text-sm uppercase font-medium px-3 text-gray-600">
                     Approvals
                   </p>
                   <div class="inline-block rounded-full p-2 bg-orange-50 text-orange-300">
@@ -523,8 +526,12 @@ function openUrl(url) {
                     </p>
 
                     <div class="mt-2 text-center">
-                      <ApproveCard :status="item.organization_process.campus_adviser_approved_status" />
-                    </div>
+                      <ApproveCard :status="item.organization_process.campus_adviser_approved_status"/>
+
+
+                     <EndorsementCard :status=" item.organization_process.campus_adviser_endorsed_status"/>
+                     
+                    </div>  
                   </div>
                 </div>
                 <div class="mt-2 rounded-lg bg-gray-200 p-2">

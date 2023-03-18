@@ -19,7 +19,7 @@ const props = defineProps({
                         <th
                         v-for="item in headers" :key="item"
                           scope="col"
-                          class="py-3.5 pl-4 pr-6 text-center text-l  text-gray-800 "
+                          class="py-3.5 pl-4 pr-6 text-center text-l  font-medium text-gray-700 "
                         >
                         {{ item }}
                         </th>

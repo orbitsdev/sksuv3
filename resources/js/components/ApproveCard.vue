@@ -21,7 +21,7 @@
                             />
                           </svg>
 
-                          <p class="text-xs">Waiting</p>
+                          <p class="text-xs"> For Review </p>
                         </div>
                         </div>
 
@@ -66,6 +66,7 @@
 
                           <p class="text-xs">Denied</p>
                         </div>
+   
 </template>
 
 <script>
@@ -75,6 +76,7 @@ export default {
       type: String,
       default: "approved",
     },
+   
   },
 };
 </script>

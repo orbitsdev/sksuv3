@@ -1,6 +1,10 @@
 
+
+
+
+
 <template>
- <p class="text-xl text-green-900 font-bold font-rubik uppercase">
+ <p class="text-xl text-gray-700 font-medium font-rubik uppercase">
                <slot>
                
                </slot>

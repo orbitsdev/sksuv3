@@ -4,7 +4,7 @@ import { router } from "@inertiajs/core";
 import { throttle } from "lodash";
 import { useForm } from "@inertiajs/vue3";
 
-import axios from 'axios';
+import axios from "axios";
 const props = defineProps({
   organizations: Object,
   filters: Object,
@@ -20,17 +20,12 @@ const selected_items = ref([]);
 const selected_item = ref(null);
 const has_warning = ref(null);
 
-const show_remarks  = ref(false);
-
-
+const show_remarks = ref(false);
 
 function viewRemarks(item) {
   selected_item.value = item;
   show_remarks.value = true;
 }
-
-
-
 
 const form = useForm({
   name: "",
@@ -51,8 +46,6 @@ watch(
     );
   }, 500)
 );
-
-
 
 const is_processing = ref(false);
 
@@ -197,7 +190,7 @@ function handleManageForm() {
   show_manage_form.value = false;
 }
 
-function openUrl(url){
+function openUrl(url) {
   window.open(url);
 }
 </script>
@@ -238,9 +231,12 @@ function openUrl(url){
       class="bg-white rounded-xl shadow-xl mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8"
     >
       <div class="pt-4 flex items-center justify-between">
-        <p class="text-xl text-green-800 font-bold font-rubik uppercase">
+
+      <TableTitle>
+      
           Applied Organizations
-        </p>
+      </TableTitle>
+      
         <div class="flex items-center">
           <sk-button2
             v-if="selected_items.length > 0"
@@ -288,163 +284,217 @@ function openUrl(url){
         </div>
       </div>
       <div class="rounded pb-6">
-      <SkTable
-        v-if="props.organizations.data.length > 0"
-        :headers="[
+        <SkTable
+          v-if="props.organizations.data.length > 0"
+          :headers="[
+            '',
+            'Certificate',
+          'Document Information',
+          'Application Process Status',
           '',
-          'Certificate',
-          'Organization Name',
-          'Campus Adviser ',
-          ' School Year',
-          ' Requirements &  attachment',
-          ' Application Process Status',
-          
-
-          '',
-        ]"
-      >
-        <tr
-          class="divide-x divide-gray-200"
-          v-for="item in props.organizations.data"
-          :key="item"
+            ]"
         >
-          <Tcell
-            :c="'whitespace-nowrap align-center text-center text-sm items-center  font-medium text-gray-900 align-top pt-2'"
+          <tr
+            class="divide-x divide-gray-200"
+            v-for="item in props.organizations.data"
+            :key="item"
           >
-            <input
-              v-model="selected_items"
-              :value="item.id"
-              type="checkbox"
-              class="h-4 w-4 accent-green-600 text-white rounded border-gray-200"
-            />
-          </Tcell>
-              <Tcell
-            :c="'whitespace-nowrap align-center text-center text-sm items-center  font-medium text-gray-900 align-top pt-2'"
-          >
-            <div
-              @click="generateCertificate(item)"
-              class="flex justify-center relative cursor-pointer hover:scale-105 transition-all ease-in-out"
-              v-if="item.certificate != null"
+            <Tcell
+              :c="'whitespace-nowrap align-center text-center text-sm items-center  font-medium text-gray-900 align-top pt-2'"
             >
-              <!-- <div class="absolute top-0 left-5">
-                <i class="fa-solid fa-award text-2xl gold"></i>
-              </div> -->
+              <input
+                v-model="selected_items"
+                :value="item.id"
+                type="checkbox"
+                class="h-4 w-4 accent-green-600 text-white rounded border-gray-200"
+              />
+            </Tcell>
+             <Tcell
+              :c="'whitespace-nowrap align-center text-center text-sm items-center  font-medium text-gray-900 align-top pt-2'"
+            >
               <div
-                class="absolute top-6 flex items-center justify-center rounded-full p-2"
+                @click="generateCertificate(item)"
+                class="flex justify-center relative cursor-pointer hover:scale-105 transition-all ease-in-out"
+                v-if="item.certificate != null"
               >
-                <svg
-                  class="fill-current w-8 h-8 mr-2"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z" />
-                </svg>
-              </div>
-              <div class="w-36 h-36">
-                <img
-                  src="/assets/images/certificates/template2.png "
-                  alt="logo"
-                  class="object-fill"
-                />
-              </div>
-            </div>
-            <div class="flex justify-center relative" v-else>
-              <div class="absolute top-0 right-5"></div>
-              <div class="w-36 h-36 flex items-center justify-center">
-                NONE
-                <!-- <img src="/assets/images/certificates/template2.png "  alt="logo" class="object-fill"> -->
-              </div>
-            </div>
-          </Tcell>
-          <Tcell class="uppercase align-top pt-2"> {{ item.name }} </Tcell>
-
-          <Tcell class="uppercase align-top pt-2 "> {{ item.campus_adviser.user != null ?  item.campus_adviser.user.first_name + ' '  + item.campus_adviser.user.last_name  : 'None'}}  </Tcell>
-          <Tcell class="uppercase align-top pt-2">     {{  item.campus_adviser.school_year != null ? 'SY.' +  item.campus_adviser.school_year.from + ' - ' + item.campus_adviser.school_year.to  : 'None'}} </Tcell> 
-
-          
-          <Tcell class="align-top pt-2 whitespace-normal">
-            <div>
-              <div
-                class="truncate text-sm font-medium text-gray-900 uppercase flex items-center"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  class="w-5 h-5 mr-2"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M5.625 1.5H9a3.75 3.75 0 013.75 3.75v1.875c0 1.036.84 1.875 1.875 1.875H16.5a3.75 3.75 0 013.75 3.75v7.875c0 1.035-.84 1.875-1.875 1.875H5.625a1.875 1.875 0 01-1.875-1.875V3.375c0-1.036.84-1.875 1.875-1.875zM9.75 14.25a.75.75 0 000 1.5H15a.75.75 0 000-1.5H9.75z"
-                    clip-rule="evenodd"
-                  />
-                  <path
-                    d="M14.25 5.25a5.23 5.23 0 00-1.279-3.434 9.768 9.768 0 016.963 6.963A5.23 5.23 0 0016.5 7.5h-1.875a.375.375 0 01-.375-.375V5.25z"
-                  />
-                </svg>
-
-                Requirements
-              </div>
-
-              <div class="mt-1 py-1" v-if="item.organization_requirements.length > 0">
-                <aside class="" v-for="og in item.organization_requirements" :key="og">
-                  <li class="text-xs">
-                    {{ og.requirement.name }}
-                  </li>
-                </aside>
-              </div>
-
-              <div class="mt-2">
                 <div
-                  class="truncate text-sm font-medium text-gray-900 uppercase flex items-center"
+                  class="absolute top-4 flex items-center justify-center rounded-full p-2"
                 >
+                  <div class="rounded-full h-10 w-10 flex items-center justify-center bg-gray-700 shadow">
                   <svg
+                    class="fill-current w-5 h-5  text-white  "
                     xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    class="w-5 h-5 mr-2"
+                    viewBox="0 0 20 20"
                   >
-                    <path
-                      fill-rule="evenodd"
-                      d="M10.5 3.75a6 6 0 00-5.98 6.496A5.25 5.25 0 006.75 20.25H18a4.5 4.5 0 002.206-8.423 3.75 3.75 0 00-4.133-4.303A6.001 6.001 0 0010.5 3.75zm2.25 6a.75.75 0 00-1.5 0v4.94l-1.72-1.72a.75.75 0 00-1.06 1.06l3 3a.75.75 0 001.06 0l3-3a.75.75 0 10-1.06-1.06l-1.72 1.72V9.75z"
-                      clip-rule="evenodd"
-                    />
+                    <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z" />
                   </svg>
-
-                  Uploaded
+                  </div>
                 </div>
-                <div>
-                  <aside class="" v-for="og in item.organization_requirements" :key="og">
-                    <div class="mt-2" v-if="og.file.length > 0">
-                      <div class="">
-                        <p class="mb-1 px-2"></p>
-                        <FileViewLink
-                          :href="file.file_url"
-                          target="_blank"
-                          class="mb-1"
-                          v-for="file in og.file"
-                          :key="file"
-                          :file="file"
-                        >
-                          {{ file.file_name }}
-                        </FileViewLink>
-                      </div>
-                    </div>
-                  </aside>
+                <div class="w-36 h-36">
+                  <img
+                    src="/assets/images/certificates/template2.png "
+                    alt="logo"
+                    class="object-fill"
+                  />
                 </div>
               </div>
-
-                <div
-                  @click="viewRemarks(item)"
-                  class="cursor-pointer bg-gradient-to-r hover:scale-95 transition-all ease-in-out from-rose-500 via-red-500 to-pink-500 text-white rounded py-2 text px-1 mr-2 mt-4"
-                  v-if="item.remarks.length > 0"
-                >
-                  <div class="truncate text-sm font-medium uppercase flex items-center">
+              <div class="flex justify-center relative" v-else>
+                <div class="absolute top-0 right-5"></div>
+                <div class="w-36 h-36 flex items-center justify-center border ro">
+                  <img src="/assets/placeholder.png" alt="logo" class="object-fill" />
+                </div>
+              </div>
+            </Tcell>
+            <Tcell class="align-top">
+              <aside class="whitespace-normal">
+                <div class="flex items-center mb-2 justify-end">
+                  <p class="text-sm uppercase font-medium px-3 text-gray-600">Details</p>
+                  <div class="inline-block rounded-full p-2 bg-blue-50 text-blue-400">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
                       fill="currentColor"
-                      class="w-5 h-5 mr-2"
+                      class="w-6 h-6"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M6.32 2.577a49.255 49.255 0 0111.36 0c1.497.174 2.57 1.46 2.57 2.93V21a.75.75 0 01-1.085.67L12 18.089l-7.165 3.583A.75.75 0 013.75 21V5.507c0-1.47 1.073-2.756 2.57-2.93z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div class="border-b pb-3">
+                  <div class="px-2 mb-2">
+                    <p class="text-gray-600 leading-5 uppercase text-sm">
+                      {{ item.name }}
+                    </p>
+                    <p class="text-xs min-sk-w-t text-gray-500 leading-4">
+                      ( Organizaiton name )
+                    </p>
+                  </div>
+                  <div class="px-2 mb-2">
+                    <p class="text-gray-600 leading-5 uppercase text-sm">
+                      {{
+                        item.campus_adviser.user != null
+                          ? item.campus_adviser.user.first_name +
+                            " " +
+                            item.campus_adviser.user.last_name
+                          : "None"
+                      }}
+                    </p>
+                    <p class="text-xs min-sk-w-t text-gray-500 leading-4">
+                      ( Campus adviser)
+                    </p>
+                  </div>
+                  <div class="px-2 mb-2">
+                    <p class="text-gray-600 leading-5 uppercase text-sm">
+                      {{
+                        item.campus_adviser.school_year != null
+                          ? item.campus_adviser.school_year.from +
+                            " - " +
+                            item.campus_adviser.school_year.to
+                          : "None"
+                      }}
+                    </p>
+                    <p class="text-xs min-sk-w-t text-gray-500 leading-4">
+                      ( School Year )
+                    </p>
+                  </div>
+                </div>
+
+                <div class="mt-3 border-b pb-3">
+                  <div class="flex items-center mb-2 justify-end">
+                    <p class="text-sm uppercase font-medium text-gray-600">
+                      Requirements
+                    </p>
+                    <div
+                      class="inline-block rounded-full p-2 bg-emerald-50 text-emerald-400 ml-2"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        class="w-6 h-6"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M7.502 6h7.128A3.375 3.375 0 0118 9.375v9.375a3 3 0 003-3V6.108c0-1.505-1.125-2.811-2.664-2.94a48.972 48.972 0 00-.673-.05A3 3 0 0015 1.5h-1.5a3 3 0 00-2.663 1.618c-.225.015-.45.032-.673.05C8.662 3.295 7.554 4.542 7.502 6zM13.5 3A1.5 1.5 0 0012 4.5h4.5A1.5 1.5 0 0015 3h-1.5z"
+                          clip-rule="evenodd"
+                        />
+                        <path
+                          fill-rule="evenodd"
+                          d="M3 9.375C3 8.339 3.84 7.5 4.875 7.5h9.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-9.75A1.875 1.875 0 013 20.625V9.375zm9.586 4.594a.75.75 0 00-1.172-.938l-2.476 3.096-.908-.907a.75.75 0 00-1.06 1.06l1.5 1.5a.75.75 0 001.116-.062l3-3.75z"
+                          clip-rule="evenodd"
+                        />git
+                      </svg>
+                    </div>
+                  </div>
+
+                  <div v-if="item.organization_requirements.length > 0">
+                    <p
+                      class="text-sm min-sk-w-t text-gray-600 leading-5 mb-1"
+                      v-for="(og, index) in item.organization_requirements"
+                      :key="og"
+                    >
+                      <span class="mx-1 normal"> {{ index + 1 }}. </span>
+                      <span class=""> {{ og.requirement.name }} </span>
+                    </p>
+                  </div>
+                </div>
+              </aside>
+
+              <aside class="mt-2">
+                <div class="flex items-center mb-2 justify-end">
+                  <p class="text-sm uppercase font-medium text-gray-600">Files</p>
+                  <div
+                    class="inline-block rounded-full p-2 bg-purple-50 text-purple-400 ml-2"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      class="w-6 h-6"
+                    >
+                      <path
+                        d="M19.906 9c.382 0 .749.057 1.094.162V9a3 3 0 00-3-3h-3.879a.75.75 0 01-.53-.22L11.47 3.66A2.25 2.25 0 009.879 3H6a3 3 0 00-3 3v3.162A3.756 3.756 0 014.094 9h15.812zM4.094 10.5a2.25 2.25 0 00-2.227 2.568l.857 6A2.25 2.25 0 004.951 21H19.05a2.25 2.25 0 002.227-1.932l.857-6a2.25 2.25 0 00-2.227-2.568H4.094z"
+                      />
+                    </svg>
+                  </div>
+                </div>
+
+                <div class="border-b mb-1">
+                  <div
+                    class="whitespace-normal mb-1"
+                    v-for="og in item.organization_requirements"
+                    :key="og"
+                  >
+                    <div v-if="og.file.length > 0">
+    
+                      <div v-for="file in og.file" :key="file" :file="file">
+                        <FileViewLink :href="file.file_url" target="_blank" class="mb-1">
+                          {{ file.file_name }}
+                        </FileViewLink>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </aside>
+            </Tcell>
+
+            <Tcell colspan="1 " class="sk-th-min-w">
+              <aside
+                @click="viewRemarks(item)"
+                  v-if="item.remarks.length > 0"
+                class="whitespace-normal border-b pb-3 transition-all ease-out hover:scale-105 rounded mx-2 text-red-400 hover:bg-rose-400 hover:text-white cursor-pointer p-2"
+              >
+                <div class="flex items-center mb-2 justify-center">
+                  <div class="inline-block rounded-full">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      class="w-6 h-6"
                     >
                       <path
                         fill-rule="evenodd"
@@ -452,275 +502,84 @@ function openUrl(url){
                         clip-rule="evenodd"
                       />
                     </svg>
-                    Comments {{ item.remarks.length }}
                   </div>
                 </div>
-            </div>
-          </Tcell>
-          <Tcell class="align-top pt-2">
-            <div class="mb-1 border py-2 px-2 mr-4 rounded">
-              <p class="truncate text-sm t text-gray-900 uppercase">SBO ADVISER</p>
-              <div class="px-2">
-                <div class="mb-0.5">
-                  <status-card
-                    v-if="
-                      item.organization_process.campus_adviser_approved_status ===
-                      'waiting for review'
-                    "
-          :c="'cursor-pointer bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white'"
-                    class="inline-flex items-center"
-                  >
-                    <timeSvg />
 
-                    {{ item.organization_process.campus_adviser_approved_status }}
-                  </status-card>
-                </div>
-                <div class="mb-0.5">
-                  <status-card
-                    v-if="
-                      item.organization_process.campus_adviser_approved_status ===
-                      'approved'
-                    "
-                              :c="'cursor-pointer bg-gradient-to-r from-green-700 via-green-600 to-green-500 text-white'"
-                    class="inline-flex items-center"
-                  >
-                    <approveSvg />
+                <p class="text-center uppercase">{{ item.remarks.length > 1 ? 'Comments'  : 'Comment'}} {{ item.remarks.length }}</p>
+              </aside>
 
-                    {{ item.organization_process.campus_adviser_approved_status }}
-                  </status-card>
+              <aside class="whitespace-normal mb-2">
+                <div class="flex items-center mb-2 justify-end">
+                  <p class="text-sm uppercase font-medium px-3 text-gray-600">
+                    Approvals
+                  </p>
+                  <div class="inline-block rounded-full p-2 bg-orange-50 text-orange-300">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      class="w-6 h-6"
+                    >
+                      <path
+                        d="M12.378 1.602a.75.75 0 00-.756 0L3 6.632l9 5.25 9-5.25-8.622-5.03zM21.75 7.93l-9 5.25v9l8.628-5.032a.75.75 0 00.372-.648V7.93zM11.25 22.18v-9l-9-5.25v8.57a.75.75 0 00.372.648l8.628 5.033z"
+                      />
+                    </svg>
+                  </div>
                 </div>
 
-                <div class="mb-0.5">
-                  <status-card
-                    v-if="
-                      item.organization_process.campus_adviser_approved_status ===
-                      'denied'
-                    "
-                                     :c="'cursor-pointer bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white'"
-                    class="inline-flex items-center"
-                  >
-                    <deniedSvg />
+                <div class="mt-2 rounded-lg bg-gray-200 p-2">
+                  <div class="p-4 bg-white rounded">
+                    <p class="text-gray-600 leading-5 uppercase text-sm text-center">
+                      Campus Adviser
+                    </p>
 
-                    Denied
-                  </status-card>
-                </div>
+                    <div class="mt-2 text-center">
+                      <ApproveCard :status="item.organization_process.campus_adviser_approved_status"/>
 
-                <!-- <div class="mb-0.5">
-                  <status-card
-                    :c="[
-                      item.organization_process.campus_adviser_endorsed_status === 'true'
-                        ? 'bg-green-100 text-green-600'
-                        : 'bg-gray-50 text-gray-400',
-                    ]"
-                    class="inline-flex items-center"
-                  >
-                    <checkedSvg />
 
-                    {{
-                      item.organization_process.campus_adviser_endorsed_status === "true"
-                        ? "Endorsed"
-                        : "Not endorsed yet"
-                    }}
-                  </status-card>
-                </div> -->
-              </div>
-            </div>
-            <div class="mb-1 border py-2 px-2 mr-4 rounded">
-              <p class="truncate text-sm t text-gray-900 uppercase">Campus Director</p>
-
-              <div class="px-2">
-                <div class="mb-0.5">
-                  <status-card
-                    v-if="
-                      item.organization_process.campus_director_approved_status ===
-                      'waiting for review'
-                    "
-                                                        :c="'cursor-pointer bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white'"
-
-                    class="inline-flex items-center"
-                  >
-                    <timeSvg />
-
-                    {{ item.organization_process.campus_director_approved_status }}
-                  </status-card>
-                </div>
-                <div class="mb-0.5">
-                  <status-card
-                    v-if="
-                      item.organization_process.campus_director_approved_status ===
-                      'approved'
-                    "
-                             :c="'cursor-pointer bg-gradient-to-r from-green-700 via-green-600 to-green-500 text-white'" 
-                    class="inline-flex items-center"
-                  >
-                    <approveSvg />
-
-                    {{ item.organization_process.campus_director_approved_status }}
-                  </status-card>
-                </div>
-
-                <div class="mb-0.5">
-                  <status-card
-                    v-if="
-                      item.organization_process.campus_director_approved_status ===
-                      'denied'
-                    "
-                                     :c="'cursor-pointer bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white'"
-                    class="inline-flex items-center"
-                  >
-                    <deniedSvg />
-
-                    Denied
-                  </status-card>
-                </div>
-
-                <!-- <div class="mb-0.5">
-                  <status-card
-                    :c="[
-                      item.organization_process.campus_director_endorsed_status === 'true'
-                        ? 'bg-green-100 text-green-600'
-                        : 'bg-gray-50 text-gray-400',
-                    ]"
-                    class="inline-flex items-center"
-                  >
-                    <checkedSvg />
-
-                    {{
-                      item.organization_process.campus_director_endorsed_status === "true"
-                        ? "Endorsed"
-                        : "Not endorsed yet"
-                    }}
-                  </status-card>
-                </div> -->
-              </div>
-            </div>
-            <div class="mb-1 border py-2 px-2 mr-4 rounded">
-              <p class="truncate text-sm t text-gray-900 uppercase">Osas</p>
-              <div class="px-2">
-                <div class="mb-0.5">
-                  <status-card
-                    v-if="
-                      item.organization_process.osas_approved_status ===
-                      'waiting for review'
-                    "
-          :c="'cursor-pointer bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white'"
-
-                    class="inline-flex items-center"
-                  >
-                    <timeSvg />
-
-                    {{ item.organization_process.osas_approved_status }}
-                  </status-card>
-                </div>
-                <div class="mb-0.5">
-                  <status-card
-                    v-if="item.organization_process.osas_approved_status === 'approved'"
-                                :c="'cursor-pointer bg-gradient-to-r from-green-700 via-green-600 to-green-500 text-white'"
-
-                    class="inline-flex items-center"
-                  >
-                    <approveSvg />
-
-                    {{ item.organization_process.osas_approved_status }}
-                  </status-card>
-                </div>
-
-                <div class="mb-0.5">
-                  <status-card
-                    v-if="item.organization_process.osas_approved_status === 'denied'"
-                                     :c="'cursor-pointer bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white'"
-                    class="inline-flex items-center"
-                  >
-                    <deniedSvg />
-
-                    Denied
-                  </status-card>
-                </div>
-
-                <!-- <div class="mb-0.5">
-                  <status-card
-                    :c="[
-                      item.organization_process.osas_endorsed_status === 'true'
-                        ? 'bg-green-100 text-green-600'
-                        : 'bg-gray-50 text-gray-400',
-                    ]"
-                    class="inline-flex items-center"
-                  >
-                    <checkedSvg />
-
-                    {{
-                      item.organization_process.osas_endorsed_status === "true"
-                        ? "Endorsed"
-                        : "Not endorsed yet"
-                    }}
-                  </status-card>
-                </div> -->
-              </div>
-            </div>
-
-            <div class="mb-1 border py-2 px-2 mr-4 rounded">
-              <p class="truncate text-sm t text-gray-900 uppercase">Vpa</p>
-              <div class="px-2">
-                <div class="mb-0.5">
-                  <status-card
-                    v-if="
-                      item.organization_process.vpa_approved_status ===
-                      'waiting for review'
-                    "
-
-                              :c="'cursor-pointer bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 text-white'"
-
-                    class="inline-flex items-center"
-                  >
-                    <timeSvg />
-
-                    {{ item.organization_process.vpa_approved_status }}
-                  </status-card>
-                </div>
-                <div class="mb-0.5">
-                  <status-card
-                    v-if="item.organization_process.vpa_approved_status === 'approved'"
-                              :c="'cursor-pointer bg-gradient-to-r from-green-700 via-green-600 to-green-500 text-white'"
-                    class="inline-flex items-center"
-                  >
-                    <approveSvg />
-
-                    {{ item.organization_process.vpa_approved_status }}
-                  </status-card>
-                </div>
-
-                <div class="mb-0.5">
-                  <status-card
-                    v-if="item.organization_process.vpa_approved_status === 'denied'"
-                                     :c="'cursor-pointer bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white'"
-                    class="inline-flex items-center"
-                  >
-                    <deniedSvg />
-
-                    Denied
-                  </status-card>
-                </div>
-              </div>
-            </div>
-          </Tcell>
-          <!-- <Tcell class="align-top pt-2">
-            <div> 
-
-                    <div class="flex space-x-3">
-                      <div>
-                        <div class="text-sm">
-                          <a href="#" class="font-medium text-gray-900">Leslie Alexander</a>
-                        </div>
-                        <div class="mt-1 text-sm text-gray-700 whitespace-normal w-72">
-                          <p>Ducimus quas delectus ad maxime totam doloribus reiciendis ex. Tempore dolorem maiores. Similique voluptatibus tempore non ut.</p>
-                        </div>
+                     <EndorsementCard :status=" item.organization_process.campus_adviser_endorsed_status"/>
                      
-                      </div>
-                    </div>
-            </div>
-         </Tcell> -->
+                    </div>  
+                  </div>
+                </div>
+                <div class="mt-2 rounded-lg bg-gray-200 p-2">
+                  <div class="p-4 bg-white rounded">
+                    <p class="text-gray-600 leading-5 uppercase text-sm text-center">
+                      Campus Director
+                    </p>
 
-          <Tcell class="flex items-center justify-center align-top pt-2">
+                    <div class="mt-2 text-center">
+                        <ApproveCard :status=" item.organization_process.campus_director_approved_status" />
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-2 rounded-lg bg-gray-200 p-2">
+                  <div class="p-4 bg-white rounded">
+                    <p class="text-gray-600 leading-5 uppercase text-sm text-center">
+                     Osas
+                    </p>
+
+                    <div class="mt-2 text-center">
+                      <ApproveCard :status="item.organization_process.osas_approved_status" />
+
+                       <EndorsementCard :status=" item.organization_process.osas_endorsed_status"/>
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-2 rounded-lg bg-gray-200 p-2">
+                  <div class="p-4 bg-white rounded">
+                    <p class="text-gray-600 leading-5 uppercase text-sm text-center">
+                      VPAA
+                    </p>
+
+                    <div class="mt-2 text-center">
+                      <ApproveCard :status="item.organization_process.vpa_approved_status" />
+                    </div>
+                  </div>
+                </div>
+              </aside>
+            </Tcell>
+           <Tcell class="flex items-center justify-center ">
             <SkButtonGray
               :disabled="selected_items.length > 0"
               class="max-w-40 mr-2"
@@ -742,11 +601,12 @@ function openUrl(url){
               <span class=""> Manage </span>
             </SkButtonGray>
           </Tcell>
-        </tr>
-      </SkTable>
-      <EmptyCard class="flex items-center justify-center h-64" v-else />
-      
-       <div class="mt-6 bg-white" v-if="$props.organizations.links.length > 0">
+          </tr>
+       
+        </SkTable>
+        <EmptyCard class="flex items-center justify-center h-64" v-else />
+
+        <div class="mt-6 bg-white" v-if="$props.organizations.links.length > 0">
           <Pagination
             v-if="$props.organizations.data.length > 0"
             class="block"
@@ -754,8 +614,7 @@ function openUrl(url){
           />
         </div>
       </div>
-  
-      </div>
+    </div>
 
     <sk-dialog :transition="'slide-down'" :persistent="true" :isOpen="show_form">
       <main class="p-2">
@@ -779,7 +638,6 @@ function openUrl(url){
 
           <div class="mt-1">
             <Authfield1 type="email" autocomplete="email" v-model="form.name" />
-            <!-- <input id="email" v-model="form.email" name="email" type="email" autocomplete="email"  class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"> -->
           </div>
           <p class="text-red-700 text-sm" v-if="$page.props.errors.name">
             {{ $page.props.errors.name }}
@@ -838,8 +696,8 @@ function openUrl(url){
           </SkDeleteButton>
           <SkButtonGray @click="confirm_delete = false" :c="'w-24'"> No </SkButtonGray>
         </div>
-      </main>
-    </sk-dialog>
+      </main> </sk-dialog
+    >a
 
     <sk-dialog
       :transition="'slide-down'"
@@ -848,75 +706,74 @@ function openUrl(url){
       :isOpen="show_manage_form"
     >
       <main class="p-2 form-max-h overflow-y-auto">
-          <div class="">
-            <label for="email" class="block te font-medium text-gray-700"
-              >Organization Name</label
-            >
+        <div class="">
+          <label for="email" class="block te font-medium text-gray-700"
+            >Organization Name</label
+          >
 
-            <div class="mt-">
-              <Authfield1 type="email" autocomplete="email" v-model="form.name" />
-              <!-- <input id="email" v-model="form.email" name="email" type="email" autocomplete="email"  class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"> -->
-            </div>
-            <p class="text-red-700 text-sm" v-if="$page.props.errors.name">
-              {{ $page.props.errors.name }}
-            </p>
+          <div class="mt-">
+            <Authfield1 type="email" autocomplete="email" v-model="form.name" />
           </div>
+          <p class="text-red-700 text-sm" v-if="$page.props.errors.name">
+            {{ $page.props.errors.name }}
+          </p>
+        </div>
 
-          <p class="mt-2 uppercase leading-8 text-black font-medium">Requirements</p>
-          <div v-if="selected_item.requirements.length > 0">
-            <!-- {{ selected_item.organization_requirements }} -->
-            <aside
-              class="shadow-md my-1 mb-2 border rounded-md p-2 bg-gradient-to-r from-gray-50 to-gray-100 "
-              v-for="r in selected_item.organization_requirements"
-              :key="r"
-            >
-              <p class="text-gray-900  capitalize">{{ r.name }}</p>
-              <div class=" ">
-                <p class="mb-2 t text-gray-800 capitalize ">
-                  {{ r.requirement.name }}
-                </p>
-                <div
-                  v-if="r.file.length > 0"
-                  class="bg-gradient-to-r from-green-600 to-green-600 py-1 px-2 rounded-lg"
-                >
-                  <!-- {{ r.file  }} -->
-                  <div class="my=2">
-                    <span v-for="file in r.file" :key="file">
-                      <!-- <span class="badge badge-primary" > {{ file.file_name }}  </span> -->
-                      <FileCard @click="deleteFile(file)" class="mt-1 mr-1">
-                        {{ file.file_name }}</FileCard
-                      >
-                    </span>
-                  </div>
-                  <!-- {{ r.organization_requirements }} -->
+        <p class="mt-2 uppercase leading-8 text-black font-medium">Requirements</p>
+        <div v-if="selected_item.requirements.length > 0">
+          <aside
+            class="shadow-md my-1 mb-2 border rounded-md p-2 bg-gradient-to-r from-gray-50 to-gray-100"
+            v-for="r in selected_item.organization_requirements"
+            :key="r"
+          >
+            <p class="text-gray-900 capitalize">{{ r.name }}</p>
+            <div class=" ">
+              <p class="mb-2 t text-gray-800 capitalize">
+                {{ r.requirement.name }}
+              </p>
+              <div
+                v-if="r.file.length > 0"
+                class="bg-gradient-to-r from-green-600 to-green-600 py-1 px-2 rounded-lg"
+              >
+                <div class="my=2">
+                  <span v-for="file in r.file" :key="file">
+                    <FileCard @click="deleteFile(file)" class="mt-1 mr-1">
+                      {{ file.file_name }}</FileCard
+                    >
+                  </span>
                 </div>
-
-                <div v-else class="mt-2 bg-gray-100 px-2 text-sm text-gray-600 rouned-lg inline-block">
-                  No File
-                </div>
-
-                <FileUpload
-                  @uploadSuccess="handleManageForm"
-                  @uploadStart="is_updating = true"
-                  @uploadFinish="handleManageForm"
-                  :model_id="r.id"
-                />
               </div>
-            </aside>
-          </div>
-        
 
-        
+              <div
+                v-else
+                class="mt-2 bg-gray-100 px-2 text-sm text-gray-600 rouned-lg inline-block"
+              >
+                No File
+              </div>
+
+              <FileUpload
+                @uploadSuccess="handleManageForm"
+                @uploadStart="is_updating = true"
+                @uploadFinish="handleManageForm"
+                :model_id="r.id"
+              />
+            </div>
+          </aside>
+        </div>
       </main>
       <div class="mt-5 flex items-center justify-end">
-          <SkButtonGray class="w-40 mr-4" @click="show_manage_form = false">
-            Close
-          </SkButtonGray>
+        <SkButtonGray class="w-40 mr-4" @click="show_manage_form = false">
+          Close
+        </SkButtonGray>
 
-          <SkButton :c="'w-40 sk-bg-green text-white'" @click="update" :processing="form.processing">
-            Update
-          </SkButton>
-        </div>
+        <SkButton
+          :c="'w-40 sk-bg-green text-white'"
+          @click="update"
+          :processing="form.processing"
+        >
+          Update
+        </SkButton>
+      </div>
     </sk-dialog>
   </adminlayout>
 
@@ -933,82 +790,51 @@ function openUrl(url){
   </SkDialog>
 
 
-
-<SkDialog :persistent="true" :isOpen="show_remarks" :width="'540'">
-
-
-    
-    <main class="form-max-h"   >
-    <div  v-if="selected_item !=null">
-  
-    <div v-if="selected_item.remarks.length > 0">
-      <div
-        class="border-b divide-y divide-gray-300"
-        v-for="remark in selected_item.remarks"
-        :key="remark"
-      >
-
-      <div class="flex py-4">
-    <div class="ml-3">
-    <div class="">
-    <DateCard :text="remark.created_at" />
-    
+   <SkDialog :persistent="true" :isOpen="is_processing" :width="'260'">
+    <div class="flex items-center justify-center">
+      <w-progress
+        :size="'24'"
+        class="text-green-900 mr-6"
+        color="green"
+        circle
+      ></w-progress>
+      <p class="">Generating Please wait ...</p>
     </div>
-
-      <p class="uppercase text-sm font-medium text-gray-900"> From: {{ remark.user_sender.first_name }} - {{ remark.user_sender.last_name }}</p>
-      <p class="text-sm text-gray-500">  {{ remark.body }}</p>
-    </div>
-  </div>
-        
-
-         
-          
-
-      
-      </div>
-      </div>
-      <div class="mt-5">
-        <SkButtonGray class="w-40 mr-4" @click="show_remarks = false">
-          Close
-        </SkButtonGray>
-      </div>
-      </div>
-    </main>
   </SkDialog>
-<!-- 
 
-  <SkDialog :persistent="true" :isOpen="show_remarks" :width="'260'">
-   <div class="mt-5 flex items-center justify-end">
-  <div v-if="selected_item.remarks.length > 0">
 
- <div
-        class="flex items-center space-x-4 border-b mb-1 py-2"
-        v-for="remark in selected_item.remarks"
-        :key="remark"
-      >
-        <div class="min-w-0 flex-1">
-          <p class="truncate text-xs font-medium text-gray-900">
-            <DateCard :text="remark.created_at" />
-          </p>
+  <SkDialog :persistent="true" :isOpen="show_remarks" :width="'540'">
+    <main class="form-max-h">
+      <div v-if="selected_item != null">
+        <div v-if="selected_item.remarks.length > 0">
+          <div
+            class="border-b divide-y divide-gray-300"
+            v-for="remark in selected_item.remarks"
+            :key="remark"
+          >
+            <div class="flex py-4">
+              <div class="ml-3">
+                <div class="">
+                  <DateCard :text="remark.created_at" />
+                </div>
 
-          <p>
-                {{ remark.body }}
-          </p>
-          
+                <p class="uppercase text-sm font-medium text-gray-900">
+                  From: {{ remark.user_sender.first_name }} -
+                  {{ remark.user_sender.last_name }}
+                </p>
+                <p class="text-sm text-gray-500">{{ remark.body }}</p>
+              </div>
+            </div>
+          </div>
         </div>
-        
-      </div>
-      <div class="text-center py-2" >  No Remarks</div>
-     </div>
+        <div class="mt-5">
           <SkButtonGray class="w-40 mr-4" @click="show_remarks = false">
             Close
           </SkButtonGray>
-
-   
         </div>
-  </SkDialog>  -->
-  
-  
+      </div>
+    </main>
+  </SkDialog>
 </template>
 
 <script>

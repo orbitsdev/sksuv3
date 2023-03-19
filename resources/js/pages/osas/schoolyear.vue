@@ -252,7 +252,7 @@ export default {
         </section>
         <div class="rounded mt-4 h-40 bg-gradient-to-r"></div>
         <div class="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
-          <SkButtonGray @click="is_open = false"> Cancel </SkButtonGray>
+          <SkButtonGray @click="is_open = false"> Close </SkButtonGray>
           <SkButton @click="saveSchoolYear" :processing="form.processing"> Save</SkButton>
         </div>
       </main>

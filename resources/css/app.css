@@ -69,3 +69,13 @@
   .gold{
     color: #e15819;
   }
+
+ .min-sk-w-t{
+
+  min-width: 170px;
+
+  }
+
+  .sk-th-min-w{
+    min-width: 300px;
+  }

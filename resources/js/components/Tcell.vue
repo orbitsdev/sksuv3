@@ -1,10 +1,13 @@
+
+
+
 <script setup>
 import { defineProps } from "vue";
 
 const props = defineProps({
   c: {
     type: String,
-    default: "whitespace-nowrap py-2 pl-4 pr-6 text-sm text-gray-500 sm:pr-0",
+    default: "whitespace-nowrap  text-sm text-gray-500 p-2 ",
   },
 });
 </script>

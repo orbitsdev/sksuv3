@@ -200,10 +200,6 @@ class PublicController extends Controller
 
         $filename = "accreditation-certificate";
         $path = 'assets/generatedcertificates/';
-<<<<<<< HEAD
-=======
-
->>>>>>> main
 
 
         $img->save(public_path($path . $filename . '.png'));    

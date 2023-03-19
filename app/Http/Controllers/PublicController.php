@@ -226,7 +226,7 @@ class PublicController extends Controller
 
 
         $filename = "accreditation-certificate";
-        $path = 'assets/images/certificates/';
+        $path = 'assets/generatedcertificates/';
 
 
 

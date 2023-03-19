@@ -65,33 +65,6 @@ class PublicController extends Controller
 
         
 
-
-        // return response()->json([$request->all()]);
-        // $img = Image::make(public_path("assets/images/certificates/template2.png"));
-        // $font_family =  public_path("assets/fonts/helvetica/Helvetica-Bold.ttf");
-    
-        // $filename = "accreditation-certificate";
-        // $path = 'assets/images/certificates/';
-    
-        // $img->save(public_path($path . $filename . '.png'));
-    
-        // $file = public_path($path . $filename . '.png');
-        // if (file_exists($file)) {
-        //     $headers = [
-        //         'Content-Type' => 'image/png',
-        //     ];
-        //     return response()->download($file, $filename, $headers);
-        // }
-        // dd($request->all());
-        // $validated = $request->validate([
-        //     'usg_adviser' => 'required',
-        //     'director_affair' => 'required',
-        //     'held_location' => 'required',
-            
-        // ]);
-
-        
-        // return response()->json([$organization->name]);
         
         
          $organization = Organization::find($request->id);
@@ -227,15 +200,14 @@ class PublicController extends Controller
 
         $filename = "accreditation-certificate";
         $path = 'assets/generatedcertificates/';
+<<<<<<< HEAD
+=======
+
+>>>>>>> main
 
 
-
+        $img->save(public_path($path . $filename . '.png'));    
         
-        // Storage::disk('public')->put($path . $filename . '.png', $img->stream());
-
-        // $url = route('osas.generatecerticate.certificate.generatefile', ['path' => $filename]);
-
-        $img->save(public_path($path . $filename . '.png'));
 
         $file = public_path($path . $filename . '.png');
 
@@ -247,13 +219,7 @@ class PublicController extends Controller
             return response()->download($file, $filename, $headers);
         }
 
-        if (file_exists($file)) {
-                $headers = [
-                    'Content-Type' => 'image/png',
-                ];
-                return response()->download($file, $filename, $headers);
-            }
-
+      
 
 
         // if (file_exists($file)) {

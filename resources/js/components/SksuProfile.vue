@@ -20,11 +20,49 @@ import { usePage } from '@inertiajs/vue3'
 
 import { router } from "@inertiajs/core";
 const isOpen = ref(false);
-
 const is_singning_out = ref(false);
+const   isNotif = ref(false);
+const   showProfileForm = ref(false);
+
+
+import { useForm } from "@inertiajs/vue3"
+
+const page = usePage();
+
+let form =  useForm({
+  first_name: '',
+  last_name: '',
+  profile: null,
+  id: null
+  
+});
 
 
 
+function showProfileFormForUpdate(){
+ 
+  form.first_name = page.props.auth.user.first_name;
+  form.last_name = page.props.auth.user.last_name;
+  form.id = page.props.auth.user.id;
+
+  showProfileForm.value = true;
+
+
+
+}
+
+function saveProfile(){
+    form.post(route('update.profile'),{
+      onSuccess: ()=>{  
+
+        showProfileForm.value = false;
+
+      },
+      onFinish: ()=>{
+      //  showProfileForm.value = false;
+      }
+    });
+}
 
 
 const closeOnClickOutside = (event) => {
@@ -37,28 +75,36 @@ const closeOnClickOutside = (event) => {
     }
   }
 };
+
+const closeNotificationOnClickOutside = (event) => {
+  if (document.getElementById("notification-dropdown").contains(event.target)) {
+
+    isNotif.value = !isNotif.value;
+  } else {
+    if (isNotif.value == true) {
+      isNotif.value = false;
+    }
+  }
+};
+
 onMounted(() => {
   document.addEventListener("click", closeOnClickOutside);
+  document.addEventListener("click", closeNotificationOnClickOutside);
 
-  // window.Echo = new Echo({
-  //       broadcaster: 'pusher',
-  //       key: import.meta.env.VITE_PUSHER_APP_KEY,
-  //       cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
-  //       forceTLS: true,
-  //   });
-
-
-  // console.log("fetching");
-  // window.Echo.private(`App.Models.User.${this.$page.props.auth.user.id}`).notification((notification) => {
-  //     console.log(notification)
-  //   })
 });
 
 
 
 onBeforeUnmount(() => {
   document.removeEventListener("click", closeOnClickOutside);
+  document.removeEventListener("click", closeNotificationOnClickOutside);
 });
+
+function toggleNotficaiton(){
+
+      isNotif.value = !isNotif.value;
+     
+  }
 
 function logout() {
   is_singning_out.value = true;
@@ -135,8 +181,8 @@ function logout() {
     
       
       <button
-      @click="isNotif = !isNotif"
-      
+      id="notification-dropdown"
+
       :class=" ['cursor-pointer flex-shrink-0 rounded-full p-1 text-cyan-200 hover:bg-white hover:bg-opacity-10 hover:text-white focus:outline-none relative ', isNotif ? 'focus:ring-2 focus:ring-white' :'' ]"
     >
      <div v-if="$page.props.unreadNotification > 0 " class="bg-red-500 flex items-center w-7 h-7 absolute -top-2  -right-0.5 z-100 justify-center text-white rounded-full text-sm"> {{ $page.props.unreadNotification }}</div>
@@ -173,10 +219,13 @@ function logout() {
           aria-haspopup="true"
         >
           <span class="sr-only">Open user menu</span>
+          <!-- {{page.props.auth.user_profile}} -->
+
+         
           <img
             class="h-8 w-8 rounded-full"
-            src="https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-            alt=""
+            :src="$page.props.auth.user.profile_image_url" 
+            alt="profileimage"
           />
         </button>
       </div>
@@ -204,6 +253,17 @@ function logout() {
         >
           {{ $page.props.auth.user.first_name }} {{ $page.props.auth.user.last_name }}
         </SksuLink>
+        <Button
+
+          @click="showProfileFormForUpdate"
+          as="button"
+          class="text-left w-full hover:scale-x-110 hover:bg-gray-200 rounded-lg transition-all ease-inoute block px-4 py-2 text-sm text-gray-700"
+          role="menuitem"
+          tabindex="-1"
+          id="user-menu-item-2"
+        >
+          Update Profile
+        </Button>
         <SksuLink
           href="#"
           as="button"
@@ -229,6 +289,45 @@ function logout() {
       <p class="">Signing out ....</p>
     </div>
   </SkDialog>
+  <SkDialog :persistent="true" :isOpen="showProfileForm" :width="'540'">
+      <form  @submit.prevent="submit" class="space-y-6">
+              <div>
+
+                <label for="first_name" class="block text-sm font-medium text-gray-700">Change Profile</label>
+                <div class="mt-1">
+                <input type="file" @input="form.profile = $event.target.files[0]" />
+                               <p class="text-red-700 text-sm" v-if="$page.props.errors.profile"> {{$page.props.errors.profile }}</p>
+
+          
+              </div>
+            
+
+
+                <label for="first_name" class="block text-sm font-medium text-gray-700">First name</label>
+                <div class="mt-1">
+                                   <Authfield1 type="text" v-model="form.first_name" />
+                </div>
+
+                <p class="text-red-700 text-sm" v-if="$page.props.errors.first_name"> {{$page.props.errors.first_name }}</p>
+              </div>
+              <div>
+                <label for="lastname" class="block text-sm font-medium text-gray-700">Last name</label>
+                <div class="mt-1">
+                   <Authfield1 type="text" v-model="form.last_name" />
+                </div>
+
+                <p class="text-red-700 text-sm" v-if="$page.props.errors.last_name"> {{$page.props.errors.last_name }}</p>
+              </div>
+              
+              
+           <div class="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
+          <SkButtonGray @click="showProfileForm = false"> Close </SkButtonGray>
+          <SkButton type="submit"  @click="saveProfile" :processing="form.processing"> Update</SkButton>
+        </div>
+
+            </form>
+
+  </SkDialog>
 </template>
 
 <script>
@@ -236,7 +335,7 @@ export default {
   data() {
     return {
       isLoading: false,
-      isNotif: false,
+    
     };
   },
 
@@ -245,11 +344,6 @@ export default {
   methods: {
 
 
-  toggleNotficaiton(){
-
-      this.isNotif = !this.isNotif;
-     
-  },
 
     logout() {
       this.isLoading = true;

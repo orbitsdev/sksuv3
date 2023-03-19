@@ -22,13 +22,16 @@
 
        
               <nav class="">
+               <div v-if="$page.props.can.isSuperAdmin">
+              <DashboardLink :href="route('superadmin.index')" :active="$page.component=== 'superadmin/index'"> Manage Osas </DashboardLink>
+               </div>
 
               <div v-if="$page.props.can.isOsas">
               <DashboardLink :href="route('schoolyear.index')" :active="$page.component=== 'osas/schoolyear'"> School Year </DashboardLink>
               <DashboardLink :href="route('campus.index')" :active="($page.component === 'osas/campusindex')"> Campus </DashboardLink>
               <DashboardLink :href="route('account.userpassword.index')" :active="($page.component === 'osas/accountpasswordindex' || $page.component === 'osas/campusadviserindex' || $page.component === 'osas/campusdirectorindex' || $page.component === 'osas/vpaindex' ) "> Accounts & Roles </DashboardLink>
               <DashboardLink :href="route('requirement.index')" :active="$page.component=== 'osas/requirementsindex' "> Requirements  </DashboardLink>
-              <DashboardLink :href="route('osas.organization.index')" :active="$page.component=== 'osas/organizationindex' "> Review Documents  </DashboardLink>
+              <DashboardLink :href="route('osas.organization.index')" :active="$page.component=== 'osas/organizationindex' "> Review  Documents  </DashboardLink>
               <DashboardLink   :href="route('osas.organization.endorsedindex')" :active="$page.component=== 'osas/endorseindex' "> Endorsed List  </DashboardLink>
               <!-- <DashboardLink :href="route('osas.generatecerticate.index')" :active="$page.component=== 'osas/generatecertificateindex' "> Generate Certificate  </DashboardLink> -->
             

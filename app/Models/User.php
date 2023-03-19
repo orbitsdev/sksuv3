@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Vpa;
+use App\Models\File;
 use App\Models\Role;
 use App\Models\Remark;
 use App\Models\Officer;
@@ -30,6 +31,7 @@ class User extends Authenticatable
         'last_name',
         'email',
         'password',
+        'profile_image_url',
     ];
     protected $guarded = [];
     /**
@@ -135,6 +137,10 @@ class User extends Authenticatable
 
     public function remark_recievers(){
         return $this->hasMany(Remark::class, 'reciever_id');
+    }
+
+    public function files(){
+        return $this->morphMany(File::class, 'fileable');
     }
 
 }

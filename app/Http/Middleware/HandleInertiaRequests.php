@@ -40,9 +40,10 @@ class HandleInertiaRequests extends Middleware
     {
         return array_merge(parent::share($request), [
 
-            'unreadNotification'=>Auth::user() ?  $request->user()->unreadNotifications()->count() : null ,
+           'unreadNotification'=>Auth::user() ?  $request->user()->unreadNotifications()->count() : null ,
            'auth'=> [
-                'user'=> Auth::user() ? Auth::user() : null
+                'user'=> Auth::user() ? Auth::user() : null,
+                // 'user_profile'=> Auth::user() ? Auth::user()->files[0] : null
            ],
             'notification'=> session('notification'),
             'flash'=> [

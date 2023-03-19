@@ -341,44 +341,44 @@ function handleManageForm() {
               class="h-4 w-4 accent-green-600 text-white rounded border-gray-200"
             /> -->
           </Tcell>
+             
+             
              <Tcell
-            :c="'whitespace-nowrap align-center text-center text-sm items-center  font-medium text-gray-900 align-top pt-2'"
-          >
-            <div
-              @click="generateCertificate(item)"
-              class="flex justify-center relative cursor-pointer hover:scale-105 transition-all ease-in-out"
-              v-if="item.certificate != null"
+              :c="'whitespace-nowrap align-center text-center text-sm items-center  font-medium text-gray-900 align-top pt-2'"
             >
-              <!-- <div class="absolute top-0 left-5">
-                <i class="fa-solid fa-award text-2xl gold"></i>
-              </div> -->
               <div
-                class="absolute top-6 flex items-center justify-center rounded-full p-2"
+                @click="generateCertificate(item)"
+                class="flex justify-center relative cursor-pointer hover:scale-105 transition-all ease-in-out"
+                v-if="item.certificate != null"
               >
-                <svg
-                  class="fill-current w-8 h-8 mr-2"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
+                <div
+                  class="absolute top-4 flex items-center justify-center rounded-full p-2"
                 >
-                  <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z" />
-                </svg>
+                  <div class="rounded-full h-10 w-10 flex items-center justify-center bg-gray-700 shadow">
+                  <svg
+                    class="fill-current w-5 h-5  text-white  "
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z" />
+                  </svg>
+                  </div>
+                </div>
+                <div class="w-36 h-36">
+                  <img
+                    src="/assets/images/certificates/template2.png "
+                    alt="logo"
+                    class="object-fill"
+                  />
+                </div>
               </div>
-              <div class="w-36 h-36">
-                <img
-                  src="/assets/images/certificates/template2.png "
-                  alt="logo"
-                  class="object-fill"
-                />
+              <div class="flex justify-center relative" v-else>
+                <div class="absolute top-0 right-5"></div>
+                <div class="w-36 h-36 flex items-center justify-center border ro">
+                  <img src="/assets/placeholder.png" alt="logo" class="object-fill" />
+                </div>
               </div>
-            </div>
-            <div class="flex justify-center relative" v-else>
-              <div class="absolute top-0 right-5"></div>
-              <div class="w-36 h-36 flex items-center justify-center">
-                NONE
-                <!-- <img src="/assets/images/certificates/template2.png "  alt="logo" class="object-fill"> -->
-              </div>
-            </div>
-          </Tcell>
+            </Tcell>
   <Tcell class="align-top">
               <aside class="whitespace-normal">
                 <div class="flex items-center mb-2 justify-end">
@@ -570,6 +570,8 @@ function handleManageForm() {
                     <div class="mt-2 text-center">
                       <ApproveCard :status="item.organization_process.osas_approved_status" />
                     </div>
+
+                     <EndorsementCard :status=" item.organization_process.osas_endorsed_status"/>
                   </div>
                 </div>
                 <div class="mt-2 rounded-lg bg-gray-200 p-2">
@@ -800,6 +802,18 @@ function handleManageForm() {
       </main>
     </sk-dialog>
   </adminlayout>
+
+   <SkDialog :persistent="true" :isOpen="is_processing" :width="'260'">
+    <div class="flex items-center justify-center">
+      <w-progress
+        :size="'24'"
+        class="text-green-900 mr-6"
+        color="green"
+        circle
+      ></w-progress>
+      <p class="">Generating Please wait ...</p>
+    </div>
+  </SkDialog>
 
   <SkDialog :persistent="true" :isOpen="is_updating" :width="'260'">
     <div class="flex items-center justify-center">

@@ -54,7 +54,7 @@ class FileController extends Controller
   public function uploadTemplate(Request $request){
 
 
- 
+    
     
     if ($request->has('file')) {
 

@@ -286,7 +286,13 @@ function openUrl(url) {
       <div class="rounded pb-6">
         <SkTable
           v-if="props.organizations.data.length > 0"
-          :headers="['', 'Certificate', 'Document Information', ' Status', '']"
+          :headers="[
+            '',
+            'Certificate',
+          'Document Information',
+          'Application Process Status',
+          '',
+            ]"
         >
           <tr
             class="divide-x divide-gray-200"
@@ -303,7 +309,7 @@ function openUrl(url) {
                 class="h-4 w-4 accent-green-600 text-white rounded border-gray-200"
               />
             </Tcell>
-            <Tcell
+             <Tcell
               :c="'whitespace-nowrap align-center text-center text-sm items-center  font-medium text-gray-900 align-top pt-2'"
             >
               <div
@@ -312,15 +318,17 @@ function openUrl(url) {
                 v-if="item.certificate != null"
               >
                 <div
-                  class="absolute top-6 flex items-center justify-center rounded-full p-2"
+                  class="absolute top-4 flex items-center justify-center rounded-full p-2"
                 >
+                  <div class="rounded-full h-10 w-10 flex items-center justify-center bg-gray-700 shadow">
                   <svg
-                    class="fill-current w-8 h-8 mr-2"
+                    class="fill-current w-5 h-5  text-white  "
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
                   >
                     <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z" />
                   </svg>
+                  </div>
                 </div>
                 <div class="w-36 h-36">
                   <img
@@ -553,6 +561,8 @@ function openUrl(url) {
 
                     <div class="mt-2 text-center">
                       <ApproveCard :status="item.organization_process.osas_approved_status" />
+
+                       <EndorsementCard :status=" item.organization_process.osas_endorsed_status"/>
                     </div>
                   </div>
                 </div>
@@ -778,6 +788,20 @@ function openUrl(url) {
       <p class="">Updating</p>
     </div>
   </SkDialog>
+
+
+   <SkDialog :persistent="true" :isOpen="is_processing" :width="'260'">
+    <div class="flex items-center justify-center">
+      <w-progress
+        :size="'24'"
+        class="text-green-900 mr-6"
+        color="green"
+        circle
+      ></w-progress>
+      <p class="">Generating Please wait ...</p>
+    </div>
+  </SkDialog>
+
 
   <SkDialog :persistent="true" :isOpen="show_remarks" :width="'540'">
     <main class="form-max-h">

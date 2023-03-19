@@ -41,6 +41,10 @@ class AuthController extends Controller
     if (Auth::attempt(['email' => $user->email, 'password' => $validated['password']])) {
         $request->session()->regenerate();
 
+        if (Auth::user()->hasRole('super-admin')) {
+            return redirect()->route('superadmin.index');
+        }
+
         if(Auth::user()->hasRole('osas')){
             return redirect()->route('schoolyear.index');
         }
@@ -91,6 +95,10 @@ class AuthController extends Controller
             $request->session()->regenerate();
 
             
+            if (Auth::user()->hasRole('super-admin')) {
+                return redirect()->route('superadmin.index');
+            }
+
             if(Auth::user()->hasRole('osas')){
                 return redirect()->route('schoolyear.index');
             }

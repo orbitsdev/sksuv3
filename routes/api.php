@@ -21,6 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
+Route::get('public/roles', [PublicController::class, 'getGuestAndOsasRoles'])->name('public.guestandosas');
 Route::get('public/school-year', [PublicController::class, 'getSchoolYear'])->name('public.schoolyear');
 Route::get('public/school-year/print', [PublicController::class, 'getSchoolYearForPrint'])->name('public.schoolyearforprint');
 Route::get('public/school-year-with-campus', [PublicController::class, 'getCampus'])->name('public.campus');

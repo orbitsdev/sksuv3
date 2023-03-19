@@ -28,7 +28,7 @@
       <div class="mx-auto w-full max-w-sm lg:w-96">
         <div>
           <img class="h-12 w-auto" src="/assets/sksu1.png" alt="Your Company">
-          <h2 class="mt-6 text-3xl font-bold tracking-tight text-gray-900">Sign in to your account</h2>
+          <h2 class="mt-6 text-3xl font-bold tracking-tight text-gray-900">Create new account</h2>
        
         </div>
         

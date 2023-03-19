@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use App\Models\User;
 use App\Models\Campus;
 use App\Models\SchoolYear;
@@ -20,7 +21,12 @@ class PublicController extends Controller
 
 
 
-    
+
+    public function getGuestAndOsasRoles(){
+        return response()->json(['data' => Role::whereIn('name',['osas', 'guest'])->latest()->get()]);
+
+    }
+
 
   public function uploadTemplateTemporary(Request $request){
 

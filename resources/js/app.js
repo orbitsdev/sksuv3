@@ -57,6 +57,8 @@ import FilePondBase from "./components/FilePondBase.vue";
 import FileUpload from "./components/FileUpload.vue";
 import FileViewLink from "./components/FileViewLink.vue";
 import thumbsUpSvg from "./components/thumbsUpSvg.vue";
+import ApproveCard from "./components/ApproveCard.vue";
+import EndorsementCard from "./components/EndorsementCard.vue";
 import NotificationList from "./components/NotificationList.vue";
 import DateCard from "./components/DateCard.vue";
 import thumbsDownSvg from "./components/thumbsDownSvg.vue";
@@ -111,6 +113,8 @@ createInertiaApp({
             .component("FilePondBase", FilePondBase)
             .component("FileUpload", FileUpload)
             .component("FileViewLink", FileViewLink)
+            .component("ApproveCard", ApproveCard)
+            .component("EndorsementCard", EndorsementCard)
             .component("NotificationList", NotificationList)
             .component("DateCard", DateCard)
             .component("DashboardLink", DashboardLink);

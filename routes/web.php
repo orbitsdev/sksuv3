@@ -10,6 +10,7 @@ use App\Http\Controllers\VpaController;
 use Illuminate\Support\Facades\Request;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\PrintController;
 use App\Http\Controllers\CampusController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\PublicController;
@@ -17,8 +18,10 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\ApproveController;
 use App\Http\Controllers\OfficerController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\GenerateController;
 use App\Http\Controllers\SchoolYearController;
+use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\RequirementController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrganizationController;
@@ -28,12 +31,11 @@ use App\Http\Controllers\CampusDirectorController;
 use App\Http\Controllers\VpaOrganizationController;
 use App\Http\Controllers\ApplyApplicationController;
 use App\Http\Controllers\OsasOrganizationController;
-use App\Http\Controllers\DirectorOrganizationController;
-use App\Http\Controllers\CampusAdviserOrganizationController;
-use App\Http\Controllers\CertificateController;
-use App\Http\Controllers\PrintController;
-use App\Http\Controllers\RealTimeNotificationController;
 use App\Notifications\ApplicationStatusNotification;
+use App\Http\Controllers\DirectorOrganizationController;
+use App\Http\Controllers\RealTimeNotificationController;
+use App\Http\Controllers\CampusAdviserOrganizationController;
+use App\Http\Controllers\OsasController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,6 +52,9 @@ use App\Notifications\ApplicationStatusNotification;
 
 Route::post('file/upload', [FileController::class, 'uploadToTemporaryStorage'])->name('uploadtolocal');
 Route::delete('file/delete', [FileController::class, 'deleteFromLocalStorage'])->name('deletefromlocal');
+
+
+
 
 
 Route::get('/testnotification', function(){
@@ -97,17 +102,27 @@ Route::middleware('guest')->group(function () {
 
 
 Route::group(['middleware' => ['auth',]], function () {
+Route::post('profile/updates' , [ProfileController::class ,'updateProfile'])->name('update.profile');
+
 Route::post('upload-template', [FileController::class, 'uploadTemplate'])->name('uploadTemplate');
 Route::post('template/delete', [FileController::class, 'deleteTemplate'])->name('deleteTemplate');
 Route::get('template', [FileController::class, 'index'])->name('template.index');
+
+
+
     
 Route::get('/', function () {
     return redirect()->route('dashboard');
 });
 
 
+
+
     Route::get('dashboard', function () {
 
+        if (Auth::user()->hasRole('super-admin')) {
+            return redirect()->route('superadmin.index');
+        }
         if (Auth::user()->hasRole('osas')) {
             return redirect()->route('schoolyear.index');
         }
@@ -129,6 +144,19 @@ Route::get('/', function () {
         return Inertia::render('dashboard');
     })->name('dashboard'); //name goes here
     Route::post('logout', [AuthController::class, 'logout']);
+
+    Route::group([
+        'middleware'=> [
+            'can:is-superadmin'
+        ],
+        'prefix' => 'user/acount/osas',
+        'as' => 'superadmin.'
+    ], function () {
+
+        Route::get('/', [OsasController::class, 'index'])->name('index');
+        Route::post('change/user/roles', [OsasController::class, 'changeUserRoles'])->name('changeuserroles');
+
+    });
 
     Route::group([
         'middleware'=> [
@@ -200,6 +228,8 @@ Route::get('/', function () {
         Route::post('update', [VpaController::class, 'update'])->name('update');
         Route::post('delete-selected', [VpaController::class, 'deleteSelected'])->name('deleteselected');
     });
+
+   
 
 
 

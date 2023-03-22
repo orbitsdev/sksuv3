@@ -92,7 +92,7 @@
                       />
                     </svg>
 
-                    <span>Vpa </span>
+                    <span>Vpaa </span>
                   </AccountLink>
                 </nav>
 

@@ -1,1 +1,0 @@
-import{a}from"./adminlayout-bd406e24.js";import{_ as t,o as n,c as e,r as s}from"./app-f1d32345.js";const r={components:{adminlayout:a}};function c(p,m,_,d,i,f){const o=s("adminlayout");return n(),e(o)}const $=t(r,[["render",c]]);export{$ as default};

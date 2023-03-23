@@ -225,7 +225,7 @@ function save() {
             </Tcell>
             
 
-          <Tcell class="uppercase" v-if="item.user != null"> {{ item.user.first_name }} - {{ item.user.first_name }} </Tcell>
+          <Tcell class="uppercase" v-if="item.user != null"> {{ item.user.first_name }} - {{ item.user.last_name }} </Tcell>
           <Tcell>     {{  item.school_year != null ? 'SY.' +  item.school_year.from + ' - ' + item.school_year.to  : 'None'}} </Tcell> 
     
         

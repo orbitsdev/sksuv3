@@ -7,6 +7,7 @@ use App\Models\User;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Models\CampusAdviser;
+use App\Http\Controllers\GlobalOrganizationController;
 use Illuminate\Support\Facades\Request as supportrequest;
 
 class CampusAdviserController extends Controller
@@ -73,14 +74,32 @@ class CampusAdviserController extends Controller
 
       
 
-        foreach($collection as $data){
+        // foreach($collection as $data){
             
-            if(count($data->user->campus_advisers) <= 1){
-                $data->user->roles()->sync($role->id);
+        //     if(count($data->user->campus_advisers) <= 1){
+
+        //         $data->user->roles()->sync($role->id);
                 
-            }
+        //     }
             
+        // }
+
+        if ($collection->count() > 0) {
+
+
+            foreach ($collection as $adviser) {
+
+
+                if ($adviser->organizations->count()) {
+                }
+
+                GlobalOrganizationController::deleteOrganizationByCampusAdviser($adviser->id);
+
+                $adviser->user->roles()->sync($role->id);
+                $adviser->delete();
+            }
         }
+
         
         
         CampusAdviser::whereIn('id', $request->input('ids'))->delete();

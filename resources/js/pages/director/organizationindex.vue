@@ -314,7 +314,7 @@ function handleManageForm() {
                   <div class="px-2 mb-2">
                     <p class="text-gray-600 leading-5 uppercase text-sm">
                       {{
-                        item.campus_adviser.user != null
+                        item.campus_adviser != null
                           ? item.campus_adviser.user.first_name +
                             " " +
                             item.campus_adviser.user.last_name
@@ -328,7 +328,7 @@ function handleManageForm() {
                   <div class="px-2 mb-2">
                     <p class="text-gray-600 leading-5 uppercase text-sm">
                       {{
-                        item.campus_adviser.school_year != null
+                        item.campus_adviser != null
                           ? item.campus_adviser.school_year.from +
                             " - " +
                             item.campus_adviser.school_year.to

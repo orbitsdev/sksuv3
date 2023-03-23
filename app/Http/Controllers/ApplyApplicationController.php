@@ -140,11 +140,13 @@ class ApplyApplicationController extends Controller
         
         // dd($request->all());
         // $campus = Campus::wheeIn('id', $request->input('ids'))->get();
-       $collection =   Organization::whereIn('id', $request->input('ids'))
-                        ->with(['organization_requirements' => function($org) {
-                            $org->with(['file']);
-                        }])
-                            ->get();
+       $collection =   Organization::whereIn('id', $request->input('ids'))->with(
+        [
+        'organization_requirements' => function($org) {
+            $org->with(['file']);
+            }
+        ]
+        )->get();
 
 
          foreach($collection as  $data){

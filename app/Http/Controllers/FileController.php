@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Request as supportrequest;
 class FileController extends Controller
 {
 
-
+ 
   public function index(){
 
     return Inertia::render('student/templateindex',[

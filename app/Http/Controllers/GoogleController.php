@@ -22,7 +22,11 @@ class GoogleController extends Controller
 
         //  Socialite::driver($provider)->stateless()->redirect()->getTargetUrl();
         // return Socialite::driver($provider)->stateless()->redirect();
-        return Socialite::driver($provider)->redirect();
+        // return Socialite::driver($provider)->stateless()->redirect();
+
+        return Socialite::driver('google')->with(['prompt' => 'select_account'])->redirect();
+
+        
          
     }
 

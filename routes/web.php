@@ -93,8 +93,8 @@ Route::middleware('guest')->group(function () {
     Route::post('user/create', [AuthController::class, 'create']);
 
 
-    Route::get('/authorize/{provider}/redirect', [GoogleController::class, 'redirectToProvider']);
-    Route::get('/authorize/{provider}/callback', [GoogleController::class, 'handleProviderCallback']);
+    Route::get('authorize/{provider}/redirect', [GoogleController::class, 'redirectToProvider']);
+    Route::get('authorize/{provider}/callback', [GoogleController::class, 'handleProviderCallback']);
 });
 
 

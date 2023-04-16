@@ -4,6 +4,9 @@ import { router } from "@inertiajs/core";
 import { throttle } from "lodash";
 import { useForm } from "@inertiajs/vue3";
 
+import axios from "axios";
+
+
 const props = defineProps({
   organizations: Object,
   filters: Object,
@@ -22,6 +25,7 @@ const selected_item = ref(null);
 const has_warning = ref(null);
 
 const form = useForm({
+
   comment: "",
   approver_type: "osas",
   item_id: null,
@@ -38,6 +42,44 @@ function showEndorsedConfirmation(item){
       form.id = item.id;
       confirm_endorse.value = true;
 }
+
+const is_processing = ref(false);
+const show_cerficate_form = ref(false);
+async function generateCertificate(item) {
+  form.id = item.id;
+
+  is_processing.value = true;
+  axios
+    .get(
+      route("public.generateFile", {
+        // usg_adviser: form.usg_adviser,
+        // director_affair: form.director_affair,
+        // held_location: form.held_location,
+        id: parseInt(form.id),
+      }),
+      {
+        responseType: "arraybuffer",
+      }
+    )
+    .then((response) => {
+      // console.log(response.data);
+
+      let blob = new Blob([response.data], { type: "image/png" }),
+        url = window.URL.createObjectURL(blob),
+        a = document.createElement("a");
+
+      a.href = url;
+      a.download = "accreditation-certificate.png";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    })
+    .finally(() => {
+      is_processing.value = false;
+      show_cerficate_form.value = false;
+    });
+}
+
 
 watch(
   search,
@@ -323,7 +365,7 @@ function handleManageForm() {
           <input
             v-model.number="search"
             class="block w-full rounded-md border border-transparent bg-white bg-opacity-20 py-2 pl-10 pr-3 leading-5 text-white placeholder-white focus:border-transparent focus:bg-opacity-100 focus:text-gray-900 focus:placeholder-gray-500 focus:outline-none focus:ring-0 sm:text-sm"
-            placeholder="Name "
+            placeholder="Search "
             type="search"
             name="search"
           />
@@ -932,6 +974,18 @@ function handleManageForm() {
           >
         </div>
 
+  </SkDialog>
+
+    <SkDialog :persistent="true" :isOpen="is_processing" :width="'260'">
+    <div class="flex items-center justify-center">
+      <w-progress
+        :size="'24'"
+        class="text-green-900 mr-6"
+        color="green"
+        circle
+      ></w-progress>
+      <p class="">Generating Please wait ...</p>
+    </div>
   </SkDialog>
 </template>
 

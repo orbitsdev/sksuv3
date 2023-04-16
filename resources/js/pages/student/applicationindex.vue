@@ -231,12 +231,8 @@ function openUrl(url) {
       class="bg-white rounded-xl shadow-xl mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8"
     >
       <div class="pt-4 flex items-center justify-between">
+        <TableTitle> Applied Organizations </TableTitle>
 
-      <TableTitle>
-      
-          Applied Organizations
-      </TableTitle>
-      
         <div class="flex items-center">
           <sk-button2
             v-if="selected_items.length > 0"
@@ -288,11 +284,12 @@ function openUrl(url) {
           v-if="props.organizations.data.length > 0"
           :headers="[
             '',
-            'Certificate',
-          'Document Information',
-          'Application Process Status',
-          '',
-            ]"
+            'Adviser',
+            'School Year',
+            'Document Information',
+            'Application Process Status',
+            '',
+          ]"
         >
           <tr
             class="divide-x divide-gray-200"
@@ -309,42 +306,29 @@ function openUrl(url) {
                 class="h-4 w-4 accent-green-600 text-white rounded border-gray-200"
               />
             </Tcell>
-             <Tcell
-              :c="'whitespace-nowrap align-center text-center text-sm items-center  font-medium text-gray-900 align-top pt-2'"
-            >
-              <div
-                @click="generateCertificate(item)"
-                class="flex justify-center relative cursor-pointer hover:scale-105 transition-all ease-in-out"
-                v-if="item.certificate != null"
-              >
-                <div
-                  class="absolute top-4 flex items-center justify-center rounded-full p-2"
-                >
-                  <div class="rounded-full h-10 w-10 flex items-center justify-center bg-gray-700 shadow">
-                  <svg
-                    class="fill-current w-5 h-5  text-white  "
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z" />
-                  </svg>
-                  </div>
-                </div>
-                <div class="w-36 h-36">
-                  <img
-                    src="/assets/images/certificates/template2.png "
-                    alt="logo"
-                    class="object-fill"
-                  />
-                </div>
-              </div>
-              <div class="flex justify-center relative" v-else>
-                <div class="absolute top-0 right-5"></div>
-                <div class="w-36 h-36 flex items-center justify-center border ro">
-                  <img src="/assets/placeholder.png" alt="logo" class="object-fill" />
-                </div>
-              </div>
+            <Tcell  class="align-top ">
+              <p class="text-gray-600 leading-5 uppercase text-sm">
+
+          
+                {{
+                  item.campus_adviser.user != null
+                    ? item.campus_adviser.user.first_name + " " +   item.campus_adviser.user.last_name
+                    : "None"
+                }}
+              </p>
             </Tcell>
+            <Tcell  class="align-top ">
+              <p class="text-gray-600 leading-5 uppercase text-sm">
+                {{
+                  item.campus_adviser.school_year != null
+                    ? item.campus_adviser.school_year.from +
+                      " - " +
+                      item.campus_adviser.school_year.to
+                    : "None"
+                }}
+              </p>
+            </Tcell>
+         
             <Tcell class="align-top">
               <aside class="whitespace-normal">
                 <div class="flex items-center mb-2 justify-end">
@@ -365,7 +349,7 @@ function openUrl(url) {
                   </div>
                 </div>
                 <div class="border-b pb-3">
-                  <div class="px-2 mb-2">
+                    <div class="px-2 mb-6">
                     <p class="text-gray-600 leading-5 uppercase text-sm">
                       {{ item.name }}
                     </p>
@@ -374,32 +358,52 @@ function openUrl(url) {
                     </p>
                   </div>
                   <div class="px-2 mb-2">
-                    <p class="text-gray-600 leading-5 uppercase text-sm">
-                      {{
-                        item.campus_adviser.user != null
-                          ? item.campus_adviser.user.first_name +
-                            " " +
-                            item.campus_adviser.user.last_name
-                          : "None"
-                      }}
+
+                    <p class="text-gray-600 leading-5 uppercase text-sm mb-6">
+                    Certificate
                     </p>
-                    <p class="text-xs min-sk-w-t text-gray-500 leading-4">
-                      ( Campus adviser)
-                    </p>
+                    
+                     <div
+                @click="generateCertificate(item)"
+                class="flex justify-center relative cursor-pointer hover:scale-105 transition-all ease-in-out"
+                v-if="item.certificate != null"
+              >
+                <div
+                  class="absolute top-4 flex items-center justify-center rounded-full p-2"
+                >
+                  <div
+                    class="rounded-full h-10 w-10 flex items-center justify-center bg-gray-700 shadow"
+                  >
+                    <svg
+                      class="fill-current w-5 h-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z" />
+                    </svg>
                   </div>
-                  <div class="px-2 mb-2">
-                    <p class="text-gray-600 leading-5 uppercase text-sm">
-                      {{
-                        item.campus_adviser.school_year != null
-                          ? item.campus_adviser.school_year.from +
-                            " - " +
-                            item.campus_adviser.school_year.to
-                          : "None"
-                      }}
-                    </p>
-                    <p class="text-xs min-sk-w-t text-gray-500 leading-4">
-                      ( School Year )
-                    </p>
+                </div>
+                <div class="w-36 h-36">
+                  <img
+                    src="/assets/images/certificates/template2.png "
+                    alt="logo"
+                    class="object-fill"
+                  />
+                    
+                </div>
+
+
+
+              </div>
+              <div class="flex justify-center relative" v-else>
+                <div class="absolute top-0 right-5"></div>
+                <div class="w-36 h-36 flex items-center justify-center border ro">
+                  <img src="/assets/placeholder.png" alt="logo" class="object-fill" />
+               
+                </div>
+                
+              </div>
+
                   </div>
                 </div>
 
@@ -426,7 +430,8 @@ function openUrl(url) {
                           fill-rule="evenodd"
                           d="M3 9.375C3 8.339 3.84 7.5 4.875 7.5h9.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-9.75A1.875 1.875 0 013 20.625V9.375zm9.586 4.594a.75.75 0 00-1.172-.938l-2.476 3.096-.908-.907a.75.75 0 00-1.06 1.06l1.5 1.5a.75.75 0 001.116-.062l3-3.75z"
                           clip-rule="evenodd"
-                        />git
+                        />
+                        git
                       </svg>
                     </div>
                   </div>
@@ -470,7 +475,6 @@ function openUrl(url) {
                     :key="og"
                   >
                     <div v-if="og.file.length > 0">
-    
                       <div v-for="file in og.file" :key="file" :file="file">
                         <FileViewLink :href="file.file_url" target="_blank" class="mb-1">
                           {{ file.file_name }}
@@ -485,7 +489,7 @@ function openUrl(url) {
             <Tcell colspan="1 " class="sk-th-min-w">
               <aside
                 @click="viewRemarks(item)"
-                  v-if="item.remarks.length > 0"
+                v-if="item.remarks.length > 0"
                 class="whitespace-normal border-b pb-3 transition-all ease-out hover:scale-105 rounded mx-2 text-red-400 hover:bg-rose-400 hover:text-white cursor-pointer p-2"
               >
                 <div class="flex items-center mb-2 justify-center">
@@ -505,7 +509,10 @@ function openUrl(url) {
                   </div>
                 </div>
 
-                <p class="text-center uppercase">{{ item.remarks.length > 1 ? 'Comments'  : 'Comment'}} {{ item.remarks.length }}</p>
+                <p class="text-center uppercase">
+                  {{ item.remarks.length > 1 ? "Comments" : "Comment" }}
+                  {{ item.remarks.length }}
+                </p>
               </aside>
 
               <aside class="whitespace-normal mb-2">
@@ -534,12 +541,14 @@ function openUrl(url) {
                     </p>
 
                     <div class="mt-2 text-center">
-                      <ApproveCard :status="item.organization_process.campus_adviser_approved_status"/>
+                      <ApproveCard
+                        :status="item.organization_process.campus_adviser_approved_status"
+                      />
 
-
-                     <EndorsementCard :status=" item.organization_process.campus_adviser_endorsed_status"/>
-                     
-                    </div>  
+                      <EndorsementCard
+                        :status="item.organization_process.campus_adviser_endorsed_status"
+                      />
+                    </div>
                   </div>
                 </div>
                 <div class="mt-2 rounded-lg bg-gray-200 p-2">
@@ -549,20 +558,28 @@ function openUrl(url) {
                     </p>
 
                     <div class="mt-2 text-center">
-                        <ApproveCard :status=" item.organization_process.campus_director_approved_status" />
+                      <ApproveCard
+                        :status="
+                          item.organization_process.campus_director_approved_status
+                        "
+                      />
                     </div>
                   </div>
                 </div>
                 <div class="mt-2 rounded-lg bg-gray-200 p-2">
                   <div class="p-4 bg-white rounded">
                     <p class="text-gray-600 leading-5 uppercase text-sm text-center">
-                     Osas
+                      Osas
                     </p>
 
                     <div class="mt-2 text-center">
-                      <ApproveCard :status="item.organization_process.osas_approved_status" />
+                      <ApproveCard
+                        :status="item.organization_process.osas_approved_status"
+                      />
 
-                       <EndorsementCard :status=" item.organization_process.osas_endorsed_status"/>
+                      <EndorsementCard
+                        :status="item.organization_process.osas_endorsed_status"
+                      />
                     </div>
                   </div>
                 </div>
@@ -573,36 +590,37 @@ function openUrl(url) {
                     </p>
 
                     <div class="mt-2 text-center">
-                      <ApproveCard :status="item.organization_process.vpa_approved_status" />
+                      <ApproveCard
+                        :status="item.organization_process.vpa_approved_status"
+                      />
                     </div>
                   </div>
                 </div>
               </aside>
             </Tcell>
-           <Tcell class="flex items-center justify-center ">
-            <SkButtonGray
-              :disabled="selected_items.length > 0"
-              class="max-w-40 mr-2"
-              @click="showManageForm(item)"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                class="w-4 h-4 mr-2"
+            <Tcell class="flex items-center justify-center">
+              <SkButtonGray
+                :disabled="selected_items.length > 0"
+                class="max-w-40 mr-2"
+                @click="showManageForm(item)"
               >
-                <path
-                  d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32l8.4-8.4z"
-                />
-                <path
-                  d="M5.25 5.25a3 3 0 00-3 3v10.5a3 3 0 003 3h10.5a3 3 0 003-3V13.5a.75.75 0 00-1.5 0v5.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5V8.25a1.5 1.5 0 011.5-1.5h5.25a.75.75 0 000-1.5H5.25z"
-                />
-              </svg>
-              <span class=""> Manage </span>
-            </SkButtonGray>
-          </Tcell>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  class="w-4 h-4 mr-2"
+                >
+                  <path
+                    d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32l8.4-8.4z"
+                  />
+                  <path
+                    d="M5.25 5.25a3 3 0 00-3 3v10.5a3 3 0 003 3h10.5a3 3 0 003-3V13.5a.75.75 0 00-1.5 0v5.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5V8.25a1.5 1.5 0 011.5-1.5h5.25a.75.75 0 000-1.5H5.25z"
+                  />
+                </svg>
+                <span class=""> Manage </span>
+              </SkButtonGray>
+            </Tcell>
           </tr>
-       
         </SkTable>
         <EmptyCard class="flex items-center justify-center h-64" v-else />
 
@@ -789,8 +807,7 @@ function openUrl(url) {
     </div>
   </SkDialog>
 
-
-   <SkDialog :persistent="true" :isOpen="is_processing" :width="'260'">
+  <SkDialog :persistent="true" :isOpen="is_processing" :width="'260'">
     <div class="flex items-center justify-center">
       <w-progress
         :size="'24'"
@@ -801,7 +818,6 @@ function openUrl(url) {
       <p class="">Generating Please wait ...</p>
     </div>
   </SkDialog>
-
 
   <SkDialog :persistent="true" :isOpen="show_remarks" :width="'540'">
     <main class="form-max-h">

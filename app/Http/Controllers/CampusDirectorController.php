@@ -28,7 +28,7 @@ class CampusDirectorController extends Controller
                 });
             })
             ->latest()
-            ->with(['user','school_year'])
+            ->with(['user','school_year','campus'])
             ->paginate(10)
             ->withQueryString(),
             'filters'=> supportrequest::only('search'),
@@ -40,15 +40,19 @@ class CampusDirectorController extends Controller
     public function create(Request $request){
 
       
-       
+        
+
         $newrecord = CampusDirector::create([ 
          'school_year_id'=> $request->input('school_year_id'), 
          'user_id'=> $request->input('user_id'), 
+         'campus_id'=> $request->input('campus_id'), 
 
         ]);
 
+
         $user = User::where('id', $request->input('user_id'))->first();
         $role = Role::where('name', 'campus-director')->first();
+
         $user->roles()->sync($role->id);
         
         return redirect()->back()->with('notification', 'Created');

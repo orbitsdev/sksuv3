@@ -3,6 +3,7 @@
 namespace App\Models;
 
 
+use App\Models\Vpa;
 use App\Models\CampusAdviser;
 use App\Models\CampusDirector;
 use Illuminate\Database\Eloquent\Model;
@@ -27,6 +28,10 @@ class SchoolYear extends Model
         return $this->hasMany(CampusDirector::class);
 
     } 
+
+    public function vpaas(){
+        return $this->hasMany(Vpa::class);
+    }
 
     
 }

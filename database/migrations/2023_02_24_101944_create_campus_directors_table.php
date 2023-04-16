@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('school_year_id')->nullable();
             $table->foreignId('user_id')->nullable();
+            $table->foreignId('campus_id')->nullable();
             $table->timestamps();
         });
     }

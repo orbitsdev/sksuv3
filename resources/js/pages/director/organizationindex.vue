@@ -262,8 +262,10 @@ function handleManageForm() {
         v-if="props.organizations.data.length > 0"
         :headers="[
           '',
-          'Document Information',
-          'Application Process Status',
+        'Adviser',
+            'School Year',
+            'Document Information',
+            'Application Process Status',
           '',
         ]"
       >
@@ -283,7 +285,31 @@ function handleManageForm() {
             /> -->
           </Tcell>
 
-          <Tcell class="align-top">
+         
+          <Tcell  class="align-top ">
+              <p class="text-gray-600 leading-5 uppercase text-sm">
+
+          
+                {{
+                  item.campus_adviser.user != null
+                    ? item.campus_adviser.user.first_name + " " +   item.campus_adviser.user.last_name
+                    : "None"
+                }}
+              </p>
+            </Tcell>
+            <Tcell  class="align-top ">
+              <p class="text-gray-600 leading-5 uppercase text-sm">
+                {{
+                  item.campus_adviser.school_year != null
+                    ? item.campus_adviser.school_year.from +
+                      " - " +
+                      item.campus_adviser.school_year.to
+                    : "None"
+                }}
+              </p>
+            </Tcell>
+         
+            <Tcell class="align-top">
               <aside class="whitespace-normal">
                 <div class="flex items-center mb-2 justify-end">
                   <p class="text-sm uppercase font-medium px-3 text-gray-600">Details</p>
@@ -303,7 +329,7 @@ function handleManageForm() {
                   </div>
                 </div>
                 <div class="border-b pb-3">
-                  <div class="px-2 mb-2">
+                    <div class="px-2 mb-6">
                     <p class="text-gray-600 leading-5 uppercase text-sm">
                       {{ item.name }}
                     </p>
@@ -311,34 +337,7 @@ function handleManageForm() {
                       ( Organizaiton name )
                     </p>
                   </div>
-                  <div class="px-2 mb-2">
-                    <p class="text-gray-600 leading-5 uppercase text-sm">
-                      {{
-                        item.campus_adviser != null
-                          ? item.campus_adviser.user.first_name +
-                            " " +
-                            item.campus_adviser.user.last_name
-                          : "None"
-                      }}
-                    </p>
-                    <p class="text-xs min-sk-w-t text-gray-500 leading-4">
-                      ( Campus adviser)
-                    </p>
-                  </div>
-                  <div class="px-2 mb-2">
-                    <p class="text-gray-600 leading-5 uppercase text-sm">
-                      {{
-                        item.campus_adviser != null
-                          ? item.campus_adviser.school_year.from +
-                            " - " +
-                            item.campus_adviser.school_year.to
-                          : "None"
-                      }}
-                    </p>
-                    <p class="text-xs min-sk-w-t text-gray-500 leading-4">
-                      ( School Year )
-                    </p>
-                  </div>
+                
                 </div>
 
                 <div class="mt-3 border-b pb-3">
@@ -364,7 +363,8 @@ function handleManageForm() {
                           fill-rule="evenodd"
                           d="M3 9.375C3 8.339 3.84 7.5 4.875 7.5h9.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-9.75A1.875 1.875 0 013 20.625V9.375zm9.586 4.594a.75.75 0 00-1.172-.938l-2.476 3.096-.908-.907a.75.75 0 00-1.06 1.06l1.5 1.5a.75.75 0 001.116-.062l3-3.75z"
                           clip-rule="evenodd"
-                        />git
+                        />
+                        git
                       </svg>
                     </div>
                   </div>
@@ -408,7 +408,6 @@ function handleManageForm() {
                     :key="og"
                   >
                     <div v-if="og.file.length > 0">
-    
                       <div v-for="file in og.file" :key="file" :file="file">
                         <FileViewLink :href="file.file_url" target="_blank" class="mb-1">
                           {{ file.file_name }}

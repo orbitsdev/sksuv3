@@ -66,14 +66,14 @@ class CertificateController extends Controller
         public function create(Request $request){
 
 
-
+            
             
             $organization = Organization::find($request->id);
 
             $held_location =$request->held_location  ;
             $usg_adviser =strtoupper( $request->usg_adviser);
             $director_student_affaire_service = strtoupper($request->director_affair) ;
-            $date_year =         Carbon::parse($request->month_year)->format('F, Y');
+            $date_year =       Carbon::parse($request->month_year)->format('F j, Y');
             $school_year = $organization->campus_adviser->school_year->from . ' - ' . $organization->campus_adviser->school_year->to;
 
          

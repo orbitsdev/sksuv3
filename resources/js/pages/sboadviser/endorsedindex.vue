@@ -428,7 +428,6 @@ function handleManageForm() {
                     
                 </div>
 
-                      <p class="mt-6  text-center uppercase"> ISSUED</p>
 
               </div>
               <div class="flex justify-center relative" v-else>

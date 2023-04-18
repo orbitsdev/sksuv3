@@ -22,6 +22,7 @@ const form = useForm({
   
   user_id: null,
   id: null,
+  school_year_id: null,
 });
 
 
@@ -40,6 +41,17 @@ function getDefaultValueOfUser(item) {
   }
 }
 
+
+
+function getValueOfYear(item) {
+  form.school_year_id = item;
+}
+
+function getDefaultValueOfYear(item) {
+  if (item != null) {
+    form.school_year_id = item;
+  }
+}
 
 
 async function deleteSelected(){
@@ -196,7 +208,7 @@ function save() {
     <SkTable 
     v-if="props.vpas.data.length > 0"
 
-    :headers="['', 'Name', '' ]"> 
+    :headers="['','School Year', 'Name', '' ]"> 
      <tr
           class="divide-x divide-gray-200"
           v-for="item in props.vpas.data"
@@ -214,6 +226,13 @@ function save() {
               />
             </Tcell>
             
+         <Tcell>
+          {{
+            item.school_year != null
+              ? "SY." + item.school_year.from + " - " + item.school_year.to
+              : "None"
+          }}
+        </Tcell>
 
           <Tcell class="uppercase" v-if="item.user != null"> {{ item.user.first_name }} - {{ item.user.last_name }} </Tcell>
           <Tcell>     </Tcell> 
@@ -235,7 +254,18 @@ function save() {
     <sk-dialog :transition="'slide-down'" :persistent="true" :isOpen="show_form">
       <main class="p-2">
       
-        
+         <div class="mb-4">
+          <label for="email" class="block text-sm font-medium text-gray-700"
+            >School Year</label
+          >
+
+          <div class="mt-1">
+            <schoolYearSelect
+              @selectItem="getValueOfYear"
+              @setDefaultValue="getDefaultValueOfYear"
+            />
+          </div>
+        </div>
        
          <div class="mb-4">
           <label for="email" class="block text-sm font-medium text-gray-700"
@@ -250,7 +280,7 @@ function save() {
         
         
 
-        
+
         <div class="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
           <SkButtonGray @click="show_form = false"> Close </SkButtonGray>
           <div>
@@ -311,12 +341,13 @@ function save() {
 <script>
 import accounts from "@/pages/osas/accounts.vue";
 import guestUserSelect from "@/components/guestUserSelect.vue";
+import schoolYearSelect from "@/components/schoolYearSelect.vue";
 
 export default {
   components: {
     accounts,
     
-     
+     schoolYearSelect,
      guestUserSelect,
      
   },

@@ -30,7 +30,7 @@ const form = useForm({
   usg_adviser: "",
   director_affair: "",
   held_location: "",
-  month_year: moment().format("YYYY-MM"),
+  month_year: moment().format("YYYY-MM-DD"),
   comment: "",
   approver_type: "osas",
   item_id: null,
@@ -541,9 +541,10 @@ async function createCertificate() {
         v-if="props.organizations.data.length > 0"
         :headers="[
           '',
-          'Certificate',
-          'Organization Information',
-          'Status',
+           'Adviser',
+            'School Year',
+            'Document Information',
+            'Application Process Status',
           '',
         ]"
       >
@@ -557,43 +558,30 @@ async function createCertificate() {
           >
           </Tcell>
            
-             <Tcell
-              :c="'whitespace-nowrap align-center text-center text-sm items-center  font-medium text-gray-900 align-top pt-2'"
-            >
-              <div
-                @click="generateCertificate(item)"
-                class="flex justify-center relative cursor-pointer hover:scale-105 transition-all ease-in-out"
-                v-if="item.certificate != null"
-              >
-                <div
-                  class="absolute top-4 flex items-center justify-center rounded-full p-2"
-                >
-                  <div class="rounded-full h-10 w-10 flex items-center justify-center bg-gray-700 shadow">
-                  <svg
-                    class="fill-current w-5 h-5  text-white  "
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z" />
-                  </svg>
-                  </div>
-                </div>
-                <div class="w-36 h-36">
-                  <img
-                    src="/assets/images/certificates/template2.png "
-                    alt="logo"
-                    class="object-fill"
-                  />
-                </div>
-              </div>
-              <div class="flex justify-center relative" v-else>
-                <div class="absolute top-0 right-5"></div>
-                <div class="w-36 h-36 flex items-center justify-center border ro">
-                  <img src="/assets/placeholder.png" alt="logo" class="object-fill" />
-                </div>
-              </div>
+              <Tcell  class="align-top ">
+              <p class="text-gray-600 leading-5 uppercase text-sm">
+
+          
+                {{
+                  item.campus_adviser.user != null
+                    ? item.campus_adviser.user.first_name + " " +   item.campus_adviser.user.last_name
+                    : "None"
+                }}
+              </p>
             </Tcell>
-  <Tcell class="align-top">
+            <Tcell  class="align-top ">
+              <p class="text-gray-600 leading-5 uppercase text-sm">
+                {{
+                  item.campus_adviser.school_year != null
+                    ? item.campus_adviser.school_year.from +
+                      " - " +
+                      item.campus_adviser.school_year.to
+                    : "None"
+                }}
+              </p>
+            </Tcell>
+         
+            <Tcell class="align-top">
               <aside class="whitespace-normal">
                 <div class="flex items-center mb-2 justify-end">
                   <p class="text-sm uppercase font-medium px-3 text-gray-600">Details</p>
@@ -613,7 +601,7 @@ async function createCertificate() {
                   </div>
                 </div>
                 <div class="border-b pb-3">
-                  <div class="px-2 mb-2">
+                    <div class="px-2 mb-6">
                     <p class="text-gray-600 leading-5 uppercase text-sm">
                       {{ item.name }}
                     </p>
@@ -622,32 +610,52 @@ async function createCertificate() {
                     </p>
                   </div>
                   <div class="px-2 mb-2">
-                    <p class="text-gray-600 leading-5 uppercase text-sm">
-                      {{
-                        item.campus_adviser.user != null
-                          ? item.campus_adviser.user.first_name +
-                            " " +
-                            item.campus_adviser.user.last_name
-                          : "None"
-                      }}
+
+                    <p class="text-gray-600 leading-5 uppercase text-sm mb-6">
+                    Certificate
                     </p>
-                    <p class="text-xs min-sk-w-t text-gray-500 leading-4">
-                      ( Campus adviser)
-                    </p>
+                    
+                     <div
+                @click="generateCertificate(item)"
+                class="flex justify-center relative cursor-pointer hover:scale-105 transition-all ease-in-out"
+                v-if="item.certificate != null"
+              >
+                <div
+                  class="absolute top-4 flex items-center justify-center rounded-full p-2"
+                >
+                  <div
+                    class="rounded-full h-10 w-10 flex items-center justify-center bg-gray-700 shadow"
+                  >
+                    <svg
+                      class="fill-current w-5 h-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z" />
+                    </svg>
                   </div>
-                  <div class="px-2 mb-2">
-                    <p class="text-gray-600 leading-5 uppercase text-sm">
-                      {{
-                        item.campus_adviser.school_year != null
-                          ? item.campus_adviser.school_year.from +
-                            " - " +
-                            item.campus_adviser.school_year.to
-                          : "None"
-                      }}
-                    </p>
-                    <p class="text-xs min-sk-w-t text-gray-500 leading-4">
-                      ( School Year )
-                    </p>
+                </div>
+                <div class="w-36 h-36">
+                  <img
+                    src="/assets/images/certificates/template2.png "
+                    alt="logo"
+                    class="object-fill"
+                  />
+                    
+                </div>
+
+                
+
+              </div>
+              <div class="flex justify-center relative" v-else>
+                <div class="absolute top-0 right-5"></div>
+                <div class="w-36 h-36 flex items-center justify-center border ro">
+                  <img src="/assets/placeholder.png" alt="logo" class="object-fill" />
+               
+                </div>
+                
+              </div>
+
                   </div>
                 </div>
 
@@ -674,7 +682,8 @@ async function createCertificate() {
                           fill-rule="evenodd"
                           d="M3 9.375C3 8.339 3.84 7.5 4.875 7.5h9.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-9.75A1.875 1.875 0 013 20.625V9.375zm9.586 4.594a.75.75 0 00-1.172-.938l-2.476 3.096-.908-.907a.75.75 0 00-1.06 1.06l1.5 1.5a.75.75 0 001.116-.062l3-3.75z"
                           clip-rule="evenodd"
-                        />git
+                        />
+                        git
                       </svg>
                     </div>
                   </div>
@@ -718,7 +727,6 @@ async function createCertificate() {
                     :key="og"
                   >
                     <div v-if="og.file.length > 0">
-    
                       <div v-for="file in og.file" :key="file" :file="file">
                         <FileViewLink :href="file.file_url" target="_blank" class="mb-1">
                           {{ file.file_name }}
@@ -1067,12 +1075,12 @@ async function createCertificate() {
       <div class="mx-2">
         <div class="mb-2">
           <label for="email" class="block text-sm font-medium text-gray-700"
-            >Month Year</label
+            >Certification Date </label
           >
 
           <div class="mt-1">
             <input
-              type="month"
+              type="date"
               v-model="form.month_year"
               class="pr-8 block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm"
             />

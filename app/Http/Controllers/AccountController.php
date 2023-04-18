@@ -20,12 +20,13 @@ class AccountController extends Controller
 
     public function userPasswordIndex(){
 
-
+        // dd(User::with('campus_director')->get());
+            // dd(auth()->user()->campus_director);
         return Inertia::render('osas/accountpasswordindex', [
             'users'=> User::query()->
             when(supportrequest::input('search'), function($query, $search){
                 $query->where('first_name', 'like', "%{$search}%")->orWhere('last_name', 'like', "%{$search}%")->orWhere('email', 'like', "%{$search}%");
-            })->whereDoesntHave('social_accounts')->latest()->paginate(10)->withQueryString(),
+            })->whereDoesntHave('social_accounts')->latest()->with(['campus_director.campus'])->paginate(10)->withQueryString(),
             'filters'=> supportrequest::only(['search'])
         ]);
 

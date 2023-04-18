@@ -92,6 +92,11 @@ class User extends Authenticatable
     public function campus_directors(){
         return $this->hasMany(CampusDirector::class);
     }
+   
+    public function campus_director(){
+        return $this->hasOne(CampusDirector::class)->latest();
+    }
+
     public function vpas(){
         return $this->hasMany(Vpa::class);
     }

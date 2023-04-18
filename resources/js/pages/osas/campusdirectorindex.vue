@@ -17,60 +17,51 @@ const selected_items = ref([]);
 const selected_item = ref(null);
 const has_warning = ref(null);
 
-
 const form = useForm({
   school_year_id: null,
+  campus_id: null,
   user_id: null,
   id: null,
 });
 
-
 function getValueOfYear(item) {
-
-
   form.school_year_id = item;
 }
 
 function getDefaultValueOfYear(item) {
-    
-
   if (item != null) {
     form.school_year_id = item;
   }
 }
 
-
 function getValueOfUser(item) {
-
-
   form.user_id = item;
 }
 
 function getDefaultValueOfUser(item) {
-
- if (item != null) {
-
+  if (item != null) {
     form.user_id = item;
   }
 }
 
+function getValueOfCampus(item) {
+  form.campus_id = item;
+}
 
+function getDefaultValueOfCampus(item) {
+  if (item != null) {
+    form.campus_id = item;
+  }
+}
 
-async function deleteSelected(){
-
-
-
+async function deleteSelected() {
   selected_item.value = null;
   is_deleting.value = true;
 
-
-
   try {
-    const response = await router.post(route('campusdirector.deleteselected'), {
+    const response = await router.post(route("campusdirector.deleteselected"), {
       ids: selected_items.value,
     });
-
-
 
     confirm_delete.value = false;
     selected_items.value = [];
@@ -79,11 +70,7 @@ async function deleteSelected(){
   } finally {
     is_deleting.value = false;
   }
-
-
 }
-
-
 
 watch(
   search,
@@ -99,37 +86,26 @@ watch(
   }, 500)
 );
 
-
-
 function showForm() {
-
-form.reset();
-show_form.value = true;
-
+  form.reset();
+  show_form.value = true;
 }
 
-
 function save() {
-
-
   form.post(route("campusdirector.create"), {
     preserveState: true,
     onSuccess: () => {
-    show_form.value = false;
-    form.reset();
+      show_form.value = false;
+      form.reset();
     },
     onError: (error) => {
       has_warning.value = error;
     },
   });
 }
-
-
 </script>
 <template>
   <accounts>
-
- 
     <template v-slot:search>
       <div class="mx-auto w-full max-w-xs lg:max-w-md">
         <label for="search" class="sr-only">Search</label>
@@ -161,8 +137,8 @@ function save() {
       </div>
     </template>
 
-    <div class="flex items-center  justify-end">
-      <div class="flex items-center ">
+    <div class="flex items-center justify-end">
+      <div class="flex items-center">
         <sk-button2
           v-if="selected_items.length > 0"
           @click="confirm_delete = true"
@@ -184,7 +160,10 @@ function save() {
           Delete Selected
         </sk-button2>
 
-        <sk-button2 @click="showForm" class="min-w-40 px-4 flex items-center justify-center h-10">
+        <sk-button2
+          @click="showForm"
+          class="min-w-40 px-4 flex items-center justify-center h-10"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
@@ -202,84 +181,107 @@ function save() {
       </div>
     </div>
 
-
-    <SkTable 
-    v-if="props.campus_directors.data.length > 0"
-
-    :headers="['', 'Name', 'Campus', 'School Year', ]"> 
-     <tr
-          class="divide-x divide-gray-200"
-          v-for="item in props.campus_directors.data"
-          :key="item"
+    <SkTable
+      v-if="props.campus_directors.data.length > 0"
+      :headers="['', 'Name', 'Campus', 'School Year']"
+    >
+      <tr
+        class="divide-x divide-gray-200"
+        v-for="item in props.campus_directors.data"
+        :key="item"
+      >
+        <Tcell
+          :c="'whitespace-nowrap align-center text-center text-sm items-center  font-medium text-gray-900'"
         >
-         
-            <Tcell
-              :c="'whitespace-nowrap align-center text-center text-sm items-center  font-medium text-gray-900'"
-            >
-              <input
-                v-model="selected_items"
-                :value="item.id"
-                type="checkbox"
-                class="h-4 w-4 accent-green-600 text-white rounded border-gray-200"
-              />
-            </Tcell>
-            
+          <input
+            v-model="selected_items"
+            :value="item.id"
+            type="checkbox"
+            class="h-4 w-4 accent-green-600 text-white rounded border-gray-200"
+          />
+        </Tcell>
 
-          <Tcell class="uppercase" v-if="item.user != null"> {{ item.user.first_name }} - {{ item.user.last_name }} </Tcell>
-          <Tcell>     {{  item.school_year != null ? 'SY.' +  item.school_year.from + ' - ' + item.school_year.to  : 'None'}} </Tcell> 
-    
-        
-        </tr>
+        <Tcell class="uppercase " v-if="item.user != null">
+          {{ item.user.first_name }} - {{ item.user.last_name }}
+        </Tcell>
+        <Tcell class="uppercase" v-if="item.campus != null">
+          {{ item.campus != null ? item.campus.name:  'None' }} 
+        </Tcell>
+        <Tcell>
+          {{
+            item.school_year != null
+              ? "SY." + item.school_year.from + " - " + item.school_year.to
+              : "None"
+          }}
+        </Tcell>
+      </tr>
     </SkTable>
 
-      <EmptyCard   v-else class="flex items-center justify-center h-64" />
+    <EmptyCard v-else class="flex items-center justify-center h-64" />
 
-        <div class="mt-6 py-4 bg-white" v-if="$props.campus_directors.links.length > 0">
-          <Pagination
-            v-if="$props.campus_directors.data.length > 0"
-            class="block"
-            :links="$props.campus_directors.links"
-          />
-        </div>
+    <div class="mt-6 py-4 bg-white" v-if="$props.campus_directors.links.length > 0">
+      <Pagination
+        v-if="$props.campus_directors.data.length > 0"
+        class="block"
+        :links="$props.campus_directors.links"
+      />
+    </div>
 
     <sk-dialog :transition="'slide-down'" :persistent="true" :isOpen="show_form">
       <main class="p-2">
-      
-         <div class="mb-4">
+        <div class="mb-4">
           <label for="email" class="block text-sm font-medium text-gray-700"
             >School Year</label
           >
 
           <div class="mt-1">
-            <schoolYearSelect @selectItem="getValueOfYear" @setDefaultValue="getDefaultValueOfYear" />
-         
+            <schoolYearSelect
+              @selectItem="getValueOfYear"
+              @setDefaultValue="getDefaultValueOfYear"
+            />
           </div>
         </div>
-       
-         <div class="mb-4">
-          <label for="email" class="block text-sm font-medium text-gray-700"
-            > User </label
+        <div class="mb-4">
+          <label for="campus" class="block text-sm font-medium text-gray-700"
+            >Campus</label
           >
 
           <div class="mt-1">
-            <guestUserSelect  @selectItem="getValueOfUser" @setDefaultValue="getDefaultValueOfUser"/>
-         
+            <campusSelect
+              @selectItem="getValueOfCampus"
+              @setDefaultValue="getDefaultValueOfCampus"
+            />
           </div>
         </div>
-        
-        
 
-        
+        <div class="mb-4">
+          <label for="email" class="block text-sm font-medium text-gray-700">
+            User
+          </label>
+
+          <div class="mt-1">
+            <guestUserSelect
+              @selectItem="getValueOfUser"
+              @setDefaultValue="getDefaultValueOfUser"
+            />
+          </div>
+        </div>
+
         <div class="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
           <SkButtonGray @click="show_form = false"> Close </SkButtonGray>
           <div>
-          <SkButton v-if="(form.school_year_id != null &&  form.user_id != null )" @click="save"  :processing="form.processing">  Save</SkButton>
+            <SkButton
+              v-if="form.school_year_id != null && form.user_id != null"
+              @click="save"
+              :processing="form.processing"
+            >
+              Save</SkButton
+            >
           </div>
         </div>
       </main>
     </sk-dialog>
 
-    
     <sk-dialog :transition="'slide-down'" :persistent="true" :isOpen="confirm_delete">
       <main class="p-2">
         <div class="sm:flex sm:items-start">
@@ -303,7 +305,7 @@ function save() {
           </div>
           <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
             <h3 class="text-lg font-medium leading-6 text-gray-900" id="modal-title">
-              Delete campus Director/s 
+              Delete campus Director/s
             </h3>
             <div class="mt-2">
               <p class="text-sm text-gray-500">
@@ -316,14 +318,12 @@ function save() {
         </div>
         <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
           <SkDeleteButton @click="deleteSelected" :processing="is_deleting" class="w-24">
-           Yes
+            Yes
           </SkDeleteButton>
-          <SkButtonGray @click="confirm_delete = false" :c="'w-24'">
-            No
-          </SkButtonGray>
+          <SkButtonGray @click="confirm_delete = false" :c="'w-24'"> No </SkButtonGray>
         </div>
       </main>
-    </sk-dialog> 
+    </sk-dialog>
   </accounts>
 </template>
 
@@ -331,14 +331,15 @@ function save() {
 import accounts from "@/pages/osas/accounts.vue";
 import schoolYearSelect from "@/components/schoolYearSelect.vue";
 import guestUserSelect from "@/components/guestUserSelect.vue";
+import campusSelect from "@/components/campusSelect.vue";
 
 export default {
   components: {
     accounts,
      schoolYearSelect,
-     
+     campusSelect,
      guestUserSelect,
-     
+
   },
 };
 </script>

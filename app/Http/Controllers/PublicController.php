@@ -263,7 +263,7 @@ class PublicController extends Controller
         
 
         return response()->json([
-            'data' => CampusAdviser::latest()->with('user','school_year')->get(),
+            'data' => CampusAdviser::latest()->with('user','school_year','campus')->get(),
         ]);
     }
 

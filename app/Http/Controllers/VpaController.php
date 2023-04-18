@@ -25,7 +25,7 @@ class VpaController extends Controller
                 });
             })
             ->latest()
-            ->with(['user'])
+            ->with(['user','school_year'])
             ->paginate(10)
             ->withQueryString(),
             'filters'=> supportrequest::only('search'),
@@ -39,6 +39,7 @@ class VpaController extends Controller
        
         $newrecord = Vpa::create([ 
          'user_id'=> $request->input('user_id'), 
+         'school_year_id'=> $request->input('school_year_id'), 
 
         ]);
 

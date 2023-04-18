@@ -119,8 +119,9 @@ function updateUserPassword(){
     <template #default>
         <SkTable :headers="['Name','Email','Password', '']">
          <tr   class="divide-x divide-gray-200" v-for="item in props.users.data" :key="item">
-              <Tcell class="uppercase"> {{ item.first_name }} - {{ item.last_name }}</Tcell>
-              <Tcell> {{ item.email }} </Tcell>
+              <Tcell  class="uppercase min-w-40"> {{ item.first_name }} - {{ item.last_name }}</Tcell>
+              <Tcell> {{ item.email }}  </Tcell>
+           
               <Tcell> {{ item.password }}</Tcell>
                <Tcell class="flex items-center justify-center" > <SkButtonGray class="max-w-40" @click="showUpdateForm(item)"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5  mr-2">
   <path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32l8.4-8.4z" />
@@ -129,7 +130,7 @@ function updateUserPassword(){
     <span class=""> 
  Update
     </span>
- </SkButtonGray> </Tcell>
+ </SkButtonGray> </Tcell> 
               </tr>
         </SkTable>
         <div class="mt-6 py-4 bg-white" v-if="$props.users.links.length > 0">
@@ -158,16 +159,15 @@ function updateUserPassword(){
 
  <aside class="rounded-lg flex item-center ">
             <div
-              class="rounded-l flex items-center justify-center w-36 bg-gradient-to-r from-blue-500 to-blue-600 "
+              class="rounded-l flex items-center justify-center w-36 bg-gradient-to-r from-red-500 to-red-600 "
             >
               <i class="fa-solid fa-triangle-exclamation text-4xl text-white"></i>
             </div>
             <div
-              class="rounded-r bg-gradient-to-r from-blue-500 to-blue-600 px-4 py-4"
+              class="rounded-r bg-gradient-to-r from-red-500 to-red-600 px-4 py-4"
             >
               <p class="font-rubik text leading-5 text-white">
-                We recommend to change password only if user are unable to access account
-                or have forgotten password.
+               We recommend changing the password only if the user is unable to access their account or has forgotten their password.
               </p>
             </div>
             </aside>
